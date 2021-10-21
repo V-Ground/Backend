@@ -29,16 +29,16 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
     /** Spring Mail */
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    // implementation 'org.springframework.boot:spring-boot-starter-mail'
 
     /** Spring Validation */
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    // implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     /** AWS SDK */
-    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.0.1.RELEASE'
+    // implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.0.1.RELEASE'
 
     /** model mapper */
-    implementation 'org.modelmapper:modelmapper:2.4.0'
+    // implementation 'org.modelmapper:modelmapper:2.4.0'
 
     /** Lombok */
     compileOnly 'org.projectlombok:lombok'
@@ -65,9 +65,6 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
-
-    /** Validation */
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     /** JUnit */
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
