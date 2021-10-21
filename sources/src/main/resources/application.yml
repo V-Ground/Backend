@@ -19,8 +19,8 @@ spring:
       # show_sql: true
       # format_sql: true
 
-frontend:
-  ip: localhost:3000
+# frontend:
+  # ip: localhost:3000
 
 jwt:
   secret: 12345678901234567890123456789012
