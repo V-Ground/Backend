@@ -2,6 +2,7 @@ package com.example.sources.domain.repository;
 
 import com.example.sources.domain.entity.User;
 import com.example.sources.domain.repository.user.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,17 +16,22 @@ class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Test
-    @DisplayName("회원 저장")
-    void save() {
+    @BeforeEach
+    void setUp() {
         User user = User.builder()
                 .email("test@test.com")
-                .name("테슽")
+                .username("테스트")
                 .password("123")
                 .build();
-        User savedUser = userRepository.save(user);
+        userRepository.save(user);
+    }
 
-        assertNotNull(savedUser);
+    @Test
+    @DisplayName("email 로 회원 검색")
+    void findByEmail() {
+        User user = userRepository.findByEmail("test@test.com").get();
+
+        assertEquals("테스트", user.getUsername());
     }
 
 }

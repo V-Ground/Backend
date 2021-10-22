@@ -41,7 +41,7 @@ dependencies {
     // implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.0.1.RELEASE'
 
     /** model mapper */
-    // implementation 'org.modelmapper:modelmapper:2.4.0'
+    implementation 'org.modelmapper:modelmapper:2.4.0'
 
     /** Lombok */
     compileOnly 'org.projectlombok:lombok'

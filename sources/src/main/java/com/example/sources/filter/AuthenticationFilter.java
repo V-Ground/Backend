@@ -21,14 +21,11 @@ import java.util.List;
 public class AuthenticationFilter extends BasicAuthenticationFilter {
 
     private final AuthenticationService authenticationService;
-    private final CookieUtil cookieUtil;
 
     public AuthenticationFilter(AuthenticationManager authenticationManager,
-                                AuthenticationService authenticationService,
-                                CookieUtil cookieUtil) {
+                                AuthenticationService authenticationService) {
         super(authenticationManager);
         this.authenticationService = authenticationService;
-        this.cookieUtil = cookieUtil;
     }
 
     @Override
@@ -37,19 +34,20 @@ public class AuthenticationFilter extends BasicAuthenticationFilter {
                                     FilterChain chain) throws IOException, ServletException {
 
         if(request.getCookies() != null) {
-            String accessToken = cookieUtil.getTokenFromCookies(request.getCookies());
-            Long userId = authenticationService.parseToken(accessToken);
-            List<Role> roles = authenticationService.getRoles(userId);
+            String accessToken = authenticationService.getTokenFromCookies(request.getCookies());
+            if(!accessToken.isBlank()) { // accessToken 이 존재하는 경우에만
+                Long userId = authenticationService.parseToken(accessToken);
+                List<Role> roles = authenticationService.getRoles(userId);
 
-            Authentication customAuthentication = new UserAuthentication(
-                    userId,
-                    roles
-            );
+                Authentication customAuthentication = new UserAuthentication(
+                        userId,
+                        roles
+                );
 
-            SecurityContext context = SecurityContextHolder.getContext();
-            context.setAuthentication(customAuthentication);
+                SecurityContext context = SecurityContextHolder.getContext();
+                context.setAuthentication(customAuthentication);
+            }
         }
-
         chain.doFilter(request, response);
     }
 }

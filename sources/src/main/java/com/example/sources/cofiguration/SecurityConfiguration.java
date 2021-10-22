@@ -22,15 +22,13 @@ import javax.servlet.Filter;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final AuthenticationService authenticationService;
-    private final CookieUtil cookieUtil;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
         Filter authenticationFilter = new AuthenticationFilter(
                 authenticationManager(),
-                authenticationService,
-                cookieUtil
+                authenticationService
         );
 
         Filter errorFilter = new AuthenticationErrorFilter();

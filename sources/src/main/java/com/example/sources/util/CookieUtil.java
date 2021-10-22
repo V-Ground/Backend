@@ -8,19 +8,22 @@ import javax.servlet.http.Cookie;
 @Component
 public class CookieUtil {
 
+    private final int ONE_DAY = 24 * 60 * 60;
+
     /**
-     * 쿠키 배열로부터 토큰 string 을 반환한다.
+     * userId 를 받아 accessToken 을 포함한 쿠키를 생성한다.
      *
-     * @param cookies : Request 에 포함된 cookie 들
-     * @return token string
+     * @param accessToken : accessToken
+     * @return Cookie
      */
-    public String getTokenFromCookies(Cookie[] cookies) {
-        for (Cookie cookie : cookies) {
-            if(cookie.getName().equals("accessToken")) {
-                return cookie.getValue();
-            }
-        }
-        throw new EmptyCookieException();
+    public Cookie generateCookie(String accessToken) {
+
+        Cookie cookie = new Cookie("accessToken", accessToken);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(ONE_DAY);
+
+        return cookie;
     }
 
 }
