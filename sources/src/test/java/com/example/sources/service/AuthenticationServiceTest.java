@@ -70,7 +70,7 @@ class AuthenticationServiceTest {
     @Test
     @DisplayName("adsf")
     void asdf() {
-        authenticationService.test();
+        // authenticationService.test();
     }
 
 }

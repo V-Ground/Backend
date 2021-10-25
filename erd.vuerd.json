@@ -3,7 +3,7 @@
     "width": 2000,
     "height": 2000,
     "scrollTop": 0,
-    "scrollLeft": 0,
+    "scrollLeft": 424.8000183105469,
     "show": {
       "tableComment": true,
       "columnComment": true,
@@ -251,7 +251,7 @@
         "id": "131d4502-d957-2f72-775c-785538dbb120"
       },
       {
-        "name": "CLASS",
+        "name": "COURSE",
         "comment": "수업",
         "columns": [
           {
@@ -374,7 +374,7 @@
           "active": false,
           "left": 1029.1999875831598,
           "top": 394.4000050640109,
-          "zIndex": 1031,
+          "zIndex": 1049,
           "widthName": 60,
           "widthComment": 60
         },
@@ -431,7 +431,7 @@
             "id": "141542ab-70cc-898d-888d-3ab64c91fcdb"
           },
           {
-            "name": "class_id",
+            "name": "course_id",
             "comment": "",
             "dataType": "BIGINT",
             "default": "",
@@ -458,7 +458,7 @@
           "active": false,
           "left": 1042.4666531250214,
           "top": 124.76667414479732,
-          "zIndex": 869,
+          "zIndex": 1051,
           "widthName": 106,
           "widthComment": 188
         },
@@ -584,7 +584,7 @@
             "id": "1b6a61c5-8552-528e-8761-bd4062f38eda"
           },
           {
-            "name": "class_id",
+            "name": "course_id",
             "comment": "",
             "dataType": "BIGINT",
             "default": "",
@@ -611,7 +611,7 @@
           "active": false,
           "left": 778,
           "top": 707.38889255303,
-          "zIndex": 1045,
+          "zIndex": 1053,
           "widthName": 76,
           "widthComment": 60
         },
@@ -966,29 +966,6 @@
             "id": "0255b3e6-3981-1e30-3080-5ed51bec26cf"
           },
           {
-            "name": "description",
-            "comment": "",
-            "dataType": "VARCHAR",
-            "default": "",
-            "option": {
-              "autoIncrement": false,
-              "primaryKey": false,
-              "unique": false,
-              "notNull": false
-            },
-            "ui": {
-              "active": false,
-              "pk": false,
-              "fk": false,
-              "pfk": false,
-              "widthName": 63,
-              "widthComment": 60,
-              "widthDataType": 60,
-              "widthDefault": 60
-            },
-            "id": "bd0872b7-033e-29b1-1e3d-0fbfff2308ea"
-          },
-          {
             "name": "os",
             "comment": "",
             "dataType": "VARCHAR",
@@ -1058,7 +1035,7 @@
             "id": "352d409c-52b1-71d9-97d9-e127c65a4c73"
           },
           {
-            "name": "class_id",
+            "name": "course_id",
             "comment": "",
             "dataType": "BIGINT",
             "default": "",
@@ -1082,10 +1059,10 @@
           }
         ],
         "ui": {
-          "active": false,
-          "left": 1584,
-          "top": 485,
-          "zIndex": 1036,
+          "active": true,
+          "left": 1558,
+          "top": 490,
+          "zIndex": 1064,
           "widthName": 107,
           "widthComment": 144
         },
@@ -1165,7 +1142,7 @@
             "id": "06499124-ddfa-ebd5-5fe9-15ff451d3ada"
           },
           {
-            "name": "class_id",
+            "name": "course_id",
             "comment": "",
             "dataType": "BIGINT",
             "default": "",
@@ -1192,7 +1169,7 @@
           "active": false,
           "left": 1233,
           "top": 750,
-          "zIndex": 1047,
+          "zIndex": 1055,
           "widthName": 141,
           "widthComment": 327
         },
@@ -1535,8 +1512,8 @@
           "columnIds": [
             "39ea81fe-9d6c-3937-248a-7a1d026e2c3d"
           ],
-          "x": 1584,
-          "y": 591.25,
+          "x": 1558,
+          "y": 586,
           "direction": "left"
         },
         "id": "98f99c7d-e896-643d-a56b-57f94f754919",
@@ -1572,8 +1549,8 @@
           "columnIds": [
             "5f4e282d-0a6e-b501-2915-157e8129f9c6"
           ],
-          "x": 1792,
-          "y": 697.5,
+          "x": 1766,
+          "y": 682,
           "direction": "bottom"
         },
         "end": {

@@ -58,33 +58,6 @@ public class AuthenticationService {
         return modelMapper.map(user, LoginResponseData.class);
     }
 
-    public void test() {
-
-        String student1 = passwordEncoder.encode("student1");
-        String student2 = passwordEncoder.encode("student2");
-        String student3 = passwordEncoder.encode("student3");
-        String student4 = passwordEncoder.encode("student4");
-        String student5 = passwordEncoder.encode("student5");
-        String teacher1 = passwordEncoder.encode("teacher1");
-        String teacher2 = passwordEncoder.encode("teacher2");
-        String teacher3 = passwordEncoder.encode("teacher3");
-        String teacher4 = passwordEncoder.encode("teacher4");
-        String teacher5 = passwordEncoder.encode("teacher5");
-
-        System.out.println("student1 = " + student1);
-        System.out.println("student2 = " + student2);
-        System.out.println("student3 = " + student3);
-        System.out.println("student4 = " + student4);
-        System.out.println("student5 = " + student5);
-
-        System.out.println("teacher1 = " + teacher1);
-        System.out.println("teacher2 = " + teacher2);
-        System.out.println("teacher3 = " + teacher3);
-        System.out.println("teacher4 = " + teacher4);
-        System.out.println("teacher5 = " + teacher5);
-
-    }
-
     /**
      * 쿠키 배열로부터 토큰 String 을 반환한다.
      *
