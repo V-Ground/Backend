@@ -3,6 +3,8 @@ package com.example.sources.controller;
 import com.example.sources.domain.dto.request.LoginRequestData;
 import com.example.sources.domain.dto.response.LoginResponseData;
 import com.example.sources.service.AuthenticationService;
+import com.example.sources.util.CookieUtil;
+import com.example.sources.util.TokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 @RequiredArgsConstructor
@@ -17,11 +20,21 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping(value = "/api/v1/authenticate", produces = "application/json")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
+    private final CookieUtil cookieUtil;
+    private final TokenUtil tokenUtil;
 
     @PostMapping
     public ResponseEntity<LoginResponseData> login(
             HttpServletResponse response,
             @RequestBody LoginRequestData requestData) {
-        return ResponseEntity.ok(authenticationService.login(requestData, response));
+
+        LoginResponseData responseData = authenticationService.login(requestData);
+        Long userId = responseData.getId();
+
+        String token = tokenUtil.generateToken(userId);
+        Cookie cookie = cookieUtil.generateCookie(token);
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(responseData);
     }
 }

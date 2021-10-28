@@ -50,8 +50,7 @@ class AuthenticationServiceTest {
     @DisplayName("로그인 성공")
     void login_success() {
         LoginResponseData request = authenticationService.login(
-                new LoginRequestData("test@test.com", "password"),
-                new MockHttpServletResponse());
+                new LoginRequestData("test@test.com", "password"));
 
         assertEquals("test@test.com", request.getEmail());
     }
@@ -61,8 +60,7 @@ class AuthenticationServiceTest {
     void login_fail_invalid_password() {
         LoginFailedException exception = assertThrows(LoginFailedException.class,
                 () -> authenticationService.login(
-                        new LoginRequestData("test@test.com", "invalid_password"),
-                        new MockHttpServletResponse()));
+                        new LoginRequestData("test@test.com", "invalid_password")));
 
         assertNotNull(exception.getMessage());
     }

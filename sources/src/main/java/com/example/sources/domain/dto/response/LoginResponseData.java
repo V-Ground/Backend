@@ -9,6 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginResponseData {
+    private Long id;
     private String email;
     private String username;
 }

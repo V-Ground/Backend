@@ -36,8 +36,8 @@ class AuthenticationControllerTest {
     @BeforeEach
     void setUp() {
 
-        given(authenticationService.login(any(LoginRequestData.class), any(HttpServletResponse.class)))
-                .willReturn(new LoginResponseData("test@test.com", "test"));
+        given(authenticationService.login(any(LoginRequestData.class)))
+                .willReturn(new LoginResponseData(1L, "test@test.com", "test"));
 
     }
 

@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -36,10 +35,9 @@ public class AuthenticationService {
      * username 과 email 을 받아 로그인한다.
      *
      * @param request Login 에 필요한 DTO
-     * @param response ServletResponse
      * @return email, name 을 포함한 DTO
      */
-    public LoginResponseData login(LoginRequestData request, HttpServletResponse response) {
+    public LoginResponseData login(LoginRequestData request) {
         String email = request.getEmail();
         String password = request.getPassword();
 
@@ -51,9 +49,6 @@ public class AuthenticationService {
         if(!isAuthenticated) { // 로그인에 실패한 경우
             throw new LoginFailedException();
         }
-
-        response.addCookie(cookieUtil
-                .generateCookie(tokenUtil.generateToken(user.getId()))); // response 에 쿠키 추가
 
         return modelMapper.map(user, LoginResponseData.class);
     }
