@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateCourseRequestData {
+public class CreateEvaluationRequestData {
     private Long userId;
     private String title;
     private String description;

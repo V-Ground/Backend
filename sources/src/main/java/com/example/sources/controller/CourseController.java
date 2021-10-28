@@ -8,10 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -21,9 +18,14 @@ public class CourseController {
 
     @PostMapping
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
-    public ResponseEntity<CreateCourseResponseData> create(@RequestBody CreateCourseRequestData request,
-                                                           UserAuthentication authentication) {
-        Long tokenUserId = authentication.getUserid();
-        return ResponseEntity.status(HttpStatus.CREATED).body(courseService.create(request, tokenUserId));
+    public ResponseEntity<CreateCourseResponseData> create(@RequestBody CreateCourseRequestData request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(courseService.create(request));
+    }
+
+    @GetMapping("/disable/{courseId}")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
+    public ResponseEntity<CreateCourseResponseData> disable(@PathVariable Long courseId) {
+        courseService.disableCourse(courseId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

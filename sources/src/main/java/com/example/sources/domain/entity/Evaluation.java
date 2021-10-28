@@ -9,11 +9,10 @@ import javax.persistence.*;
 @Getter @Setter @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Course {
+public class Evaluation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String title;
     private String description;
     private String cpu;
@@ -26,7 +25,7 @@ public class Course {
     private User teacher;
 
     /**
-     * course 를 생성한다.
+     * evaluation 를 생성한다.
      *
      * @param user : teacher
      * @return
@@ -42,5 +41,4 @@ public class Course {
     public void disable() {
         this.visibility = false;
     }
-
 }

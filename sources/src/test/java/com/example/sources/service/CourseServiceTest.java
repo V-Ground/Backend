@@ -27,8 +27,9 @@ class CourseServiceTest {
 
     @BeforeEach
     void setUp() {
-        courseService = new CourseService(userRepository,
+        courseService = new CourseService(
                 courseRepository,
+                userRepository,
                 new ModelMapper());
 
         given(userRepository.findById(1L))
@@ -42,7 +43,7 @@ class CourseServiceTest {
     @DisplayName("course 생성 성공")
     void createCourse_success() {
         CreateCourseRequestData request = new CreateCourseRequestData(
-                "와샥", "와이어샤크에 대해서 공부합니다", "1", "1", 1L);
+                1L, "와샥", "와이어샤크에 대해서 공부합니다", "1", "1", 1L);
 
         CreateCourseResponseData createCourseResponseData = courseService.create(request, 1L);
         assertNotNull(createCourseResponseData);
