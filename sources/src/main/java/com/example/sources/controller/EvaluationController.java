@@ -1,10 +1,7 @@
 package com.example.sources.controller;
 
-import com.example.sources.domain.dto.request.CreateCourseRequestData;
 import com.example.sources.domain.dto.request.CreateEvaluationRequestData;
-import com.example.sources.domain.dto.response.CreateCourseResponseData;
 import com.example.sources.domain.dto.response.CreateEvaluationResponseData;
-import com.example.sources.service.AuthenticationService;
 import com.example.sources.service.EvaluationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,13 +18,20 @@ public class EvaluationController {
     @PostMapping
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
     public ResponseEntity<CreateEvaluationResponseData> create(@RequestBody CreateEvaluationRequestData request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(evaluationService.create(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(evaluationService.addEvaluation(request));
     }
 
-    @GetMapping("/disable/{evaluationId}")
+    @PatchMapping("/{evaluationId}/disable")
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
     public ResponseEntity disable(@PathVariable Long evaluationId) {
         evaluationService.disableEvaluation(evaluationId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @DeleteMapping("/{evaluationId}")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
+    public ResponseEntity delete(@PathVariable Long evaluationId) {
+        evaluationService.deleteEvaluation(evaluationId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

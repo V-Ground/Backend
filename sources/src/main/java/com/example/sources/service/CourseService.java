@@ -1,14 +1,11 @@
 package com.example.sources.service;
 
 import com.example.sources.domain.dto.request.CreateCourseRequestData;
-import com.example.sources.domain.dto.response.CourseResponseData;
 import com.example.sources.domain.dto.response.CreateCourseResponseData;
 import com.example.sources.domain.entity.Course;
 import com.example.sources.domain.entity.User;
 import com.example.sources.domain.repository.course.CourseRepository;
-import com.example.sources.domain.repository.coursestudent.CourseUserRepository;
 import com.example.sources.domain.repository.user.UserRepository;
-import com.example.sources.exception.AuthenticationFailedException;
 import com.example.sources.exception.NotFoundException;
 import com.example.sources.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +30,7 @@ public class CourseService {
      * @param request : 클래스 생성 Request DTO
      * @return : 생성된 클래스의 정보가 담긴 DTO
      */
-    public CreateCourseResponseData create(CreateCourseRequestData request) {
+    public CreateCourseResponseData addCourse(CreateCourseRequestData request) {
         Long userId = request.getUserId();
 
         User teacher = userRepository.findById(userId).orElseThrow(
@@ -59,6 +56,18 @@ public class CourseService {
         course.disable();
 
         courseRepository.save(course);
+    }
+
+    /**
+     * 클래스를 삭제한다.
+     *
+     * @param courseId : 삭제하려는 클래스 id
+     */
+    public void deleteCourse(Long courseId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new NotFoundException("클래스 번호 " + courseId));
+        // TODO 클래스를 삭제하기 전에 question 에서 클래스에 해당하는 question 과 submit 을 먼저 삭제해야함
+        courseRepository.delete(course);
     }
 
 }

@@ -27,7 +27,7 @@ public class EvaluationService {
      * @param request : 테스트 생성 Request DTO
      * @return 생성된 테스트의 정보가 담긴 DTO
      */
-    public CreateEvaluationResponseData create(CreateEvaluationRequestData request) {
+    public CreateEvaluationResponseData addEvaluation(CreateEvaluationRequestData request) {
         Long userId = request.getUserId();
         User teacher = userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException("uid: " + userId));
@@ -41,9 +41,9 @@ public class EvaluationService {
     }
 
     /**
-     * 클래스를 비활성화한다.
+     * 평가를 비활성화한다.
      *
-     * @param evaluationId : 비활성화를 할 클래스 id
+     * @param evaluationId : 비활성화를 할 평가 id
      */
     public void disableEvaluation(Long evaluationId) {
         Evaluation evaluation = evaluationRepository.findById(evaluationId).orElseThrow(
@@ -52,5 +52,17 @@ public class EvaluationService {
         evaluation.disable();
 
         evaluationRepository.save(evaluation);
+    }
+
+    /**
+     * 평가를 삭제한다.
+     *
+     * @param evaluationId : 삭제할 평가 id
+     */
+    public void deleteEvaluation(Long evaluationId) {
+        Evaluation evaluation = evaluationRepository.findById(evaluationId).orElseThrow(
+                () -> new NotFoundException("테스트 번호 " + evaluationId));
+        // TODO 평가를 삭제하기 전에 question 에서 평가에 해당하는 question 과 submit 을 먼저 삭제해야함
+        evaluationRepository.delete(evaluation);
     }
 }

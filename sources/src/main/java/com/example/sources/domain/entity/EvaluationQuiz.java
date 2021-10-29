@@ -10,16 +10,21 @@ import javax.persistence.*;
 @Getter @Setter @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EvaluationUser {
+public class EvaluationQuiz {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    private String question;
+    private String description;
+    private String answer;
+    private Integer score;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "evaluation_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Evaluation evaluation;
+
+    public void create(Evaluation evaluation) {
+        this.evaluation = evaluation;
+    }
 }

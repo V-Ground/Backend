@@ -45,7 +45,7 @@ class CourseServiceTest {
         CreateCourseRequestData request = new CreateCourseRequestData(
                 1L, "와샥", "와이어샤크에 대해서 공부합니다", "1", "1", 1L);
 
-        CreateCourseResponseData createCourseResponseData = courseService.create(request, 1L);
+        CreateCourseResponseData createCourseResponseData = courseService.addCourse(request);
         assertNotNull(createCourseResponseData);
     }
 

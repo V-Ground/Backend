@@ -2,8 +2,8 @@
   "canvas": {
     "width": 2000,
     "height": 2000,
-    "scrollTop": 0,
-    "scrollLeft": 0,
+    "scrollTop": 375.84002685546875,
+    "scrollLeft": 895.6800537109375,
     "show": {
       "tableComment": true,
       "columnComment": true,
@@ -244,7 +244,7 @@
           "active": false,
           "left": 892.9333432128695,
           "top": 32.69999477942803,
-          "zIndex": 1157,
+          "zIndex": 1262,
           "widthName": 60,
           "widthComment": 60
         },
@@ -687,7 +687,7 @@
         "id": "ebb35f2e-ffa7-bd6f-7832-d0c69ed125ff"
       },
       {
-        "name": "QUESTION",
+        "name": "COURSE_QUESTION",
         "comment": "과제의 문제",
         "columns": [
           {
@@ -735,6 +735,29 @@
               "widthDefault": 60
             },
             "id": "f97b8ec4-5eb0-82f9-93b8-28eeb75b7e87"
+          },
+          {
+            "name": "description",
+            "comment": "",
+            "dataType": "TEXT",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": false
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 62,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "61d57e9c-f0be-fbc8-878c-f9d36d3037fa"
           },
           {
             "name": "answer",
@@ -810,8 +833,8 @@
           "active": false,
           "left": 52.59998083686828,
           "top": 777.2799925968175,
-          "zIndex": 1248,
-          "widthName": 61,
+          "zIndex": 1272,
+          "widthName": 111,
           "widthComment": 61
         },
         "id": "3cf487e0-acde-e020-9e5e-7dfc68d6b1bc"
@@ -1207,7 +1230,7 @@
         "id": "0dc0c080-2de8-280e-1e4d-2c07ee4700cd"
       },
       {
-        "name": "EVALUATION_QUESTION",
+        "name": "EVALUATION_QUIZ",
         "comment": "",
         "columns": [
           {
@@ -1255,6 +1278,29 @@
               "widthDefault": 60
             },
             "id": "1cce8829-14e6-90ed-853c-785ea6e2dee6"
+          },
+          {
+            "name": "description",
+            "comment": "",
+            "dataType": "TEXT",
+            "default": "",
+            "option": {
+              "autoIncrement": false,
+              "primaryKey": false,
+              "unique": false,
+              "notNull": false
+            },
+            "ui": {
+              "active": false,
+              "pk": false,
+              "fk": false,
+              "pfk": false,
+              "widthName": 62,
+              "widthComment": 60,
+              "widthDataType": 60,
+              "widthDefault": 60
+            },
+            "id": "2b45dec0-43d8-0076-79fb-ce836e55d6e7"
           },
           {
             "name": "answer",
@@ -1330,8 +1376,8 @@
           "active": false,
           "left": 1268.4800407707232,
           "top": 814.2400272529608,
-          "zIndex": 1254,
-          "widthName": 137,
+          "zIndex": 1270,
+          "widthName": 106,
           "widthComment": 60
         },
         "id": "6fbbdc68-24bb-02d1-8d7e-46d9f81a10be"
@@ -1410,7 +1456,7 @@
             "id": "af108038-1d93-a1d5-2210-a6e95c51729e"
           },
           {
-            "name": "evaluation_question_id",
+            "name": "evaluation_quiz_id",
             "comment": "",
             "dataType": "VARCHAR",
             "default": "",
@@ -1425,7 +1471,7 @@
               "pk": false,
               "fk": true,
               "pfk": false,
-              "widthName": 124,
+              "widthName": 100,
               "widthComment": 60,
               "widthDataType": 60,
               "widthDefault": 60
@@ -1460,7 +1506,7 @@
           "active": false,
           "left": 656.4800174133303,
           "top": 881.9200298278824,
-          "zIndex": 1259,
+          "zIndex": 1268,
           "widthName": 122,
           "widthComment": 60
         },
@@ -1619,7 +1665,7 @@
             "8c2b8c0d-9022-b254-7221-9879c4aa9e90"
           ],
           "x": 258.59998083686827,
-          "y": 948.7799925968175,
+          "y": 969.2799925968175,
           "direction": "bottom"
         },
         "end": {
@@ -1757,7 +1803,7 @@
             "721279ca-a6ab-61b4-473d-43c4c5b386a3"
           ],
           "x": 1268.4800407707232,
-          "y": 899.9900272529608,
+          "y": 910.2400272529608,
           "direction": "left"
         },
         "end": {
@@ -1765,7 +1811,7 @@
           "columnIds": [
             "430e7032-b5b6-a1bc-0c66-7f81234152b7"
           ],
-          "x": 1114.4800174133302,
+          "x": 1090.4800174133302,
           "y": 967.6700298278824,
           "direction": "right"
         },
@@ -1788,7 +1834,7 @@
           "columnIds": [
             "cce8d39e-1d16-0d27-8918-44343b5f99c3"
           ],
-          "x": 885.4800174133303,
+          "x": 873.4800174133303,
           "y": 881.9200298278824,
           "direction": "top"
         },

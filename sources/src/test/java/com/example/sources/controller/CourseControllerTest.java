@@ -55,7 +55,7 @@ class CourseControllerTest {
         given(authenticationService.getRoles(TEACHER_ID))
                 .willReturn(List.of(new Role(TEACHER_ID, RoleType.TEACHER), new Role(TEACHER_ID, RoleType.STUDENT)));
 
-        given(courseService.create(any(CreateCourseRequestData.class), eq(TEACHER_ID)))
+        given(courseService.addCourse(any(CreateCourseRequestData.class)))
                 .willReturn(new CreateCourseResponseData());
     }
 
