@@ -30,7 +30,7 @@ public class UserService {
      * @return List 타입의 CourseResponseData DTO
      */
     public MyParticipatingResponseData getMyParticipating(Long targetUserId, Long tokenUserId) {
-        if(targetUserId != tokenUserId) { // 요청을 보낸 userId 와 조회하려는 userId 가 다른 경우
+        if(!targetUserId.equals(tokenUserId)) { // 요청을 보낸 userId 와 조회하려는 userId 가 다른 경우
             throw new AuthenticationFailedException();
         }
 

@@ -3,6 +3,10 @@ package com.example.sources.domain.entity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CourseTest {

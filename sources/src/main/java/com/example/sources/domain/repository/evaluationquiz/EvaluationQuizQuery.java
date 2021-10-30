@@ -5,5 +5,5 @@ import com.example.sources.domain.dto.response.QuizResponseData;
 import java.util.List;
 
 public interface EvaluationQuizQuery {
-    List<QuizResponseData> findAllByReferenceId(Long evaluationId);
+    List<QuizResponseData> findAllByEvaluationId(Long evaluationId);
 }

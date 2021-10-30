@@ -2,8 +2,8 @@
   "canvas": {
     "width": 2000,
     "height": 2000,
-    "scrollTop": 375.84002685546875,
-    "scrollLeft": 895.6800537109375,
+    "scrollTop": 164.16000366210938,
+    "scrollLeft": 521.280029296875,
     "show": {
       "tableComment": true,
       "columnComment": true,
@@ -160,7 +160,7 @@
           "active": false,
           "left": 561.7199988487242,
           "top": 545.8400037685403,
-          "zIndex": 1255,
+          "zIndex": 1291,
           "widthName": 60,
           "widthComment": 99
         },
@@ -963,7 +963,7 @@
           "active": false,
           "left": 18.960000431441998,
           "top": 1019.959998274235,
-          "zIndex": 1241,
+          "zIndex": 1281,
           "widthName": 124,
           "widthComment": 221
         },
@@ -1139,7 +1139,7 @@
           "active": false,
           "left": 1128.560021706008,
           "top": 451.60000704384,
-          "zIndex": 1261,
+          "zIndex": 1289,
           "widthName": 74,
           "widthComment": 60
         },
@@ -1231,7 +1231,7 @@
       },
       {
         "name": "EVALUATION_QUIZ",
-        "comment": "",
+        "comment": "강사가 출제한 문제",
         "columns": [
           {
             "name": "id",
@@ -1373,17 +1373,17 @@
           }
         ],
         "ui": {
-          "active": false,
+          "active": true,
           "left": 1268.4800407707232,
           "top": 814.2400272529608,
-          "zIndex": 1270,
+          "zIndex": 1292,
           "widthName": 106,
-          "widthComment": 60
+          "widthComment": 98
         },
         "id": "6fbbdc68-24bb-02d1-8d7e-46d9f81a10be"
       },
       {
-        "name": "EVALUATION_SUBMIT",
+        "name": "QUIZ_SUBMIT",
         "comment": "",
         "columns": [
           {
@@ -1504,10 +1504,10 @@
         ],
         "ui": {
           "active": false,
-          "left": 656.4800174133303,
-          "top": 881.9200298278824,
-          "zIndex": 1268,
-          "widthName": 122,
+          "left": 620.4800160400391,
+          "top": 861.7600290588397,
+          "zIndex": 1286,
+          "widthName": 77,
           "widthComment": 60
         },
         "id": "904caa6e-1daf-9efe-6092-68fb9bb46c42"
@@ -1811,8 +1811,8 @@
           "columnIds": [
             "430e7032-b5b6-a1bc-0c66-7f81234152b7"
           ],
-          "x": 1090.4800174133302,
-          "y": 967.6700298278824,
+          "x": 1054.4800160400391,
+          "y": 947.5100290588397,
           "direction": "right"
         },
         "id": "16eca756-be90-34b8-0f5d-648418ecc53a",
@@ -1834,8 +1834,8 @@
           "columnIds": [
             "cce8d39e-1d16-0d27-8918-44343b5f99c3"
           ],
-          "x": 873.4800174133303,
-          "y": 881.9200298278824,
+          "x": 837.4800160400391,
+          "y": 861.7600290588397,
           "direction": "top"
         },
         "id": "272f61bb-6040-8105-658f-3cf060acc9cf",

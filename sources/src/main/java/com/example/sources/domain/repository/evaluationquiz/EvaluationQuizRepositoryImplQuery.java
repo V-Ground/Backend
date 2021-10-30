@@ -19,7 +19,7 @@ public class EvaluationQuizRepositoryImplQuery implements EvaluationQuizQuery {
     }
 
     @Override
-    public List<QuizResponseData> findAllByReferenceId(Long evaluationId) {
+    public List<QuizResponseData> findAllByEvaluationId(Long evaluationId) {
         return queryFactory
                 .select(Projections.fields(QuizResponseData.class,
                         evaluationQuiz.id.as("quizId"),
