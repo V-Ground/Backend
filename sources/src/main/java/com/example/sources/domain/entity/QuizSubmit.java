@@ -22,4 +22,13 @@ public class QuizSubmit {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    /**
+     * 점수를 받아 scored 의 필드에 값을 할당한다
+     *
+     * @param score : 점수
+     */
+    public void scoring(Integer score) {
+        this.scored = score;
+    }
 }

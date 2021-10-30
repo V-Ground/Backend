@@ -46,17 +46,21 @@ class QuizSubmitRepositoryTest {
         evaluationUserRepository.save(EvaluationUser.builder().user(student1).evaluation(evaluation).build());
         evaluationUserRepository.save(EvaluationUser.builder().user(student2).evaluation(evaluation).build());
 
-        EvaluationQuiz eq = evaluationQuizRepository.save(EvaluationQuiz.builder().build());
+        EvaluationQuiz eq1 = evaluationQuizRepository.save(EvaluationQuiz.builder().evaluation(evaluation).question("문제 1").build());
+        EvaluationQuiz eq2 = evaluationQuizRepository.save(EvaluationQuiz.builder().evaluation(evaluation).question("문제 2").build());
+        EvaluationQuiz eq3 = evaluationQuizRepository.save(EvaluationQuiz.builder().evaluation(evaluation).question("문제 3").build());
 
-        quizSubmitRepository.save(QuizSubmit.builder().answer("정답은 123").user(student1).evaluationQuiz(eq).build());
-        quizSubmitRepository.save(QuizSubmit.builder().answer("정답은 2123").user(student1).evaluationQuiz(eq).build());
-        quizSubmitRepository.save(QuizSubmit.builder().answer("정답은 815123").user(student1).evaluationQuiz(eq).build());
+
+        quizSubmitRepository.save(QuizSubmit.builder().answer("정답은 123").user(student1).evaluationQuiz(eq1).build());
+        quizSubmitRepository.save(QuizSubmit.builder().answer("정답은 2123").user(student1).evaluationQuiz(eq2).build());
+        quizSubmitRepository.save(QuizSubmit.builder().answer("정답은 815123").user(student1).evaluationQuiz(eq3).build());
+
     }
 
     @Test
     @DisplayName("조회")
     void get() {
-        List<SubmittedQuizResponseData> allByEvaluationIdAndUserId = quizSubmitRepository.findAllByEvaluationIdAndUserId(1L, 2L);
+        List<SubmittedQuizResponseData> allByEvaluationIdAndUserId = quizSubmitRepository.findAllByEvaluationIdAndUserId(1L, 9L);
         System.out.println("--------------");
         for (SubmittedQuizResponseData submittedQuizResponseData : allByEvaluationIdAndUserId) {
             System.out.println("submittedQuizResponseData = " + submittedQuizResponseData.toString());

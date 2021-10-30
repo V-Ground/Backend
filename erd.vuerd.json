@@ -2,8 +2,8 @@
   "canvas": {
     "width": 2000,
     "height": 2000,
-    "scrollTop": 164.16000366210938,
-    "scrollLeft": 521.280029296875,
+    "scrollTop": 214.5600128173828,
+    "scrollLeft": 524.1600341796875,
     "show": {
       "tableComment": true,
       "columnComment": true,
@@ -160,7 +160,7 @@
           "active": false,
           "left": 561.7199988487242,
           "top": 545.8400037685403,
-          "zIndex": 1291,
+          "zIndex": 1307,
           "widthName": 60,
           "widthComment": 99
         },
@@ -1139,7 +1139,7 @@
           "active": false,
           "left": 1128.560021706008,
           "top": 451.60000704384,
-          "zIndex": 1289,
+          "zIndex": 1309,
           "widthName": 74,
           "widthComment": 60
         },
@@ -1373,10 +1373,10 @@
           }
         ],
         "ui": {
-          "active": true,
+          "active": false,
           "left": 1268.4800407707232,
           "top": 814.2400272529608,
-          "zIndex": 1292,
+          "zIndex": 1302,
           "widthName": 106,
           "widthComment": 98
         },
@@ -1506,7 +1506,7 @@
           "active": false,
           "left": 620.4800160400391,
           "top": 861.7600290588397,
-          "zIndex": 1286,
+          "zIndex": 1301,
           "widthName": 77,
           "widthComment": 60
         },

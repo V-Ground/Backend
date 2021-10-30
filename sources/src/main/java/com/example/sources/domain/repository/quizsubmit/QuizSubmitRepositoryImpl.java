@@ -30,26 +30,8 @@ public class QuizSubmitRepositoryImpl implements QuizSubmitQuery {
                         ))
                 .from(quizSubmit)
                 .innerJoin(quizSubmit.evaluationQuiz, evaluationQuiz)
-                .on(quizSubmit.user.id.eq(userId))
-                .innerJoin(evaluationQuiz.evaluation, evaluation)
-                .on(evaluation.id.eq(evaluationId))
+                .on(quizSubmit.evaluationQuiz.id.eq(evaluationQuiz.id))
+                .where(quizSubmit.user.id.eq(userId).and(evaluationQuiz.evaluation.id.eq(evaluationId)))
                 .fetch();
     }
 }
-
-/**
- *
- * 강사가 Evaluation(평가)를 생성한다.
- * 강사는 문제(Evaluation_Quiz) 를 생성한다.
- * [Evaluation] 1 : N [Evaluation_Quiz] 가 된다.
- * 학생은 문제를 푼다. (Quiz_Submit 에 insert)
- *
- * 문제 : 학생 (1L) 이 평가 (1L) 에 제출한 정답과 문제 번호를 가져오는 select 쿼리를 짜세용
- * 문제 2 : quiz_submit 을 대상 테이블로 해서 문제 1을 해결하는 select 쿼리를 짜세용
- *
- * select
- * from evaluation
- *
- * @param
- * @return
- */

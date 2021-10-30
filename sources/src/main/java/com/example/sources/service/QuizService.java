@@ -1,6 +1,7 @@
 package com.example.sources.service;
 
 import com.example.sources.domain.dto.request.CreateQuizRequestData;
+import com.example.sources.domain.dto.request.ScoringQuizRequestData;
 import com.example.sources.domain.dto.request.SolveQuizRequestData;
 import com.example.sources.domain.dto.response.CreateQuizResponseData;
 import com.example.sources.domain.dto.response.SubmittedQuizResponseData;
@@ -20,6 +21,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.module.FindException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -94,10 +96,20 @@ public class QuizService {
     /**
      * 특정 학생이 제출한 퀴즈 정답 확인
      *
-     * @param
-     * @return
+     * @param teacherId : 조회하려는 강사의 ID
+     * @param evaluationId : 테스트 번호
+     * @param userId : 조회하려는 학생의 ID
+     * @param tokenUserId : 토큰에 포함된 강사의 ID
+     * @return List 타입의 제출된 정답 DTO
      */
-    public List<SubmittedQuizResponseData> getAllSubmittedQuizAnswer(Long teacherId, Long userId, Long evaluationId) {
+    public List<SubmittedQuizResponseData> getAllSubmittedQuizAnswer(Long teacherId,
+                                                                     Long evaluationId,
+                                                                     Long userId,
+                                                                     Long tokenUserId) {
+        if(!teacherId.equals(tokenUserId)) { // 요청을 보낸 userId 와 강사의 userId 가 다른 경우
+            throw new AuthenticationFailedException();
+        }
+
         Evaluation evaluation = evaluationRepository.findById(evaluationId).orElseThrow(
                 () -> new NotFoundException("테스트 번호 " + evaluationId));
 
@@ -108,4 +120,38 @@ public class QuizService {
         }
         return quizSubmitRepository.findAllByEvaluationIdAndUserId(evaluationId, userId);
     }
+
+    /**
+     *  강사가 퀴즈를 채점한다
+     *
+     * @param teacherId : 강사 id
+     * @param evaluationId : 테스트 id
+     * @param quizId : 사용자가 제출한 quid id
+     * @param request : 채점 점수가 포함된 DTO
+     */
+    public void scoreQuiz(Long teacherId,
+                          Long evaluationId,
+                          Long quizId,
+                          ScoringQuizRequestData request,
+                          Long tokenUserId) {
+
+        if(!teacherId.equals(tokenUserId)) {
+            throw new AuthenticationFailedException();
+        }
+
+        Evaluation evaluation = evaluationRepository.findById(evaluationId).orElseThrow(
+                () -> new NotFoundException("평가 번호 " + evaluationId));
+
+        if (!teacherId.equals(evaluation.getTeacher().getId())) {
+            throw new AuthenticationFailedException();
+        }
+
+        QuizSubmit quizSubmit = quizSubmitRepository.findById(quizId).orElseThrow(
+                () -> new NotFoundException("퀴즈 번호 " + quizId));
+
+        quizSubmit.scoring(request.getScore());
+        quizSubmitRepository.save(quizSubmit);
+    }
+
+
 }
