@@ -90,12 +90,15 @@
 - **내가 소속된 모든 코스 조회** : GET : `/api/v1/users/{userId}/participating`
 - **테스트 퀴즈 풀기** : POST `/api/v1/users/{userId}/evaluations/{evaluationId}/quizzes/{quizId}`
 - **특정 학셍이 제출한 퀴즈 정답 확인** : GET `/api/v1/users/${teacherId}/evaluations/{evaluationId}/users/{userId}/quizzes`
-- **퀴즈 채점** : PATCH `/api/v1/users/${teacherId}/evaluations/{evaluationId}/quizzes/socring/{quizId}`
+- **과제 주관식 풀기** : POST `/api/v1/users/{userId}/course/{courseId}/assignments/{assignments}/questions/{questionId}`
+- **특정 학생이 제출한 과제 정답 확인** : POST `/api/v1/users/{teacherId}/courses/{courseId}/assignments/{assignmentId}/users/{userId}/questions`
 
 ## 강사
 
 - **특정 학셍이 제출한 퀴즈 정답 확인** : GET `/api/v1/teachers/${teacherId}/evaluations/{evaluationId}/users/{userId}/quizzes/{quizId}`
-- **퀴즈 채점** : PATCH `/api/v1/teachers/${teacherId}/evaluations/{evaluationId}/quizzes/{quizId}`
+- **특정 학셍이 제출한 퀴즈 정답 확인** : GET `/api/v1/teachers/${teacherId}/evaluations/{evaluationId}/assignments/{assignmentId}/users/{userId}/quizzes/{quizId}`
+- **퀴즈 채점** : PATCH `/api/v1/teachers/${teacherId}/evaluations/{evaluationId}/quizzes/scoring/{quizId}`
+- **과제 채점** : PATCH `/api/v1/users/{teacherId}/courses/{courseId}/assignments/{assignmentId}/scoring/{questionId}`
 
 ## 클래스
 
@@ -120,5 +123,13 @@
 - **테스트에 존재하는 모든 퀴즈 조회** : GET `/api/v1/evaluations/{evaluationId}/quizzes`
 
 ## 과제
+
+과제 생성도 퀴즈와 마찬가지로 Client Side Paging 할 것
+
+- **과제 생성** : POST `/api/v1/courses/{courseId}/assignments`
+- **과제 문제 생성** : POST `/api/v1/courses/{courseId}/assignments/{assignmentId}`
+- **과제 조회** : GET `/api/v1/courses/{courseId}/assignments`
+- **과제 상세 상세 조회** : GET `/api/v1/courses/{courseId}/assignments/{assignmentId}`
+- **과제 제출** : POST `/api/v1/users/{userId}/courses/{courseId}/assignments/{assignmentId}`
 
 ## 스냅샷
