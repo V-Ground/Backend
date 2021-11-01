@@ -43,4 +43,13 @@ public class Course {
         this.visibility = false;
     }
 
+    /**
+     * 파라미터로 들어오는 user 가 동일한 user 인지 확인한다.
+     *
+     * @param userId : 비교할 User 의 id
+     * @return 동일한 사용자라면 true
+     */
+    public boolean isOwner(Long userId) {
+        return userId.equals(this.id);
+    }
 }

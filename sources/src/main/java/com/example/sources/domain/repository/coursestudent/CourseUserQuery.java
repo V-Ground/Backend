@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface CourseUserQuery {
     List<CourseResponseData> findAllByUserId(Long userId);
+    Boolean existsByCourseIdAndUserId(Long courseId, Long userId);
 }

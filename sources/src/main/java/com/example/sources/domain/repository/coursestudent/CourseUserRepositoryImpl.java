@@ -31,6 +31,18 @@ public class CourseUserRepositoryImpl implements CourseUserQuery {
                 .fetch();
     }
 
+    @Override
+    public Boolean existsByCourseIdAndUserId(Long courseId, Long userId) {
+        Integer fetchOne = queryFactory
+                .selectOne()
+                .from(courseUser)
+                .where(courseUser.course.id.eq(courseId)
+                        .and(courseUser.user.id.eq(userId)))
+                .fetchFirst();
+
+        return fetchOne != null;
+    }
+
     private static QBean<CourseResponseData> getCourseListSelectFields() {
         return Projections.fields(CourseResponseData.class,
                 course.id.as("courseId"),

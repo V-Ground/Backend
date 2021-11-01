@@ -50,7 +50,7 @@ public class EvaluationController {
     }
 
     @GetMapping("/{evaluationId}/quizzes")
-    @PreAuthorize("isAuthenticated() and hasAnyAuthority('USER')")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('STUDENT')")
     public ResponseEntity<List<QuizResponseData>> getAllEvaluationQuiz(@PathVariable Long evaluationId) {
         return ResponseEntity.status(HttpStatus.CREATED).body(quizService.getAllQuizzes(evaluationId));
     }

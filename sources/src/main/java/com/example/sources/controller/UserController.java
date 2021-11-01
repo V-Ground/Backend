@@ -22,7 +22,7 @@ public class UserController {
     private final QuizService quizService;
 
     @GetMapping("/{userId}/participating")
-    @PreAuthorize("isAuthenticated() and hasAnyAuthority('USER')")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('STUDENT')")
     public ResponseEntity<MyParticipatingResponseData> getMyParticipating(@PathVariable Long userId,
                                                                           UserAuthentication authentication) {
         Long tokenUserId = authentication.getUserId();
@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @PostMapping("/{userId}/evaluations/{evaluationId}/quizzes/{quizId}")
-    @PreAuthorize("isAuthenticated() and hasAnyAuthority('USER')")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('STUDENT')")
     public ResponseEntity submitEvaluationQuiz(@PathVariable Long userId,
                                                @PathVariable Long evaluationId,
                                                @PathVariable Long quizId,
@@ -53,7 +53,7 @@ public class UserController {
                 quizService.getAllSubmittedQuizAnswer(teacherId, evaluationId, studentId, tokenUserId));
     }
 
-    @PatchMapping("/{teacherId}/evaluations/{evaluationId}/quizzes/socring/{quizId}")
+    @PatchMapping("/{teacherId}/evaluations/{evaluationId}/quizzes/scoring/{quizId}")
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
     public ResponseEntity<List<SubmittedQuizResponseData>> scoringQuiz(@PathVariable Long teacherId,
                                                                        @PathVariable Long evaluationId,
