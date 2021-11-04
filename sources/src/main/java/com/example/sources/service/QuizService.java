@@ -1,7 +1,7 @@
 package com.example.sources.service;
 
 import com.example.sources.domain.dto.request.CreateQuizRequestData;
-import com.example.sources.domain.dto.request.ScoringQuizRequestData;
+import com.example.sources.domain.dto.request.ScoringRequestData;
 import com.example.sources.domain.dto.request.SolveQuizRequestData;
 import com.example.sources.domain.dto.response.CreateQuizResponseData;
 import com.example.sources.domain.dto.response.SubmittedQuizResponseData;
@@ -21,7 +21,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.module.FindException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -132,7 +131,7 @@ public class QuizService {
     public void scoreQuiz(Long teacherId,
                           Long evaluationId,
                           Long quizId,
-                          ScoringQuizRequestData request,
+                          ScoringRequestData request,
                           Long tokenUserId) {
 
         if(!teacherId.equals(tokenUserId)) {

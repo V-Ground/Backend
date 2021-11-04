@@ -91,7 +91,7 @@
 - **테스트 퀴즈 풀기** : POST `/api/v1/users/{userId}/evaluations/{evaluationId}/quizzes/{quizId}`
 - **특정 학셍이 제출한 퀴즈 정답 확인** : GET `/api/v1/users/${teacherId}/evaluations/{evaluationId}/users/{userId}/quizzes`
 - **과제 주관식 풀기** : POST `/api/v1/users/{userId}/course/{courseId}/assignments/{assignments}/questions/{questionId}`
-- **특정 학생이 제출한 과제 정답 확인** : POST `/api/v1/users/{teacherId}/courses/{courseId}/assignments/{assignmentId}/users/{userId}/questions`
+- **특정 학생이 제출한 과제 정답 확인** : POST `/api/v1/users/{teacherId}/courses/{courseId}/assignments/{assignmentId}/questions/{questionId}`
 
 ## 강사
 
@@ -130,6 +130,5 @@
 - **과제 문제 생성** : POST `/api/v1/courses/{courseId}/assignments/{assignmentId}`
 - **과제 조회** : GET `/api/v1/courses/{courseId}/assignments`
 - **과제 상세 상세 조회** : GET `/api/v1/courses/{courseId}/assignments/{assignmentId}`
-- **과제 제출** : POST `/api/v1/users/{userId}/courses/{courseId}/assignments/{assignmentId}`
 
 ## 스냅샷

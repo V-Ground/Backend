@@ -1,10 +1,13 @@
 package com.example.sources.controller;
 
-import com.example.sources.domain.dto.request.ScoringQuizRequestData;
+import com.example.sources.domain.dto.request.ScoringRequestData;
+import com.example.sources.domain.dto.request.SolveQuestionRequestData;
 import com.example.sources.domain.dto.request.SolveQuizRequestData;
 import com.example.sources.domain.dto.response.MyParticipatingResponseData;
+import com.example.sources.domain.dto.response.SubmittedQuestionResponseData;
 import com.example.sources.domain.dto.response.SubmittedQuizResponseData;
 import com.example.sources.security.UserAuthentication;
+import com.example.sources.service.AssignmentService;
 import com.example.sources.service.QuizService;
 import com.example.sources.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +23,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     private final QuizService quizService;
+    private final AssignmentService assignmentService;
 
     @GetMapping("/{userId}/participating")
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('STUDENT')")
@@ -55,13 +59,51 @@ public class UserController {
 
     @PatchMapping("/{teacherId}/evaluations/{evaluationId}/quizzes/scoring/{quizId}")
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
-    public ResponseEntity<List<SubmittedQuizResponseData>> scoringQuiz(@PathVariable Long teacherId,
+    public ResponseEntity scoringQuiz(@PathVariable Long teacherId,
                                                                        @PathVariable Long evaluationId,
                                                                        @PathVariable Long quizId,
-                                                                       @RequestBody ScoringQuizRequestData request,
+                                                                       @RequestBody ScoringRequestData request,
                                                                        UserAuthentication authentication) {
         Long tokenUserId = authentication.getUserId();
         quizService.scoreQuiz(teacherId, evaluationId, quizId, request, tokenUserId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{teacherId}/courses/{courseId}/assignments/{assignmentId}/users/{userId}")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
+    public ResponseEntity<List<SubmittedQuestionResponseData>> getStudentQuestionSubmit(@PathVariable Long teacherId,
+                                                                                        @PathVariable Long courseId,
+                                                                                        @PathVariable Long assignmentId,
+                                                                                        @PathVariable Long userId,
+                                                                                        UserAuthentication authentication) {
+        Long tokenUserId = authentication.getUserId();
+        return ResponseEntity.ok(assignmentService
+                .getSubmittedQuestions(teacherId, courseId, assignmentId, userId, tokenUserId));
+    }
+
+    @PatchMapping("/{userId}/courses/{courseId}/assignments/{assignmentId}/questions/{questionId}")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('STUDENT')")
+    public ResponseEntity<SolveQuestionRequestData> solveQuestion(@PathVariable Long userId,
+                                        @PathVariable Long courseId,
+                                        @PathVariable Long assignmentId,
+                                        @PathVariable Long questionId,
+                                        @RequestBody SolveQuestionRequestData request,
+                                        UserAuthentication authentication) {
+        Long tokenUserId = authentication.getUserId();
+        return ResponseEntity.ok(assignmentService
+                .solveQuestion(userId, courseId, assignmentId, questionId, request, tokenUserId));
+    }
+
+    @PatchMapping("/{teacherId}/courses/{courseId}/assignments/{assignmentId}/scoring/{questionId}")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
+    public ResponseEntity scoringQuestion(@PathVariable Long teacherId,
+                                          @PathVariable Long courseId,
+                                          @PathVariable Long assignmentId,
+                                          @PathVariable Long questionId,
+                                          @RequestBody ScoringRequestData request,
+                                          UserAuthentication authentication) {
+        Long tokenUserId = authentication.getUserId();
+        assignmentService.scoreQuestion(teacherId, courseId, assignmentId, questionId, request, tokenUserId);
         return ResponseEntity.ok().build();
     }
 }

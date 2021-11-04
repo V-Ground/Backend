@@ -2,16 +2,17 @@ package com.example.sources.service;
 
 import com.example.sources.domain.dto.request.CreateAssignmentRequestData;
 import com.example.sources.domain.dto.request.CreateQuestionRequestData;
-import com.example.sources.domain.dto.response.AssignmentResponseData;
-import com.example.sources.domain.dto.response.CreateQuizResponseData;
-import com.example.sources.domain.entity.Assignment;
-import com.example.sources.domain.entity.Course;
-import com.example.sources.domain.entity.CourseQuestion;
+import com.example.sources.domain.dto.request.ScoringRequestData;
+import com.example.sources.domain.dto.request.SolveQuestionRequestData;
+import com.example.sources.domain.dto.response.*;
+import com.example.sources.domain.entity.*;
 import com.example.sources.domain.repository.assignment.AssignmentRepository;
 import com.example.sources.domain.repository.course.CourseRepository;
 import com.example.sources.domain.repository.coursequestion.CourseQuestionQuery;
 import com.example.sources.domain.repository.coursequestion.CourseQuestionRepository;
 import com.example.sources.domain.repository.coursestudent.CourseUserRepository;
+import com.example.sources.domain.repository.questionsubmit.QuestionSubmitRepository;
+import com.example.sources.domain.repository.user.UserRepository;
 import com.example.sources.exception.AuthenticationFailedException;
 import com.example.sources.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -30,6 +30,8 @@ public class AssignmentService {
     private final CourseRepository courseRepository;
     private final CourseUserRepository courseUserRepository;
     private final CourseQuestionRepository courseQuestionRepository;
+    private final QuestionSubmitRepository questionSubmitRepository;
+    private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
     /**
@@ -78,6 +80,15 @@ public class AssignmentService {
         return assignmentRepository.findAllByCourseId(courseId);
     }
 
+    /**
+     * 과제에 주관식 문제를 추가한다.
+     *
+     * @param courseId : 클래스의 id
+     * @param assignmentId : 과제의 id
+     * @param request : 추가할 주관식 문제의 Request DTO
+     * @param tokenUserId : 요청을 보낸 사용자의 userId
+     * @return 생성된 주관식 문제의 count
+     */
     public CreateQuizResponseData addQuestion(Long courseId,
                               Long assignmentId,
                               List<CreateQuestionRequestData> request,
@@ -103,5 +114,117 @@ public class AssignmentService {
         }
 
         return new CreateQuizResponseData(createdCount);
+    }
+
+    /**
+     * 과제의 세부 내용을 조회하고 과제의 설명과 주관식 문제 list 를 반환한다.
+     *
+     * @param courseId : 클래스 번호
+     * @param assignmentId : 조회하려는 과제의 번호
+     * @param userId : 사용자 id
+     * @param tokenUserId : 토큰에 포함된 사용자 id
+     * @return
+     */
+    public AssignmentDetailResponseData getAssignmentDetail(Long courseId,
+                                                            Long assignmentId,
+                                                            Long userId,
+                                                            Long tokenUserId) {
+        if(!userId.equals(tokenUserId)) {
+            throw new AuthenticationFailedException();
+        }
+
+        Boolean isParticipant = courseUserRepository.existsByCourseIdAndUserId(courseId, tokenUserId);
+
+        if(!isParticipant) {
+            throw new AuthenticationFailedException();
+        }
+
+        return courseQuestionRepository.findAssignmentDetailById(assignmentId).orElseThrow(
+                () -> new NotFoundException("과제 번호 " + assignmentId));
+    }
+
+    /**
+     * 학생이 과제를 제출한다.
+     *
+     * @param userId
+     * @param courseId
+     * @param assignmentId
+     * @param questionId
+     * @param tokenUserId
+     * @return
+     */
+    public SolveQuestionRequestData solveQuestion(Long userId,
+                                           Long courseId,
+                                           Long assignmentId,
+                                           Long questionId,
+                                           SolveQuestionRequestData request,
+                                           Long tokenUserId) {
+        if(!userId.equals(tokenUserId)) {
+            throw new AuthenticationFailedException();
+        }
+
+        CourseQuestion courseQuestion = courseQuestionRepository.findById(questionId).orElseThrow(
+                () -> new NotFoundException("과제 번호 " + questionId));
+        User user = userRepository.findById(tokenUserId).orElseThrow(
+                () -> new NotFoundException("사용자 번호 " + userId));
+
+        QuestionSubmit questionSubmit = modelMapper.map(request, QuestionSubmit.class);
+        questionSubmit.solve(courseQuestion, user);
+        QuestionSubmit savedQuestionSubmit = questionSubmitRepository.save(questionSubmit);
+
+        return modelMapper.map(savedQuestionSubmit, SolveQuestionRequestData.class);
+    }
+
+    /**
+     * 특정 학생이 제출한 모든 과제의 정답을 확인한다.
+     *
+     * @param teacherId
+     * @param courseId
+     * @param assignmentId
+     * @param userId
+     * @param tokenUserId
+     * @return 학생이 제출한 정답과 배점 DTO List
+     */
+    public List<SubmittedQuestionResponseData> getSubmittedQuestions(Long teacherId,
+                                                                     Long courseId,
+                                                                     Long assignmentId,
+                                                                     Long userId,
+                                                                     Long tokenUserId) {
+        if(!teacherId.equals(tokenUserId)) {
+            throw new AuthenticationFailedException();
+        }
+        Course course = courseRepository.findById(courseId).orElseThrow(
+                () -> new NotFoundException("클래스 번호 " + courseId));
+
+        if(!course.isOwner(teacherId)) {
+            throw new AuthenticationFailedException();
+        }
+
+        return questionSubmitRepository.findAllByAssignmentIdAndUserId(assignmentId, userId);
+    }
+
+    /**
+     * 학생이 제출한 정답을 비교하여 과제를 체점한다.
+     *
+     * @param teacherId
+     * @param courseId
+     * @param assignmentId
+     * @param questionId
+     * @param request
+     * @param tokenUserId
+     */
+    public void scoreQuestion(Long teacherId,
+                              Long courseId,
+                              Long assignmentId,
+                              Long questionId,
+                              ScoringRequestData request,
+                              Long tokenUserId) {
+        if(!teacherId.equals(tokenUserId)) {
+            throw new AuthenticationFailedException();
+        }
+
+        CourseQuestion courseQuestion = courseQuestionRepository.findById(questionId)
+                .orElseThrow(() -> new NotFoundException("주관식 번호 " + questionId));
+
     }
 }

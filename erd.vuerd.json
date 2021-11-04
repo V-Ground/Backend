@@ -2,7 +2,7 @@
   "canvas": {
     "width": 2000,
     "height": 2000,
-    "scrollTop": 425,
+    "scrollTop": 475.83331298828125,
     "scrollLeft": 0,
     "show": {
       "tableComment": true,
@@ -840,7 +840,7 @@
         "id": "3cf487e0-acde-e020-9e5e-7dfc68d6b1bc"
       },
       {
-        "name": "ASSIGNMENT_SUBMIT",
+        "name": "QUESTION_SUBMIT",
         "comment": "학생이 제출한 문제의 정답 연관관계 테이블",
         "columns": [
           {
@@ -963,8 +963,8 @@
           "active": false,
           "left": 18.960000431441998,
           "top": 1019.959998274235,
-          "zIndex": 1281,
-          "widthName": 124,
+          "zIndex": 1315,
+          "widthName": 109,
           "widthComment": 221
         },
         "id": "edced2bb-698e-e302-e41c-c90e9477f7e8"

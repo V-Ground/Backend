@@ -1,14 +1,18 @@
 package com.example.sources.domain.repository.assignment;
 
+import com.example.sources.domain.dto.response.AssignmentDetailResponseData;
 import com.example.sources.domain.dto.response.AssignmentResponseData;
+import com.example.sources.domain.dto.response.QuestionResponseData;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.example.sources.domain.entity.QAssignment.assignment;
+import static com.example.sources.domain.entity.QCourseQuestion.courseQuestion;
 
 public class AssignmentRepositoryImpl implements AssignmentQuery {
     private final JPAQueryFactory queryFactory;

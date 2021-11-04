@@ -3,6 +3,7 @@ package com.example.sources.controller;
 import com.example.sources.domain.dto.request.CreateAssignmentRequestData;
 import com.example.sources.domain.dto.request.CreateCourseRequestData;
 import com.example.sources.domain.dto.request.CreateQuestionRequestData;
+import com.example.sources.domain.dto.response.AssignmentDetailResponseData;
 import com.example.sources.domain.dto.response.AssignmentResponseData;
 import com.example.sources.domain.dto.response.CreateCourseResponseData;
 import com.example.sources.domain.dto.response.CreateQuizResponseData;
@@ -61,12 +62,22 @@ public class CourseController {
     }
 
     @PostMapping("/{courseId}/assignments/{assignmentId}")
-    @PreAuthorize("isAuthenticated() and hasAnyAuthority('STUDENT')")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
     public ResponseEntity<CreateQuizResponseData> addQuestion(@PathVariable Long courseId,
                                                               @PathVariable Long assignmentId,
                                                               @RequestBody List<CreateQuestionRequestData> request,
                                                               UserAuthentication authentication) {
         Long tokenUserId = authentication.getUserId();
         return ResponseEntity.ok(assignmentService.addQuestion(courseId, assignmentId, request, tokenUserId));
+    }
+
+    @GetMapping("/{courseId}/assignments/{assignmentId}/users/{userId}")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('STUDENT')")
+    public ResponseEntity<AssignmentDetailResponseData> getAssignment(@PathVariable Long courseId,
+                                                                      @PathVariable Long assignmentId,
+                                                                      @PathVariable Long userId,
+                                                                      UserAuthentication authentication) {
+        Long tokenUserId = authentication.getUserId();
+        return ResponseEntity.ok(assignmentService.getAssignmentDetail(courseId, assignmentId, userId, tokenUserId));
     }
 }
