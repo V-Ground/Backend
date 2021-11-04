@@ -25,8 +25,9 @@ public class AssignmentRepositoryImpl implements AssignmentQuery {
     public List<AssignmentResponseData> findAllByCourseId(Long courseId) {
         return queryFactory
                 .select(Projections.fields(AssignmentResponseData.class,
-                        assignment.id,
+                        assignment.id.as("assignmentId"),
                         assignment.title,
+                        assignment.description,
                         assignment.startedAt,
                         assignment.endedAt))
                 .from(assignment)

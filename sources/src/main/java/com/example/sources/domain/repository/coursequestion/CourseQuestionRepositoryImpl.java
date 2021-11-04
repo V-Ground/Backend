@@ -27,7 +27,7 @@ public class CourseQuestionRepositoryImpl implements CourseQuestionQuery {
 
         List<QuestionResponseData> fetch = queryFactory
                 .select(Projections.fields(QuestionResponseData.class,
-                        courseQuestion.id.as("questionId)"),
+                        courseQuestion.id.as("questionId"),
                         courseQuestion.question,
                         courseQuestion.description,
                         courseQuestion.score))

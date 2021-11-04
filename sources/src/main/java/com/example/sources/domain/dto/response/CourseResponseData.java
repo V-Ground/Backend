@@ -2,10 +2,10 @@ package com.example.sources.domain.dto.response;
 
 import lombok.*;
 
+@ToString
 @Getter @Setter @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class CourseResponseData {
     private Long courseId;
     private String title;

@@ -1,4 +1,4 @@
-package com.example.sources.domain.repository;
+package com.example.sources.domain.repository.evaluation;
 
 import com.example.sources.domain.entity.Evaluation;
 import com.example.sources.domain.entity.EvaluationQuiz;

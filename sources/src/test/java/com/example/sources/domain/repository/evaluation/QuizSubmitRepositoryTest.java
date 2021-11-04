@@ -1,4 +1,4 @@
-package com.example.sources.domain.repository;
+package com.example.sources.domain.repository.evaluation;
 
 import com.example.sources.domain.dto.response.SubmittedQuizResponseData;
 import com.example.sources.domain.entity.*;

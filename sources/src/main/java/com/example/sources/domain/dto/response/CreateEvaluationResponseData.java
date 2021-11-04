@@ -2,6 +2,7 @@ package com.example.sources.domain.dto.response;
 
 import lombok.*;
 
+@ToString
 @Getter @Setter @Builder
 @NoArgsConstructor
 @AllArgsConstructor
