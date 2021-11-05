@@ -32,10 +32,12 @@ public class CourseQuestionRepositoryImpl implements CourseQuestionQuery {
                         courseQuestion.description,
                         courseQuestion.score))
                 .from(courseQuestion)
-                .join(assignment)
-                .on(courseQuestion.id.eq(assignment.id))
+                .join(courseQuestion.assignment, assignment)
                 .where(assignment.id.eq(assignmentId))
                 .fetch();
+        for (QuestionResponseData questionResponseData : fetch) {
+            System.out.println("questionResponseData = " + questionResponseData);
+        }
 
         AssignmentResponseData fetchOne = queryFactory
                 .select(Projections.fields(AssignmentResponseData.class,

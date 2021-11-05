@@ -5,7 +5,7 @@ import lombok.*;
 import java.util.List;
 
 @ToString
-@Getter @Setter
+@Getter @Setter @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class AssignmentDetailResponseData {

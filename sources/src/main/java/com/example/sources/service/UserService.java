@@ -3,7 +3,7 @@ package com.example.sources.service;
 import com.example.sources.domain.dto.response.CourseResponseData;
 import com.example.sources.domain.dto.response.EvaluationResponseData;
 import com.example.sources.domain.dto.response.MyParticipatingResponseData;
-import com.example.sources.domain.repository.coursestudent.CourseUserRepository;
+import com.example.sources.domain.repository.courseuser.CourseUserRepository;
 import com.example.sources.domain.repository.evaluationuser.EvaluationUserRepository;
 import com.example.sources.domain.repository.user.UserRepository;
 import com.example.sources.exception.AuthenticationFailedException;

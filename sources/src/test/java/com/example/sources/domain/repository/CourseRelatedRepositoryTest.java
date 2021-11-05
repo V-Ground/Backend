@@ -1,16 +1,16 @@
-package com.example.sources.domain.repository.course;
+package com.example.sources.domain.repository;
 
 import com.example.sources.domain.dto.response.AssignmentDetailResponseData;
 import com.example.sources.domain.dto.response.AssignmentResponseData;
 import com.example.sources.domain.dto.response.CourseResponseData;
+import com.example.sources.domain.dto.response.SubmittedQuestionResponseData;
 import com.example.sources.domain.entity.*;
 import com.example.sources.domain.repository.assignment.AssignmentRepository;
 import com.example.sources.domain.repository.course.CourseRepository;
 import com.example.sources.domain.repository.coursequestion.CourseQuestionRepository;
-import com.example.sources.domain.repository.coursestudent.CourseUserRepository;
+import com.example.sources.domain.repository.courseuser.CourseUserRepository;
 import com.example.sources.domain.repository.questionsubmit.QuestionSubmitRepository;
 import com.example.sources.domain.repository.user.UserRepository;
-import com.example.sources.domain.type.OsType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,13 +19,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @Transactional
-class CourseRepositoryTest {
+class CourseRelatedRepositoryTest {
     @Autowired
     private CourseRepository courseRepository;
     @Autowired
@@ -132,6 +131,21 @@ class CourseRepositoryTest {
     @DisplayName("특정 assignment 에 소속된 모든 주관식 문제 조회")
     void getAllQuestionByAssignment() {
         AssignmentDetailResponseData questions = courseQuestionRepository.findAssignmentDetailById(1L).get();
-        System.out.println("questions = " + questions);
+
+        assertAll(
+                () -> assertNotNull(questions.getAssignment()),
+                () -> assertEquals(2, questions.getQuestions().size())
+        );
+    }
+
+    @Test
+    @DisplayName("학생이 제출한 과제의 정답 확인")
+    void getAllSubmittedQuestions() {
+        List<SubmittedQuestionResponseData> submittedQuestions = questionSubmitRepository
+                .findAllByAssignmentIdAndUserId(1L, 10L);
+
+        for (SubmittedQuestionResponseData submittedQuestion : submittedQuestions) {
+            System.out.println("submittedQuestion = " + submittedQuestion);
+        }
     }
 }

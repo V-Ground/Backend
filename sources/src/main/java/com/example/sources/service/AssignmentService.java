@@ -8,9 +8,8 @@ import com.example.sources.domain.dto.response.*;
 import com.example.sources.domain.entity.*;
 import com.example.sources.domain.repository.assignment.AssignmentRepository;
 import com.example.sources.domain.repository.course.CourseRepository;
-import com.example.sources.domain.repository.coursequestion.CourseQuestionQuery;
 import com.example.sources.domain.repository.coursequestion.CourseQuestionRepository;
-import com.example.sources.domain.repository.coursestudent.CourseUserRepository;
+import com.example.sources.domain.repository.courseuser.CourseUserRepository;
 import com.example.sources.domain.repository.questionsubmit.QuestionSubmitRepository;
 import com.example.sources.domain.repository.user.UserRepository;
 import com.example.sources.exception.AuthenticationFailedException;
@@ -107,7 +106,7 @@ public class AssignmentService {
         int createdCount = 0;
 
         for (CreateQuestionRequestData createQuestionRequestData : request) {
-            CourseQuestion courseQuestion = modelMapper.map(request, CourseQuestion.class);
+            CourseQuestion courseQuestion = modelMapper.map(createQuestionRequestData, CourseQuestion.class);
             courseQuestion.create(assignment);
             courseQuestionRepository.save(courseQuestion);
             createdCount++;
@@ -146,12 +145,12 @@ public class AssignmentService {
     /**
      * 학생이 과제를 제출한다.
      *
-     * @param userId
-     * @param courseId
-     * @param assignmentId
-     * @param questionId
-     * @param tokenUserId
-     * @return
+     * @param userId : 과제를 제출한 학생의 userId
+     * @param courseId : 과제를 포함하는 courseId
+     * @param assignmentId : 과제 번호
+     * @param questionId : 주관식 번호
+     * @param tokenUserId : 요청을 보내는 토큰에 포함된 userId
+     * @return 제출한 정답의 DTO
      */
     public SolveQuestionRequestData solveQuestion(Long userId,
                                            Long courseId,

@@ -1,4 +1,4 @@
-package com.example.sources.domain.repository.coursestudent;
+package com.example.sources.domain.repository.courseuser;
 
 import com.example.sources.domain.dto.response.CourseResponseData;
 import com.querydsl.core.types.Projections;
