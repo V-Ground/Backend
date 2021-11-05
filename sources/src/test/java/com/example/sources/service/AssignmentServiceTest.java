@@ -2,14 +2,9 @@ package com.example.sources.service;
 
 import com.example.sources.domain.dto.request.CreateAssignmentRequestData;
 import com.example.sources.domain.dto.request.CreateQuestionRequestData;
-import com.example.sources.domain.dto.response.AssignmentDetailResponseData;
-import com.example.sources.domain.dto.response.AssignmentResponseData;
-import com.example.sources.domain.dto.response.CreateQuizResponseData;
-import com.example.sources.domain.dto.response.QuestionResponseData;
-import com.example.sources.domain.entity.Assignment;
-import com.example.sources.domain.entity.Course;
-import com.example.sources.domain.entity.CourseQuestion;
-import com.example.sources.domain.entity.User;
+import com.example.sources.domain.dto.request.SolveQuestionRequestData;
+import com.example.sources.domain.dto.response.*;
+import com.example.sources.domain.entity.*;
 import com.example.sources.domain.repository.assignment.AssignmentRepository;
 import com.example.sources.domain.repository.course.CourseRepository;
 import com.example.sources.domain.repository.coursequestion.CourseQuestionRepository;
@@ -36,6 +31,7 @@ class AssignmentServiceTest {
     private static final Long TEACHER_ID = 1L;
     private static final Long STUDENT_ID = 2L;
     private static final Long ASSIGNMENT_ID = 1L;
+    private static final Long COURSE_QUESTION_ID = 1L;
     private static final Long VALID_TOKEN_TEACHER_ID = 1L;
     private static final Long VALID_TOKEN_STUDENT_ID = 2L;
 
@@ -63,7 +59,10 @@ class AssignmentServiceTest {
         Assignment assignment = Assignment.builder().title("과제1").description("과제 설명").course(course).build();
         List<QuestionResponseData> questions = List.of(new QuestionResponseData(), new QuestionResponseData());
 
-        given(courseRepository.findById(COURSE_ID)) // 과제 생성, 모든 과제 조회, 주관식 생성
+        given(userRepository.findById(STUDENT_ID))
+                .willReturn(Optional.of(new User()));
+
+        given(courseRepository.findById(COURSE_ID)) // 과제 생성, 모든 과제 조회, 주관식 생성, 주관식 정답 제출
                 .willReturn(Optional.of(course));
 
         given(assignmentRepository.save(any())) // 과제 생성
@@ -87,6 +86,15 @@ class AssignmentServiceTest {
         given(courseQuestionRepository.findAssignmentDetailById(ASSIGNMENT_ID)) // 과제 세부 내용 조회(주관식)
                 .willReturn(Optional.of(AssignmentDetailResponseData.builder()
                         .assignment(new AssignmentResponseData()).questions(questions).build()));
+
+        given(courseQuestionRepository.findById(COURSE_QUESTION_ID))
+                .willReturn(Optional.of(new CourseQuestion()));
+
+        given(questionSubmitRepository.save(any()))
+                .willReturn(new QuestionSubmit());
+
+        given(questionSubmitRepository.findAllByAssignmentIdAndUserId(ASSIGNMENT_ID, STUDENT_ID))
+                .willReturn(List.of(new SubmittedQuestionResponseData()));
     }
 
     @Test
@@ -133,5 +141,23 @@ class AssignmentServiceTest {
         );
     }
 
+    @Test
+    @DisplayName("주관식 정답 제출 - 성공")
+    void solveQuestion() {
+        SolveQuestionRequestData request = new SolveQuestionRequestData("학생이 제출한 정답");
 
+        SolveQuestionRequestData response = assignmentService
+                .solveQuestion(STUDENT_ID, COURSE_ID, ASSIGNMENT_ID, COURSE_QUESTION_ID, request, VALID_TOKEN_STUDENT_ID);
+
+        assertNotNull(response);
+    }
+
+    @Test
+    @DisplayName("학생이 제출한 정답 확인하기")
+    void getSubmittedQuestions() {
+        List<SubmittedQuestionResponseData> answers = assignmentService
+                .getSubmittedQuestions(TEACHER_ID, COURSE_ID, ASSIGNMENT_ID, STUDENT_ID, VALID_TOKEN_TEACHER_ID);
+
+        assertEquals(1, answers.size());
+    }
 }

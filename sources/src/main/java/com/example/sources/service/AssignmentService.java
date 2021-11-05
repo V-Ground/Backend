@@ -177,11 +177,11 @@ public class AssignmentService {
     /**
      * 특정 학생이 제출한 모든 과제의 정답을 확인한다.
      *
-     * @param teacherId
-     * @param courseId
-     * @param assignmentId
-     * @param userId
-     * @param tokenUserId
+     * @param teacherId : 강사의 id
+     * @param courseId : 강사가 소속된 course 의 id
+     * @param assignmentId : 과제의 id
+     * @param userId : 채점하려는 학생의 id
+     * @param tokenUserId : 강사의 요청 토큰에 포함된 userId
      * @return 학생이 제출한 정답과 배점 DTO List
      */
     public List<SubmittedQuestionResponseData> getSubmittedQuestions(Long teacherId,
@@ -205,8 +205,8 @@ public class AssignmentService {
     /**
      * 학생이 제출한 정답을 비교하여 과제를 체점한다.
      *
-     * @param teacherId
-     * @param courseId
+     * @param teacherId : 강사의 ID
+     * @param courseId :
      * @param assignmentId
      * @param questionId
      * @param request
