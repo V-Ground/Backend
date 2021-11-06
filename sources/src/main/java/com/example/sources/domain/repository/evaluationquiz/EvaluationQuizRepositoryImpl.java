@@ -10,11 +10,11 @@ import java.util.List;
 import static com.example.sources.domain.entity.QEvaluationQuiz.evaluationQuiz;
 import static com.example.sources.domain.entity.QEvaluation.evaluation;
 
-public class EvaluationQuizRepositoryImplQuery implements EvaluationQuizQuery {
+public class EvaluationQuizRepositoryImpl implements EvaluationQuizQuery {
 
     private final JPAQueryFactory queryFactory;
 
-    public EvaluationQuizRepositoryImplQuery(EntityManager em) {
+    public EvaluationQuizRepositoryImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
@@ -28,7 +28,7 @@ public class EvaluationQuizRepositoryImplQuery implements EvaluationQuizQuery {
                         evaluationQuiz.score))
                 .from(evaluationQuiz)
                 .innerJoin(evaluationQuiz.evaluation, evaluation)
-                .on(evaluation.id.eq(evaluationId))
+                .where(evaluation.id.eq(evaluationId))
                 .fetch();
     }
 }

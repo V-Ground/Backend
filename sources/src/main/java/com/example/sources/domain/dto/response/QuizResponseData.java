@@ -10,5 +10,5 @@ public class QuizResponseData {
     private Long quizId;
     private String question;
     private String description;
-    private String score;
+    private Integer score;
 }

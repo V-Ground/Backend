@@ -30,7 +30,7 @@ public class EvaluationService {
     public CreateEvaluationResponseData addEvaluation(CreateEvaluationRequestData request) {
         Long userId = request.getUserId();
         User teacher = userRepository.findById(userId).orElseThrow(
-                () -> new UserNotFoundException("uid: " + userId));
+                () -> new UserNotFoundException("사용자 번호 " + userId));
 
         Evaluation evaluation = modelMapper.map(request, Evaluation.class);
         evaluation.create(teacher);
