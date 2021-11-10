@@ -28,14 +28,13 @@ public class AuthenticationService {
     private final RoleRepository roleRepository;
     private final ModelMapper modelMapper;
     private final TokenUtil tokenUtil;
-    private final CookieUtil cookieUtil;
     private final PasswordEncoder passwordEncoder;
 
     /**
      * username 과 email 을 받아 로그인한다.
      *
      * @param request Login 에 필요한 DTO
-     * @return email, name 을 포함한 DTO
+     * @return email, name, 권한을 포함한 DTO
      */
     public LoginResponseData login(LoginRequestData request) {
         String email = request.getEmail();
@@ -50,7 +49,22 @@ public class AuthenticationService {
             throw new LoginFailedException();
         }
 
-        return modelMapper.map(user, LoginResponseData.class);
+        List<Role> roles = roleRepository.findAllByUserId(user.getId());
+
+        LoginResponseData responseData = modelMapper.map(user, LoginResponseData.class);
+        int size = roles.size();
+
+        String role;
+
+        if(size == 3) {
+            role = "관리자";
+        }else if(size == 2) {
+            role = "강사";
+        }else {
+            role = "학생";
+        }
+        responseData.setRole(role);
+        return responseData;
     }
 
     /**
