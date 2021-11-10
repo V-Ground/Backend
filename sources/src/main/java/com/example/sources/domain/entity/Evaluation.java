@@ -17,7 +17,7 @@ public class Evaluation {
     private String description;
     private String cpu;
     private String memory;
-    private OsType os;
+    private String os;
     private Boolean visibility;
 
     @ManyToOne(fetch = FetchType.LAZY)

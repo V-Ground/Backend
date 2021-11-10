@@ -5,6 +5,7 @@ import com.example.sources.domain.dto.request.CreateQuizRequestData;
 import com.example.sources.domain.dto.response.CreateEvaluationResponseData;
 import com.example.sources.domain.dto.response.CreateQuizResponseData;
 import com.example.sources.domain.dto.response.QuizResponseData;
+import com.example.sources.security.UserAuthentication;
 import com.example.sources.service.EvaluationService;
 import com.example.sources.service.QuizService;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +25,16 @@ public class EvaluationController {
 
     @PostMapping
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
-    public ResponseEntity<CreateEvaluationResponseData> create(@RequestBody CreateEvaluationRequestData request) {
+    public ResponseEntity<CreateEvaluationResponseData> add(@RequestBody CreateEvaluationRequestData request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(evaluationService.addEvaluation(request));
+    }
+
+    @GetMapping("/{evaluationId}/invite/students/{studentId}")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
+    public ResponseEntity invite_need_delete_this_method(@PathVariable Long evaluationId,
+                                                         @PathVariable Long studentId) {
+        evaluationService.invite_test_need_delete(evaluationId, studentId);
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{evaluationId}/disable")
@@ -42,6 +51,11 @@ public class EvaluationController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @GetMapping("/{evaluationId}")
+    public ResponseEntity getEvaluationDetail(@PathVariable Long evaluationId) {
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/{evaluationId}/quizzes")
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
     public ResponseEntity<CreateQuizResponseData> addEvaluationQuiz(@PathVariable Long evaluationId,
@@ -52,6 +66,6 @@ public class EvaluationController {
     @GetMapping("/{evaluationId}/quizzes")
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('STUDENT')")
     public ResponseEntity<List<QuizResponseData>> getAllEvaluationQuiz(@PathVariable Long evaluationId) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(quizService.getAllQuizzes(evaluationId));
+        return ResponseEntity.ok(quizService.getAllQuizzes(evaluationId));
     }
 }

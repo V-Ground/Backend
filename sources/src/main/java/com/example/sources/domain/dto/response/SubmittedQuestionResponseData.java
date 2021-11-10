@@ -10,4 +10,5 @@ public class SubmittedQuestionResponseData {
     private Long questionId;
     private String question;
     private String submittedAnswer;
+    private Integer scored;
 }

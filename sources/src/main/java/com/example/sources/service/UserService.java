@@ -3,6 +3,7 @@ package com.example.sources.service;
 import com.example.sources.domain.dto.response.CourseResponseData;
 import com.example.sources.domain.dto.response.EvaluationResponseData;
 import com.example.sources.domain.dto.response.MyParticipatingResponseData;
+import com.example.sources.domain.repository.course.CourseRepository;
 import com.example.sources.domain.repository.courseuser.CourseUserRepository;
 import com.example.sources.domain.repository.evaluationuser.EvaluationUserRepository;
 import com.example.sources.domain.repository.user.UserRepository;
@@ -12,13 +13,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
 @Transactional
 public class UserService {
     private final UserRepository userRepository;
+    private final CourseRepository courseRepository;
     private final CourseUserRepository courseUserRepository;
     private final EvaluationUserRepository evaluationUserRepository;
 

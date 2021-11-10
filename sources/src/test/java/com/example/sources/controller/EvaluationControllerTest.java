@@ -1,15 +1,15 @@
 package com.example.sources.controller;
 
-import com.example.sources.domain.dto.request.CreateAssignmentRequestData;
-import com.example.sources.domain.dto.request.CreateCourseRequestData;
-import com.example.sources.domain.dto.request.CreateQuestionRequestData;
-import com.example.sources.domain.dto.response.*;
+import com.example.sources.domain.dto.request.CreateEvaluationRequestData;
+import com.example.sources.domain.dto.request.CreateQuizRequestData;
+import com.example.sources.domain.dto.response.CreateEvaluationResponseData;
+import com.example.sources.domain.dto.response.CreateQuizResponseData;
+import com.example.sources.domain.dto.response.QuizResponseData;
 import com.example.sources.domain.entity.Role;
 import com.example.sources.domain.type.RoleType;
-import com.example.sources.security.UserAuthentication;
-import com.example.sources.service.AssignmentService;
 import com.example.sources.service.AuthenticationService;
-import com.example.sources.service.CourseService;
+import com.example.sources.service.EvaluationService;
+import com.example.sources.service.QuizService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,13 +17,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.servlet.http.Cookie;
-import java.util.Arrays;
+
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -32,8 +34,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(CourseController.class)
-class CourseControllerTest {
+@WebMvcTest(EvaluationController.class)
+class EvaluationControllerTest {
 
     private static final Cookie[] TEACHER_COOKIES = {new Cookie("accessToken", "a.b.c")};
     private static final Cookie[] STUDENT_COOKIES = {new Cookie("accessToken", "d.e.f")};
@@ -43,8 +45,7 @@ class CourseControllerTest {
     private static final Long TEACHER_TOKEN_ID = 1L;
     private static final Long STUDENT_ID = 2L;
     private static final Long STUDENT_TOKEN_ID = 2L;
-    private static final Long COURSE_ID = 1L;
-    private static final Long ASSIGNMENT_ID = 1L;
+    private static final Long EVALUATION_ID = 1L;
 
     @Autowired
     private MockMvc mockMvc;
@@ -54,13 +55,12 @@ class CourseControllerTest {
     @MockBean
     private AuthenticationService authenticationService;
     @MockBean
-    private CourseService courseService;
+    private EvaluationService evaluationService;
     @MockBean
-    private AssignmentService assignmentService;
+    private QuizService quizService;
 
     @BeforeEach
     void setUp() {
-
         given(authenticationService.getTokenFromCookies(TEACHER_COOKIES))
                 .willReturn(TEACHER_TOKEN);
         given(authenticationService.parseToken(TEACHER_TOKEN))
@@ -77,28 +77,22 @@ class CourseControllerTest {
         given(authenticationService.getRoles(STUDENT_ID))
                 .willReturn(List.of(new Role(STUDENT_ID, RoleType.STUDENT)));
 
-        given(courseService.addCourse(any(CreateCourseRequestData.class)))
-                .willReturn(new CreateCourseResponseData());
+        given(evaluationService.addEvaluation(any()))
+                .willReturn(new CreateEvaluationResponseData());
 
-        given(assignmentService.addAssignment(eq(COURSE_ID), any(), eq(TEACHER_TOKEN_ID)))
-                .willReturn(new AssignmentResponseData());
-
-        given(assignmentService.getAssignments(COURSE_ID, STUDENT_TOKEN_ID))
-                .willReturn(List.of(new AssignmentResponseData()));
-
-        given(assignmentService.addQuestion(eq(COURSE_ID), eq(ASSIGNMENT_ID), any(), eq(TEACHER_TOKEN_ID)))
+        given(quizService.addEvaluationQuiz(eq(EVALUATION_ID), any()))
                 .willReturn(new CreateQuizResponseData());
 
-        given(assignmentService.getAssignmentDetail(COURSE_ID, ASSIGNMENT_ID, STUDENT_ID, STUDENT_TOKEN_ID))
-                .willReturn(new QuestionWithSubmittedResponseData());
+        given(quizService.getAllQuizzes(EVALUATION_ID))
+                .willReturn(List.of(new QuizResponseData()));
     }
 
     @Test
-    @DisplayName("클래스 생성 성공")
-    void addCourse_success() throws Exception {
-        CreateCourseRequestData request = new CreateCourseRequestData();
+    @DisplayName("테스트 생성")
+    void addEvaluation() throws Exception {
+        CreateEvaluationRequestData request = new CreateEvaluationRequestData();
 
-        mockMvc.perform(post("/api/v1/courses")
+        mockMvc.perform(post("/api/v1/evaluations")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
                         .cookie(TEACHER_COOKIES))
@@ -107,11 +101,11 @@ class CourseControllerTest {
     }
 
     @Test
-    @DisplayName("클래스 과제 생성")
-    void addAssignment_success() throws Exception {
-        CreateAssignmentRequestData request = new CreateAssignmentRequestData();
+    @DisplayName("테스트 퀴즈 추가")
+    void addEvaluationQuiz() throws Exception {
+        List<CreateQuizRequestData> request = List.of(new CreateQuizRequestData());
 
-        mockMvc.perform(post("/api/v1/courses/{courseId}/assignments", COURSE_ID)
+        mockMvc.perform(post("/api/v1/evaluations/{evaluationId}/quizzes", EVALUATION_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
                         .cookie(TEACHER_COOKIES))
@@ -120,37 +114,11 @@ class CourseControllerTest {
     }
 
     @Test
-    @DisplayName("모든 과제 조회")
-    void getAssignments_success() throws Exception {
-        mockMvc.perform(get("/api/v1/courses/{courseId}/assignments", COURSE_ID)
+    @DisplayName("테스트 문제 모두 조회")
+    void  getAllEvaluationQuiz() throws Exception {
+        mockMvc.perform(get("/api/v1/evaluations/{evaluationId}/quizzes", EVALUATION_ID)
                         .cookie(STUDENT_COOKIES))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
-
-    @Test
-    @DisplayName("과제에 문제 생성")
-    void addAssignmentQuestion() throws Exception {
-        List<CreateQuestionRequestData> request = List.of(new CreateQuestionRequestData());
-
-        mockMvc.perform(post("/api/v1/courses/{courseId}/assignments/{assignmentId}", COURSE_ID, ASSIGNMENT_ID)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request))
-                        .cookie(TEACHER_COOKIES))
-                .andDo(print())
-                .andExpect(status().isCreated());
-    }
-
-    @Test
-    @DisplayName("과제 세부 내용 조회")
-    void getAssignment() throws Exception {
-        mockMvc.perform(get("/api/v1/courses/{courseId}/assignments/{assignmentId}/users/{userId}",
-                            COURSE_ID,
-                            ASSIGNMENT_ID,
-                            STUDENT_ID)
-                        .cookie(STUDENT_COOKIES))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
 }

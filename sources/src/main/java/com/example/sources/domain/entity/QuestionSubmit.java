@@ -26,11 +26,29 @@ public class QuestionSubmit {
     /**
      * 문제와 user 를 세팅하여 문제를 해결한다.
      *
-     * @param question
-     * @param user
+     * @param question : 문제
+     * @param user : 사용자
      */
     public void solve(CourseQuestion question, User user) {
         this.question = question;
         this.user = user;
+    }
+
+    /**
+     * 정답을 갱신한다.
+     *
+     * @param answer : 갱신할 정답
+     */
+    public void updateAnswer(String answer) {
+        this.answer = answer;
+    }
+
+    /**
+     * 점수를 입력한다.
+     *
+     * @param score : 입력할 점수
+     */
+    public void scoring(Integer score) {
+        this.scored = score;
     }
 }

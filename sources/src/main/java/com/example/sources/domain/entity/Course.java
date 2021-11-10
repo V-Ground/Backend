@@ -18,7 +18,7 @@ public class Course {
     private String description;
     private String cpu;
     private String memory;
-    private OsType os;
+    private String os;
     private Boolean visibility;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -50,6 +50,6 @@ public class Course {
      * @return 동일한 사용자라면 true
      */
     public boolean isOwner(Long userId) {
-        return userId.equals(this.id);
+        return userId.equals(this.teacher.getId());
     }
 }

@@ -3,9 +3,15 @@ package com.example.sources.service;
 import com.example.sources.domain.dto.request.CreateEvaluationRequestData;
 import com.example.sources.domain.dto.response.CreateEvaluationResponseData;
 import com.example.sources.domain.entity.Evaluation;
+import com.example.sources.domain.entity.EvaluationUser;
+import com.example.sources.domain.entity.Role;
 import com.example.sources.domain.entity.User;
 import com.example.sources.domain.repository.evaluation.EvaluationRepository;
+import com.example.sources.domain.repository.evaluationuser.EvaluationUserRepository;
+import com.example.sources.domain.repository.role.RoleRepository;
 import com.example.sources.domain.repository.user.UserRepository;
+import com.example.sources.domain.type.RoleType;
+import com.example.sources.exception.AuthenticationFailedException;
 import com.example.sources.exception.NotFoundException;
 import com.example.sources.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +19,16 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 @Transactional
 public class EvaluationService {
     private final EvaluationRepository evaluationRepository;
+    private final RoleRepository roleRepository;
     private final UserRepository userRepository;
+    private final EvaluationUserRepository evaluationUserRepository;
     private final ModelMapper modelMapper;
 
     /**
@@ -32,10 +42,23 @@ public class EvaluationService {
         User teacher = userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException("사용자 번호 " + userId));
 
+        List<Role> roles = roleRepository.findAllByUserId(userId);
+
+        if(!roles.contains(new Role(RoleType.TEACHER))) {
+            throw new AuthenticationFailedException();
+        }
+
         Evaluation evaluation = modelMapper.map(request, Evaluation.class);
         evaluation.create(teacher);
 
         Evaluation savedEvaluation = evaluationRepository.save(evaluation);
+
+        EvaluationUser evaluationUser = EvaluationUser.builder()
+                .evaluation(savedEvaluation)
+                .user(teacher)
+                .build();
+
+        evaluationUserRepository.save(evaluationUser);
 
         return modelMapper.map(savedEvaluation, CreateEvaluationResponseData.class);
     }
@@ -64,5 +87,20 @@ public class EvaluationService {
                 () -> new NotFoundException("테스트 번호 " + evaluationId));
         // TODO 평가를 삭제하기 전에 question 에서 평가에 해당하는 question 과 submit 을 먼저 삭제해야함
         evaluationRepository.delete(evaluation);
+    }
+
+    public void invite_test_need_delete(Long evaluationId, Long studentId) {
+
+        Evaluation evaluation = evaluationRepository.findById(evaluationId).orElseThrow(
+                () -> new NotFoundException("평가 번호 " + evaluationId));
+
+        User student = userRepository.findById(studentId).orElseThrow(
+                () -> new NotFoundException("사용자 번호 " + studentId));
+
+        EvaluationUser evaluationUser = EvaluationUser.builder()
+                .evaluation(evaluation)
+                .user(student)
+                .build();
+        evaluationUserRepository.save(evaluationUser);
     }
 }

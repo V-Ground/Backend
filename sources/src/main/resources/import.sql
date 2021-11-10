@@ -22,6 +22,3 @@ insert into role (id, role_type, user_id) values('8', 'STUDENT', '8');
 insert into role (id, role_type, user_id) values('9', 'TEACHER', '6');
 insert into role (id, role_type, user_id) values('10', 'TEACHER', '7');
 insert into role (id, role_type, user_id) values('11', 'TEACHER', '8');
-
-insert into os_type (id, type) values(1, 'UBUNTU_18_04')
-insert into os_type (id, type) values(2, 'UBUNTU_20_04')

@@ -3,9 +3,15 @@ package com.example.sources.service;
 import com.example.sources.domain.dto.request.CreateCourseRequestData;
 import com.example.sources.domain.dto.response.CreateCourseResponseData;
 import com.example.sources.domain.entity.Course;
+import com.example.sources.domain.entity.CourseUser;
+import com.example.sources.domain.entity.Role;
 import com.example.sources.domain.entity.User;
 import com.example.sources.domain.repository.course.CourseRepository;
+import com.example.sources.domain.repository.courseuser.CourseUserRepository;
+import com.example.sources.domain.repository.role.RoleRepository;
 import com.example.sources.domain.repository.user.UserRepository;
+import com.example.sources.domain.type.RoleType;
+import com.example.sources.exception.AuthenticationFailedException;
 import com.example.sources.exception.NotFoundException;
 import com.example.sources.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +19,16 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 @Transactional
 public class CourseService {
 
     private final CourseRepository courseRepository;
+    private final CourseUserRepository courseUserRepository;
+    private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
@@ -33,11 +43,24 @@ public class CourseService {
 
         User teacher = userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException("uid: " + userId));
+        List<Role> roles = roleRepository.findAllByUserId(userId);
+
+        if(!roles.contains(new Role(RoleType.TEACHER))) { // 클래스 주인이 관리자나 강사가 아닌 경우에
+            throw new AuthenticationFailedException();
+        }
 
         Course course = modelMapper.map(request, Course.class);
+
         course.create(teacher); // 강사 설정
 
         Course savedCourse = courseRepository.save(course);
+
+        CourseUser courseUser = CourseUser.builder() // 클래스에 강사를 허용
+                .course(savedCourse)
+                .user(teacher)
+                .build();
+
+        courseUserRepository.save(courseUser);
 
         return modelMapper.map(savedCourse, CreateCourseResponseData.class);
     }
@@ -68,4 +91,12 @@ public class CourseService {
         courseRepository.delete(course);
     }
 
+    public void invite_test_need_delete(Long courseId, Long studentId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new NotFoundException("클래스 번호 " + courseId));
+        User student = userRepository.findById(studentId).orElseThrow(
+                () -> new NotFoundException("사용자 번호 " + studentId));
+
+        courseUserRepository.save(CourseUser.builder().user(student).course(course).build());
+    }
 }

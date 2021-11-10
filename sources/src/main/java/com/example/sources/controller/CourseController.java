@@ -3,10 +3,7 @@ package com.example.sources.controller;
 import com.example.sources.domain.dto.request.CreateAssignmentRequestData;
 import com.example.sources.domain.dto.request.CreateCourseRequestData;
 import com.example.sources.domain.dto.request.CreateQuestionRequestData;
-import com.example.sources.domain.dto.response.AssignmentDetailResponseData;
-import com.example.sources.domain.dto.response.AssignmentResponseData;
-import com.example.sources.domain.dto.response.CreateCourseResponseData;
-import com.example.sources.domain.dto.response.CreateQuizResponseData;
+import com.example.sources.domain.dto.response.*;
 import com.example.sources.security.UserAuthentication;
 import com.example.sources.service.AssignmentService;
 import com.example.sources.service.CourseService;
@@ -27,7 +24,7 @@ public class CourseController {
 
     @PostMapping
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
-    public ResponseEntity<CreateCourseResponseData> create(@RequestBody CreateCourseRequestData request) {
+    public ResponseEntity<CreateCourseResponseData> addCourse(@RequestBody CreateCourseRequestData request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(courseService.addCourse(request));
     }
 
@@ -39,9 +36,18 @@ public class CourseController {
     }
 
     @DeleteMapping("/{courseId}")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
     public ResponseEntity delete(@PathVariable Long courseId) {
         courseService.deleteCourse(courseId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/{courseId}/invite/students/{studentId}")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
+    public ResponseEntity invite_need_delete_this_method(@PathVariable Long courseId,
+                                                         @PathVariable Long studentId) {
+        courseService.invite_test_need_delete(courseId, studentId);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{courseId}/assignments")
@@ -68,15 +74,16 @@ public class CourseController {
                                                               @RequestBody List<CreateQuestionRequestData> request,
                                                               UserAuthentication authentication) {
         Long tokenUserId = authentication.getUserId();
-        return ResponseEntity.ok(assignmentService.addQuestion(courseId, assignmentId, request, tokenUserId));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(assignmentService.addQuestion(courseId, assignmentId, request, tokenUserId));
     }
 
     @GetMapping("/{courseId}/assignments/{assignmentId}/users/{userId}")
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('STUDENT')")
-    public ResponseEntity<AssignmentDetailResponseData> getAssignment(@PathVariable Long courseId,
-                                                                      @PathVariable Long assignmentId,
-                                                                      @PathVariable Long userId,
-                                                                      UserAuthentication authentication) {
+    public ResponseEntity<QuestionWithSubmittedResponseData> getAssignment(@PathVariable Long courseId,
+                                                                           @PathVariable Long assignmentId,
+                                                                           @PathVariable Long userId,
+                                                                           UserAuthentication authentication) {
         Long tokenUserId = authentication.getUserId();
         return ResponseEntity.ok(assignmentService.getAssignmentDetail(courseId, assignmentId, userId, tokenUserId));
     }

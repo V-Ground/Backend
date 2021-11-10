@@ -132,12 +132,12 @@ class AssignmentServiceTest {
     @Test
     @DisplayName("과제 세부 내용 조회 - 성공")
     void getAssignmentDetail_success() {
-        AssignmentDetailResponseData response = assignmentService
+        QuestionWithSubmittedResponseData detail = assignmentService
                 .getAssignmentDetail(COURSE_ID, ASSIGNMENT_ID, STUDENT_ID, VALID_TOKEN_STUDENT_ID);
 
         assertAll(
-                () -> assertNotNull(response.getAssignment()),
-                () -> assertEquals(2, response.getQuestions().size())
+                () -> assertNotNull(detail.getQuestionDetail()),
+                () -> assertNotNull(detail.getSubmittedAnswerDetail())
         );
     }
 

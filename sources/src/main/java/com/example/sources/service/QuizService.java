@@ -71,8 +71,8 @@ public class QuizService {
      * @param request : 사용자의 정답 데이터
      * @param tokenUserId : 요청을 보낸 사용자의 userId
      */
-    public void solveEvaluationQuiz(Long quizId, SolveQuizRequestData request, Long targetId, Long tokenUserId) {
-        if(!targetId.equals(tokenUserId)) { // 제출하는 userId 와 저장하려는 userId 가 다른 경우
+    public void solveEvaluationQuiz(Long quizId, SolveQuizRequestData request, Long userId, Long tokenUserId) {
+        if(!userId.equals(tokenUserId)) { // 제출하는 userId 와 저장하려는 userId 가 다른 경우
             throw new AuthenticationFailedException();
         }
 

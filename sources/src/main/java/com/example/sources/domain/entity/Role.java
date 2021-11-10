@@ -21,4 +21,14 @@ public class Role {
         this.userId = userId;
         this.roleType = roleType;
     }
+
+    public Role(RoleType roleType) {
+        this.roleType = roleType;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Role role = (Role) obj;
+        return this.roleType.equals(role.getRoleType());
+    }
 }

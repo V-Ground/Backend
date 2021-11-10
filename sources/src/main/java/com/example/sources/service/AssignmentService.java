@@ -16,10 +16,12 @@ import com.example.sources.exception.AuthenticationFailedException;
 import com.example.sources.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -124,7 +126,7 @@ public class AssignmentService {
      * @param tokenUserId : 토큰에 포함된 사용자 id
      * @return
      */
-    public AssignmentDetailResponseData getAssignmentDetail(Long courseId,
+    public QuestionWithSubmittedResponseData getAssignmentDetail(Long courseId,
                                                             Long assignmentId,
                                                             Long userId,
                                                             Long tokenUserId) {
@@ -138,8 +140,13 @@ public class AssignmentService {
             throw new AuthenticationFailedException();
         }
 
-        return courseQuestionRepository.findAssignmentDetailById(assignmentId).orElseThrow(
+        AssignmentDetailResponseData questionDetail = courseQuestionRepository.findAssignmentDetailById(assignmentId).orElseThrow(
                 () -> new NotFoundException("과제 번호 " + assignmentId));
+
+        List<SubmittedQuestionResponseData> submittedAnswerDetail = questionSubmitRepository
+                .findAllByAssignmentIdAndUserId(assignmentId, userId);
+
+        return new QuestionWithSubmittedResponseData(questionDetail, submittedAnswerDetail);
     }
 
     /**
@@ -162,15 +169,34 @@ public class AssignmentService {
             throw new AuthenticationFailedException();
         }
 
+        courseRepository.findById(courseId).orElseThrow(
+                () -> new NotFoundException("클래스 번호 " + courseId));
+        assignmentRepository.findById(assignmentId).orElseThrow(
+                () -> new NotFoundException("과제 번호 " + assignmentId));
         CourseQuestion courseQuestion = courseQuestionRepository.findById(questionId).orElseThrow(
-                () -> new NotFoundException("과제 번호 " + questionId));
+                () -> new NotFoundException("주관식 번호 " + questionId));
         User user = userRepository.findById(tokenUserId).orElseThrow(
                 () -> new NotFoundException("사용자 번호 " + userId));
 
-        QuestionSubmit questionSubmit = modelMapper.map(request, QuestionSubmit.class);
-        questionSubmit.solve(courseQuestion, user);
-        QuestionSubmit savedQuestionSubmit = questionSubmitRepository.save(questionSubmit);
+        Boolean isMember = courseUserRepository.existsByCourseIdAndUserId(courseId, userId);
 
+        if(!isMember) { // 클래스에 소속되지 않은 경우
+            throw new AuthenticationFailedException();
+        }
+
+        Optional<QuestionSubmit> submit = questionSubmitRepository.findByQuestionIdAndUserId(questionId, userId);
+
+        QuestionSubmit questionSubmit;
+
+        if(submit.isEmpty()) { // 기존에 정답이 없는 경우
+            questionSubmit = modelMapper.map(request, QuestionSubmit.class);
+            questionSubmit.solve(courseQuestion, user);
+        }else {
+            questionSubmit = submit.get();
+            questionSubmit.updateAnswer(request.getAnswer());
+        }
+
+        QuestionSubmit savedQuestionSubmit = questionSubmitRepository.save(questionSubmit);
         return modelMapper.map(savedQuestionSubmit, SolveQuestionRequestData.class);
     }
 
@@ -206,24 +232,41 @@ public class AssignmentService {
      * 학생이 제출한 정답을 비교하여 과제를 체점한다.
      *
      * @param teacherId : 강사의 ID
-     * @param courseId :
-     * @param assignmentId
-     * @param questionId
-     * @param request
-     * @param tokenUserId
+     * @param courseId : 클래스 번호
+     * @param assignmentId : 과제 번호
+     * @param questionId : 주관식 문제 번호
+     * @param request : 입력할 점수의 DTO
+     * @param tokenUserId : 요청을 보낸 사용자의 id
      */
     public void scoreQuestion(Long teacherId,
                               Long courseId,
                               Long assignmentId,
                               Long questionId,
+                              Long answerId,
                               ScoringRequestData request,
                               Long tokenUserId) {
         if(!teacherId.equals(tokenUserId)) {
             throw new AuthenticationFailedException();
         }
+        Course course = courseRepository.findById(courseId).orElseThrow(
+                () -> new NotFoundException("클래스 번호 " + courseId));
 
-        CourseQuestion courseQuestion = courseQuestionRepository.findById(questionId)
-                .orElseThrow(() -> new NotFoundException("주관식 번호 " + questionId));
+        if(!course.isOwner(tokenUserId)) {
+            throw new AuthenticationFailedException();
+        }
 
+        boolean assignmentExist = assignmentRepository.existsById(assignmentId);
+        boolean questionExist = courseQuestionRepository.existsById(questionId);
+
+        if(!assignmentExist || !questionExist) {
+            throw new NotFoundException("과제 혹은 주관식 문제");
+        }
+
+        QuestionSubmit submitted = questionSubmitRepository.findById(answerId).orElseThrow(
+                () -> new NotFoundException("제출 번호 " + answerId));
+
+        submitted.scoring(request.getScore());
+
+        questionSubmitRepository.save(submitted);
     }
 }

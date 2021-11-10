@@ -5,6 +5,8 @@ import com.example.sources.domain.dto.response.CreateEvaluationResponseData;
 import com.example.sources.domain.entity.Evaluation;
 import com.example.sources.domain.entity.User;
 import com.example.sources.domain.repository.evaluation.EvaluationRepository;
+import com.example.sources.domain.repository.evaluationuser.EvaluationUserRepository;
+import com.example.sources.domain.repository.role.RoleRepository;
 import com.example.sources.domain.repository.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,12 +26,18 @@ class EvaluationServiceTest {
 
     private final EvaluationRepository evaluationRepository = mock(EvaluationRepository.class);
     private final UserRepository userRepository = mock(UserRepository.class);
+    private final RoleRepository roleRepository = mock(RoleRepository.class);
+    private final EvaluationUserRepository evaluationUserRepository = mock(EvaluationUserRepository.class);
 
     private EvaluationService evaluationService;
 
     @BeforeEach
     void setUp() {
-        evaluationService = new EvaluationService(evaluationRepository, userRepository, new ModelMapper());
+        evaluationService = new EvaluationService(evaluationRepository,
+                roleRepository,
+                userRepository,
+                evaluationUserRepository,
+                new ModelMapper());
 
         User teacher = User.builder()
                 .id(TEACHER_ID)

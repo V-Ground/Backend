@@ -69,7 +69,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{teacherId}/courses/{courseId}/assignments/{assignmentId}/users/{userId}")
+    @GetMapping("/{teacherId}/courses/{courseId}/assignments/{assignmentId}/users/{userId}/answers")
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
     public ResponseEntity<List<SubmittedQuestionResponseData>> getStudentQuestionSubmit(@PathVariable Long teacherId,
                                                                                         @PathVariable Long courseId,
@@ -81,7 +81,7 @@ public class UserController {
                 .getSubmittedQuestions(teacherId, courseId, assignmentId, userId, tokenUserId));
     }
 
-    @PatchMapping("/{userId}/courses/{courseId}/assignments/{assignmentId}/questions/{questionId}")
+    @PostMapping("/{userId}/courses/{courseId}/assignments/{assignmentId}/questions/{questionId}/answers")
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('STUDENT')")
     public ResponseEntity<SolveQuestionRequestData> solveQuestion(@PathVariable Long userId,
                                         @PathVariable Long courseId,
@@ -94,16 +94,17 @@ public class UserController {
                 .solveQuestion(userId, courseId, assignmentId, questionId, request, tokenUserId));
     }
 
-    @PatchMapping("/{teacherId}/courses/{courseId}/assignments/{assignmentId}/scoring/{questionId}")
+    @PatchMapping("/{teacherId}/courses/{courseId}/assignments/{assignmentId}/questions/{questionId}/answers/{answerId}")
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
     public ResponseEntity scoringQuestion(@PathVariable Long teacherId,
                                           @PathVariable Long courseId,
                                           @PathVariable Long assignmentId,
                                           @PathVariable Long questionId,
+                                          @PathVariable Long answerId,
                                           @RequestBody ScoringRequestData request,
                                           UserAuthentication authentication) {
         Long tokenUserId = authentication.getUserId();
-        assignmentService.scoreQuestion(teacherId, courseId, assignmentId, questionId, request, tokenUserId);
+        assignmentService.scoreQuestion(teacherId, courseId, assignmentId, questionId, answerId, request, tokenUserId);
         return ResponseEntity.ok().build();
     }
 }

@@ -10,6 +10,6 @@ public class CreateEvaluationRequestData {
     private String title;
     private String description;
     private String cpu;
-    private String ram;
-    private Long osType;
+    private String memory;
+    private String os;
 }
