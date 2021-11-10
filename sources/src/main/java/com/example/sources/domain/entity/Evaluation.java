@@ -4,6 +4,7 @@ import com.example.sources.domain.type.OsType;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter @Builder
@@ -19,6 +20,8 @@ public class Evaluation {
     private String memory;
     private String os;
     private Boolean visibility;
+    private LocalDateTime startedAt;
+    private LocalDateTime endedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teacher_id")

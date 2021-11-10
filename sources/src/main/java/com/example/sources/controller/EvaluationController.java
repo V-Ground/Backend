@@ -51,9 +51,12 @@ public class EvaluationController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @GetMapping("/{evaluationId}")
-    public ResponseEntity getEvaluationDetail(@PathVariable Long evaluationId) {
-        return ResponseEntity.ok().build();
+    @GetMapping("/{evaluationId}/quizzes")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('STUDENT')")
+    public ResponseEntity<List<QuizResponseData>> getEvaluationDetail(@PathVariable Long evaluationId,
+                                              UserAuthentication authentication) {
+        Long tokenUserId = authentication.getUserId();
+        return ResponseEntity.ok(evaluationService.getQuizzes(evaluationId, tokenUserId));
     }
 
     @PostMapping("/{evaluationId}/quizzes")
@@ -61,11 +64,5 @@ public class EvaluationController {
     public ResponseEntity<CreateQuizResponseData> addEvaluationQuiz(@PathVariable Long evaluationId,
                                                                     @RequestBody List<CreateQuizRequestData> request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(quizService.addEvaluationQuiz(evaluationId, request));
-    }
-
-    @GetMapping("/{evaluationId}/quizzes")
-    @PreAuthorize("isAuthenticated() and hasAnyAuthority('STUDENT')")
-    public ResponseEntity<List<QuizResponseData>> getAllEvaluationQuiz(@PathVariable Long evaluationId) {
-        return ResponseEntity.ok(quizService.getAllQuizzes(evaluationId));
     }
 }

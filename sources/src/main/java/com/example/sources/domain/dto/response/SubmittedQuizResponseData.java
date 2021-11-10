@@ -7,7 +7,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SubmittedQuizResponseData {
-    private Long quizId;
+    private Long answerId;
     private String question;
     private String submittedAnswer;
+    private Integer scored;
 }

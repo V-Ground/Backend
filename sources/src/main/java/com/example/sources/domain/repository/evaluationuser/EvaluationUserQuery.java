@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface EvaluationUserQuery {
     List<EvaluationResponseData> findAllByUserId(Long userId);
+    Boolean existsByEvaluationIdAndUserId(Long evaluationId, Long userId);
 }

@@ -1,11 +1,13 @@
 package com.example.sources.domain.repository.evaluationquiz;
 
 import com.example.sources.domain.dto.response.QuizResponseData;
+import com.example.sources.domain.entity.EvaluationQuiz;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 import static com.example.sources.domain.entity.QEvaluationQuiz.evaluationQuiz;
 import static com.example.sources.domain.entity.QEvaluation.evaluation;

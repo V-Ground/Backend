@@ -35,14 +35,14 @@ public class UserController {
 
     @PostMapping("/{userId}/evaluations/{evaluationId}/quizzes/{quizId}")
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('STUDENT')")
-    public ResponseEntity submitEvaluationQuiz(@PathVariable Long userId,
-                                               @PathVariable Long evaluationId,
-                                               @PathVariable Long quizId,
-                                               @RequestBody SolveQuizRequestData request,
-                                               UserAuthentication authentication) {
+    public ResponseEntity solveQuiz(@PathVariable Long userId,
+                                    @PathVariable Long evaluationId,
+                                    @PathVariable Long quizId,
+                                    @RequestBody SolveQuizRequestData request,
+                                    UserAuthentication authentication) {
         // TODO userId 와 evaluationId 는 현재 사용하지 않지만 Validation 에 추가할 것
         Long tokenUserId = authentication.getUserId();
-        quizService.solveEvaluationQuiz(quizId, request, userId, tokenUserId);
+        quizService.solveEvaluationQuiz(userId, evaluationId, quizId, request, tokenUserId);
         return ResponseEntity.ok().build();
     }
 
@@ -57,15 +57,15 @@ public class UserController {
                 quizService.getAllSubmittedQuizAnswer(teacherId, evaluationId, studentId, tokenUserId));
     }
 
-    @PatchMapping("/{teacherId}/evaluations/{evaluationId}/quizzes/scoring/{quizId}")
+    @PatchMapping("/{teacherId}/evaluations/{evaluationId}/answers/{answerId}")
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
     public ResponseEntity scoringQuiz(@PathVariable Long teacherId,
                                                                        @PathVariable Long evaluationId,
-                                                                       @PathVariable Long quizId,
+                                                                       @PathVariable Long answerId,
                                                                        @RequestBody ScoringRequestData request,
                                                                        UserAuthentication authentication) {
         Long tokenUserId = authentication.getUserId();
-        quizService.scoreQuiz(teacherId, evaluationId, quizId, request, tokenUserId);
+        quizService.scoreQuiz(teacherId, evaluationId, answerId, request, tokenUserId);
         return ResponseEntity.ok().build();
     }
 

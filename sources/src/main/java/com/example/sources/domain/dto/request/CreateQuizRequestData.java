@@ -6,7 +6,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateQuizRequestData {
-    private Long referenceId;
     private String question;
     private String description;
     private String answer;

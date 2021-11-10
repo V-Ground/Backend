@@ -2,23 +2,25 @@ package com.example.sources.service;
 
 import com.example.sources.domain.dto.request.CreateEvaluationRequestData;
 import com.example.sources.domain.dto.response.CreateEvaluationResponseData;
+import com.example.sources.domain.dto.response.QuizResponseData;
 import com.example.sources.domain.entity.Evaluation;
 import com.example.sources.domain.entity.EvaluationUser;
 import com.example.sources.domain.entity.Role;
 import com.example.sources.domain.entity.User;
 import com.example.sources.domain.repository.evaluation.EvaluationRepository;
+import com.example.sources.domain.repository.evaluationquiz.EvaluationQuizRepository;
 import com.example.sources.domain.repository.evaluationuser.EvaluationUserRepository;
+import com.example.sources.domain.repository.quizsubmit.QuizSubmitRepository;
 import com.example.sources.domain.repository.role.RoleRepository;
 import com.example.sources.domain.repository.user.UserRepository;
 import com.example.sources.domain.type.RoleType;
-import com.example.sources.exception.AuthenticationFailedException;
-import com.example.sources.exception.NotFoundException;
-import com.example.sources.exception.UserNotFoundException;
+import com.example.sources.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -29,6 +31,7 @@ public class EvaluationService {
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final EvaluationUserRepository evaluationUserRepository;
+    private final EvaluationQuizRepository evaluationQuizRepository;
     private final ModelMapper modelMapper;
 
     /**
@@ -102,5 +105,35 @@ public class EvaluationService {
                 .user(student)
                 .build();
         evaluationUserRepository.save(evaluationUser);
+    }
+
+    /**
+     * 테스트 문제 및 상세 정보를 조회한다.
+     *
+     * @param evaluationId : 조회 대상 테스트 id
+     * @param tokenUserId : 요청을 보낸 사용자의 userId
+     * @return
+     */
+    public List<QuizResponseData> getQuizzes(Long evaluationId, Long tokenUserId) {
+
+        Evaluation evaluation = evaluationRepository.findById(evaluationId).orElseThrow(
+                () -> new NotFoundException("테스트 번호 " + evaluationId));
+
+        boolean isMember = evaluationUserRepository.existsByEvaluationIdAndUserId(evaluationId, tokenUserId);
+
+        if(!isMember) {
+            throw new AuthenticationFailedException();
+        }
+
+        LocalDateTime startedAt = evaluation.getStartedAt();
+        LocalDateTime endedAt = evaluation.getEndedAt();
+
+        if(LocalDateTime.now().isBefore(startedAt)) {
+            throw new CurriculumNotOpenException("해당 테스트는 아직 시작되지 않았습니다");
+        }else if(LocalDateTime.now().isAfter(endedAt)) {
+            throw new CurriculumClosedException("해당 테스트는 종료되었습니다");
+        }
+
+        return evaluationQuizRepository.findAllByEvaluationId(evaluationId);
     }
 }

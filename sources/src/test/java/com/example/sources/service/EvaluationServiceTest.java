@@ -5,6 +5,7 @@ import com.example.sources.domain.dto.response.CreateEvaluationResponseData;
 import com.example.sources.domain.entity.Evaluation;
 import com.example.sources.domain.entity.User;
 import com.example.sources.domain.repository.evaluation.EvaluationRepository;
+import com.example.sources.domain.repository.evaluationquiz.EvaluationQuizRepository;
 import com.example.sources.domain.repository.evaluationuser.EvaluationUserRepository;
 import com.example.sources.domain.repository.role.RoleRepository;
 import com.example.sources.domain.repository.user.UserRepository;
@@ -28,6 +29,7 @@ class EvaluationServiceTest {
     private final UserRepository userRepository = mock(UserRepository.class);
     private final RoleRepository roleRepository = mock(RoleRepository.class);
     private final EvaluationUserRepository evaluationUserRepository = mock(EvaluationUserRepository.class);
+    private final EvaluationQuizRepository evaluationQuizRepository = mock(EvaluationQuizRepository.class);
 
     private EvaluationService evaluationService;
 
@@ -37,6 +39,7 @@ class EvaluationServiceTest {
                 roleRepository,
                 userRepository,
                 evaluationUserRepository,
+                evaluationQuizRepository,
                 new ModelMapper());
 
         User teacher = User.builder()

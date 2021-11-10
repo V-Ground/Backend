@@ -12,6 +12,7 @@ import com.example.sources.domain.entity.QuizSubmit;
 import com.example.sources.domain.entity.User;
 import com.example.sources.domain.repository.evaluation.EvaluationRepository;
 import com.example.sources.domain.repository.evaluationquiz.EvaluationQuizRepository;
+import com.example.sources.domain.repository.evaluationuser.EvaluationUserRepository;
 import com.example.sources.domain.repository.quizsubmit.QuizSubmitRepository;
 import com.example.sources.domain.repository.user.UserRepository;
 import com.example.sources.exception.AuthenticationFailedException;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -31,17 +33,8 @@ public class QuizService {
     private final QuizSubmitRepository quizSubmitRepository;
     private final EvaluationRepository evaluationRepository;
     private final UserRepository userRepository;
+    private final EvaluationUserRepository evaluationUserRepository;
     private final ModelMapper modelMapper;
-
-    /**
-     * 평가에 해당하는 문제를 조회한다.
-     *
-     * @param evaluationId : 문제를 조회할 평가 번호
-     * @return QuizResponseData List 의 DTO
-     */
-    public List<QuizResponseData> getAllQuizzes(Long evaluationId) {
-        return evaluationQuizRepository.findAllByEvaluationId(evaluationId);
-    }
 
     /**
      * 평가에 해당하는 퀴즈를 생성한다.
@@ -71,9 +64,25 @@ public class QuizService {
      * @param request : 사용자의 정답 데이터
      * @param tokenUserId : 요청을 보낸 사용자의 userId
      */
-    public void solveEvaluationQuiz(Long quizId, SolveQuizRequestData request, Long userId, Long tokenUserId) {
+    public void solveEvaluationQuiz(Long userId,
+                                    Long evaluationId,
+                                    Long quizId,
+                                    SolveQuizRequestData request,
+                                    Long tokenUserId) {
         if(!userId.equals(tokenUserId)) { // 제출하는 userId 와 저장하려는 userId 가 다른 경우
             throw new AuthenticationFailedException();
+        }
+
+        boolean isMember = evaluationUserRepository.existsByEvaluationIdAndUserId(evaluationId, userId);
+
+        if(!isMember) {
+            throw new AuthenticationFailedException();
+        }
+
+        boolean evaluationExist = evaluationRepository.existsById(evaluationId);
+
+        if(!evaluationExist) {
+            throw new NotFoundException("테스트 " + evaluationId);
         }
 
         User user = userRepository.findById(tokenUserId).orElseThrow(
@@ -81,12 +90,20 @@ public class QuizService {
         EvaluationQuiz evaluationQuiz = evaluationQuizRepository.findById(quizId).orElseThrow(
                 () -> new NotFoundException("퀴즈 번호 " + quizId));
 
+        Optional<QuizSubmit> submit = quizSubmitRepository.findByQuizIdAndUserId(quizId, userId);
+
         String answer = request.getAnswer();
-        QuizSubmit quizSubmit = QuizSubmit.builder()
-                .answer(answer)
-                .evaluationQuiz(evaluationQuiz)
-                .user(user)
-                .build();
+        QuizSubmit quizSubmit;
+        if(submit.isEmpty()) {
+             quizSubmit = QuizSubmit.builder()
+                    .answer(answer)
+                    .evaluationQuiz(evaluationQuiz)
+                    .user(user)
+                    .build();
+        } else {
+            quizSubmit = submit.get();
+            quizSubmit.updateAnswer(answer);
+        }
 
         // TODO : 생성되지 않아도 void 로 결과를 검사하지 않으니 검증 로직이 추가될 필요가 있음
         quizSubmitRepository.save(quizSubmit);
@@ -139,14 +156,14 @@ public class QuizService {
         }
 
         Evaluation evaluation = evaluationRepository.findById(evaluationId).orElseThrow(
-                () -> new NotFoundException("평가 번호 " + evaluationId));
+                () -> new NotFoundException("테스트 번호 " + evaluationId));
 
         if (!teacherId.equals(evaluation.getTeacher().getId())) {
             throw new AuthenticationFailedException();
         }
 
         QuizSubmit quizSubmit = quizSubmitRepository.findById(quizId).orElseThrow(
-                () -> new NotFoundException("퀴즈 번호 " + quizId));
+                () -> new NotFoundException("제출 번호 " + quizId));
 
         quizSubmit.scoring(request.getScore());
         quizSubmitRepository.save(quizSubmit);

@@ -31,4 +31,13 @@ public class QuizSubmit {
     public void scoring(Integer score) {
         this.scored = score;
     }
+
+    /**
+     * 정답을 업데이트한다
+     *
+     * @param answer
+     */
+    public void updateAnswer(String answer) {
+        this.answer = answer;
+    }
 }

@@ -31,6 +31,18 @@ public class EvaluationUserRepositoryImpl implements EvaluationUserQuery {
                 .fetch();
     }
 
+    @Override
+    public Boolean existsByEvaluationIdAndUserId(Long evaluationId, Long userId) {
+        Integer fetchOne = queryFactory
+                .selectOne()
+                .from(evaluationUser)
+                .where(evaluationUser.evaluation.id.eq(evaluationId)
+                        .and(evaluationUser.user.id.eq(userId)))
+                .fetchFirst();
+
+        return fetchOne != null;
+    }
+
     private static QBean<EvaluationResponseData> getEvaluationListSelectFields() {
         return Projections.fields(EvaluationResponseData.class,
                 evaluation.id.as("evaluationId"),

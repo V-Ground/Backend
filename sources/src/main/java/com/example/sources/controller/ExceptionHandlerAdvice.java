@@ -46,4 +46,16 @@ public class ExceptionHandlerAdvice {
     public ErrorResponseData handleTokenExpiredException(TokenExpiredException e) {
         return new ErrorResponseData(e.getMessage());
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(CurriculumNotOpenException.class)
+    public ErrorResponseData handleCurriculumNotOpenException(CurriculumNotOpenException e) {
+        return new ErrorResponseData(e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(CurriculumClosedException.class)
+    public ErrorResponseData handleCurriculumClosedException(CurriculumClosedException e) {
+        return new ErrorResponseData(e.getMessage());
+    }
 }
