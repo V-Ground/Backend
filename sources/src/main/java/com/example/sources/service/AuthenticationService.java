@@ -7,6 +7,7 @@ import com.example.sources.domain.entity.User;
 import com.example.sources.domain.repository.role.RoleRepository;
 import com.example.sources.domain.repository.user.UserRepository;
 import com.example.sources.exception.LoginFailedException;
+import com.example.sources.exception.NotFoundException;
 import com.example.sources.exception.UserNotFoundException;
 import com.example.sources.util.CookieUtil;
 import com.example.sources.util.TokenUtil;
@@ -49,6 +50,29 @@ public class AuthenticationService {
             throw new LoginFailedException();
         }
 
+        return getLoginResponseData(user);
+    }
+
+    /**
+     * token 에 포함된 사용자의 정보를 토대로 값을 반환한다.
+     *
+     * @param tokenUserId : 요청에 포함된 userId
+     * @return 로그인 성공 dto
+     */
+    public LoginResponseData validate(Long tokenUserId) {
+        User user = userRepository.findById(tokenUserId)
+                .orElseThrow(() -> new NotFoundException("사용자 번호 " + tokenUserId));
+
+        return getLoginResponseData(user);
+    }
+
+    /**
+     * user 객체의 권한을 조회하고 dto 에 권한을 추가하여 반환한다.
+     *
+     * @param user : 조회할 user
+     * @return : 로그인 성공 dto
+     */
+    private LoginResponseData getLoginResponseData(User user) {
         List<Role> roles = roleRepository.findAllByUserId(user.getId());
 
         LoginResponseData responseData = modelMapper.map(user, LoginResponseData.class);

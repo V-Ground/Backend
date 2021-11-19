@@ -24,3 +24,6 @@ spring:
 
 jwt:
   secret: 12345678901234567890123456789012
+
+frontend:
+  ip: localhost:3000

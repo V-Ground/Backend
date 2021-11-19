@@ -14,6 +14,7 @@ public class EvaluationResponseData {
     private String description;
     private Boolean visibility;
     private String teacherName;
+    private String containerIp;
     private LocalDateTime startedAt;
     private LocalDateTime endedAt;
 }

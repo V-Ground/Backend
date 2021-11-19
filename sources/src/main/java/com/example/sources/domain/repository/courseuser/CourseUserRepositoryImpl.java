@@ -49,6 +49,7 @@ public class CourseUserRepositoryImpl implements CourseUserQuery {
                 course.title.as("title"),
                 course.description.as("description"),
                 course.visibility.as("visibility"),
+                courseUser.containerIp,
                 course.teacher.username.as("teacherName"));
     }
 }

@@ -5,6 +5,8 @@ import com.example.sources.domain.dto.response.CreateCourseResponseData;
 import com.example.sources.domain.entity.Course;
 import com.example.sources.domain.entity.User;
 import com.example.sources.domain.repository.course.CourseRepository;
+import com.example.sources.domain.repository.courseuser.CourseUserRepository;
+import com.example.sources.domain.repository.role.RoleRepository;
 import com.example.sources.domain.repository.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,6 +31,8 @@ class CourseServiceTest {
 
     private final UserRepository userRepository = mock(UserRepository.class);
     private final CourseRepository courseRepository = mock(CourseRepository.class);
+    private final CourseUserRepository courseUserRepository = mock(CourseUserRepository.class);
+    private final RoleRepository roleRepository = mock(RoleRepository.class);
 
     private CourseService courseService;
 
@@ -36,6 +40,8 @@ class CourseServiceTest {
     void setUp() {
         courseService = new CourseService(
                 courseRepository,
+                courseUserRepository,
+                roleRepository,
                 userRepository,
                 new ModelMapper());
 
@@ -64,7 +70,7 @@ class CourseServiceTest {
     @DisplayName("course 생성 성공")
     void createCourse_success() {
         CreateCourseRequestData request = new CreateCourseRequestData(
-                STUDENT_ID, "와샥", "와이어샤크에 대해서 공부합니다", "1", "1", 1L);
+                STUDENT_ID, "와샥", "와이어샤크에 대해서 공부합니다", "1", "1", "os");
 
         CreateCourseResponseData createCourseResponseData = courseService.addCourse(request);
         assertNotNull(createCourseResponseData);

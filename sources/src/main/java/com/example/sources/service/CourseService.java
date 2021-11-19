@@ -1,5 +1,7 @@
 package com.example.sources.service;
 
+import com.example.sources.awscli.AwsCliCommand;
+import com.example.sources.awscli.AwsCliResponseParser;
 import com.example.sources.domain.dto.request.CreateCourseRequestData;
 import com.example.sources.domain.dto.response.CreateCourseResponseData;
 import com.example.sources.domain.entity.Course;
@@ -14,6 +16,7 @@ import com.example.sources.domain.type.RoleType;
 import com.example.sources.exception.AuthenticationFailedException;
 import com.example.sources.exception.NotFoundException;
 import com.example.sources.exception.UserNotFoundException;
+import com.example.sources.util.BashExecutor;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;

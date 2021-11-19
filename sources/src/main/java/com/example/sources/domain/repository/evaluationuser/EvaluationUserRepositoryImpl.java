@@ -49,6 +49,7 @@ public class EvaluationUserRepositoryImpl implements EvaluationUserQuery {
                 evaluation.title,
                 evaluation.description,
                 evaluation.visibility,
+                evaluationUser.containerIp,
                 evaluation.teacher.username.as("teacherName"));
     }
 }

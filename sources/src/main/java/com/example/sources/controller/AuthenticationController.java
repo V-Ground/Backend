@@ -2,6 +2,7 @@ package com.example.sources.controller;
 
 import com.example.sources.domain.dto.request.LoginRequestData;
 import com.example.sources.domain.dto.response.LoginResponseData;
+import com.example.sources.security.UserAuthentication;
 import com.example.sources.service.AuthenticationService;
 import com.example.sources.util.CookieUtil;
 import com.example.sources.util.TokenUtil;
@@ -11,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RequiredArgsConstructor
@@ -42,5 +44,12 @@ public class AuthenticationController {
         Cookie clearCookie = cookieUtil.destroy();
         response.addCookie(clearCookie);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/me")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('STUDENT')")
+    public ResponseEntity validate(UserAuthentication authentication) {
+        Long tokenUserId = authentication.getUserId();
+        return ResponseEntity.ok(authenticationService.validate(tokenUserId));
     }
 }

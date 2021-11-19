@@ -2,3 +2,10 @@
 
 - Quiz 는 Class 에서도 쓰이고 Evaluation 에서도 쓰인다. 그럼 QuizService 를 Evaluation과 Class 에서 의존을 가져가는게 좋은가 아니면 QuizController 로 가는게 좋은가?
   - 내 생각에는 Quiz 가 변경되면 Evaluation 과 Quiz 모두 영향을 받을 가능성이 있기 때문에 QuizController 를 따로 만드는게 좋아보인다. 이렇게 생각해도 되는가?
+
+# 추후
+
+- **CORS Filter 추가할것**
+- **클래스 입장하면 인스턴스 접속 IP도 함꼐 반환할 것**
+  - 사용자가 특정 클래스에 접속하면 클래스 인스턴스에 접속할 수 있는 url 을 보내줘야 한다.
+- **강사가 클래스 입장하면 모든 학생의 접속 IP를 반환할 것**

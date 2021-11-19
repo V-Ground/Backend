@@ -11,5 +11,6 @@ public class CourseResponseData {
     private String title;
     private String description;
     private Boolean visibility;
+    private String containerIp;
     private String teacherName;
 }

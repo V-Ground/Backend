@@ -5,6 +5,7 @@ import com.example.sources.domain.dto.response.EvaluationResponseData;
 import com.example.sources.domain.dto.response.MyParticipatingResponseData;
 import com.example.sources.domain.entity.Course;
 import com.example.sources.domain.entity.User;
+import com.example.sources.domain.repository.course.CourseRepository;
 import com.example.sources.domain.repository.courseuser.CourseUserRepository;
 import com.example.sources.domain.repository.evaluationuser.EvaluationUserRepository;
 import com.example.sources.domain.repository.user.UserRepository;
@@ -23,6 +24,7 @@ import static org.mockito.Mockito.mock;
 class UserServiceTest {
 
     private final UserRepository userRepository = mock(UserRepository.class);
+    private final CourseRepository courseRepository = mock(CourseRepository.class);
     private final CourseUserRepository courseUserRepository = mock(CourseUserRepository.class);
     private final EvaluationUserRepository evaluationUserRepository = mock(EvaluationUserRepository.class);
 
@@ -30,7 +32,10 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        userService = new UserService(userRepository, courseUserRepository, evaluationUserRepository);
+        userService = new UserService(userRepository,
+                courseRepository,
+                courseUserRepository,
+                evaluationUserRepository);
 
         given(userRepository.findById(1L))
                 .willReturn(Optional.of(new User()));

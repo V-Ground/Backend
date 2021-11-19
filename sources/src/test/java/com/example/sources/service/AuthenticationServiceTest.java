@@ -38,7 +38,6 @@ class AuthenticationServiceTest {
                 roleRepository,
                 new ModelMapper(),
                 new TokenUtil(SECRET),
-                new CookieUtil(),
                 new BCryptPasswordEncoder());
 
         // 로그인

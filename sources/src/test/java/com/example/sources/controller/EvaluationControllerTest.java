@@ -10,7 +10,9 @@ import com.example.sources.domain.type.RoleType;
 import com.example.sources.service.AuthenticationService;
 import com.example.sources.service.EvaluationService;
 import com.example.sources.service.QuizService;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -82,9 +84,6 @@ class EvaluationControllerTest {
 
         given(quizService.addEvaluationQuiz(eq(EVALUATION_ID), any()))
                 .willReturn(new CreateQuizResponseData());
-
-        given(quizService.getAllQuizzes(EVALUATION_ID))
-                .willReturn(List.of(new QuizResponseData()));
     }
 
     @Test
