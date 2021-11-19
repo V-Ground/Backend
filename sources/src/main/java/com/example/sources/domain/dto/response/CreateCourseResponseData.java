@@ -7,6 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateCourseResponseData {
+    private Long courseId;
     private String title;
     private String description;
     private String cpu;

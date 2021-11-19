@@ -1,6 +1,7 @@
 package com.example.sources.domain.repository.courseuser;
 
 import com.example.sources.domain.dto.response.CourseResponseData;
+import com.example.sources.domain.dto.response.ParticipantResponseData;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.QBean;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -41,6 +42,20 @@ public class CourseUserRepositoryImpl implements CourseUserQuery {
                 .fetchFirst();
 
         return fetchOne != null;
+    }
+
+    @Override
+    public List<ParticipantResponseData> findAllByCourseId(Long courseId) {
+        return queryFactory
+                .select(Projections.fields(ParticipantResponseData.class,
+                        user.id.as("studentId"),
+                        user.username.as("studentName"),
+                        courseUser.containerIp))
+                .from(courseUser)
+                .join(courseUser.course, course)
+                .join(courseUser.user, user)
+                .where(course.id.eq(courseId))
+                .fetch();
     }
 
     private static QBean<CourseResponseData> getCourseListSelectFields() {

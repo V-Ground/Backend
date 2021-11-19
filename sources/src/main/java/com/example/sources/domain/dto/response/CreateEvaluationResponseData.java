@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateEvaluationResponseData {
+    private Long evaluationId;
     private String title;
     private String description;
     private String cpu;

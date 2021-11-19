@@ -4,6 +4,7 @@ import com.example.sources.awscli.AwsCliCommand;
 import com.example.sources.awscli.AwsCliResponseParser;
 import com.example.sources.domain.dto.request.CreateCourseRequestData;
 import com.example.sources.domain.dto.response.CreateCourseResponseData;
+import com.example.sources.domain.dto.response.ParticipantResponseData;
 import com.example.sources.domain.entity.Course;
 import com.example.sources.domain.entity.CourseUser;
 import com.example.sources.domain.entity.Role;
@@ -65,7 +66,9 @@ public class CourseService {
 
         courseUserRepository.save(courseUser);
 
-        return modelMapper.map(savedCourse, CreateCourseResponseData.class);
+        CreateCourseResponseData response = modelMapper.map(savedCourse, CreateCourseResponseData.class);
+        response.setCourseId(savedCourse.getId());
+        return response;
     }
 
     /**
@@ -101,5 +104,23 @@ public class CourseService {
                 () -> new NotFoundException("사용자 번호 " + studentId));
 
         courseUserRepository.save(CourseUser.builder().user(student).course(course).build());
+    }
+
+    /**
+     * 강사가 특정 클래스에 소속된 모든 학생의 컨테이너 ip 를 조회한다.
+     *
+     * @param courseId : 조회할 클래스 id
+     * @param tokenUserId : 요청을 보낸 강사의 userId
+     * @return studentId, studentName, containerIp 가 담긴 DTO List
+     */
+    public List<ParticipantResponseData> getParticipants(Long courseId, Long tokenUserId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new NotFoundException("클래스 번호 " + courseId));
+
+        if(!course.isOwner(tokenUserId)) { // 강사가 아닌 경우
+            throw new AuthenticationFailedException();
+        }
+
+        return courseUserRepository.findAllByCourseId(courseId);
     }
 }

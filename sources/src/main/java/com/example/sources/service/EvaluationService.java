@@ -63,7 +63,9 @@ public class EvaluationService {
 
         evaluationUserRepository.save(evaluationUser);
 
-        return modelMapper.map(savedEvaluation, CreateEvaluationResponseData.class);
+        CreateEvaluationResponseData response = modelMapper.map(savedEvaluation, CreateEvaluationResponseData.class);
+        response.setEvaluationId(savedEvaluation.getId());
+        return response;
     }
 
     /**

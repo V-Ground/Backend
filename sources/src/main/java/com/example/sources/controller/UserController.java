@@ -4,10 +4,12 @@ import com.example.sources.domain.dto.request.ScoringRequestData;
 import com.example.sources.domain.dto.request.SolveQuestionRequestData;
 import com.example.sources.domain.dto.request.SolveQuizRequestData;
 import com.example.sources.domain.dto.response.MyParticipatingResponseData;
+import com.example.sources.domain.dto.response.ParticipantResponseData;
 import com.example.sources.domain.dto.response.SubmittedQuestionResponseData;
 import com.example.sources.domain.dto.response.SubmittedQuizResponseData;
 import com.example.sources.security.UserAuthentication;
 import com.example.sources.service.AssignmentService;
+import com.example.sources.service.CourseService;
 import com.example.sources.service.QuizService;
 import com.example.sources.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import java.util.List;
 @RequestMapping(value = "/api/v1/users", produces = "application/json")
 public class UserController {
     private final UserService userService;
+    private final CourseService courseService;
     private final QuizService quizService;
     private final AssignmentService assignmentService;
 
@@ -31,6 +34,14 @@ public class UserController {
                                                                           UserAuthentication authentication) {
         Long tokenUserId = authentication.getUserId();
         return ResponseEntity.ok(userService.getMyParticipating(userId, tokenUserId));
+    }
+
+    @GetMapping("/{teacherId}/courses/{courseId}")
+    public ResponseEntity<List<ParticipantResponseData>> getParticipantDetails(@PathVariable Long teacherId,
+                                                                               @PathVariable Long courseId,
+                                                                               UserAuthentication authentication) {
+        Long tokenUserId = authentication.getUserId();
+        return ResponseEntity.ok(courseService.getParticipants(courseId, tokenUserId));
     }
 
     @PostMapping("/{userId}/evaluations/{evaluationId}/quizzes/{quizId}")
