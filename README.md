@@ -132,3 +132,33 @@
 - **과제 상세 상세 조회** : GET `/api/v1/courses/{courseId}/assignments/{assignmentId}`
 
 ## 스냅샷
+
+```py
+import subprocess
+
+def get_file(file):
+    with open(file, 'r') as f:
+        res = f.read()
+
+    return res
+
+def get_file_binary(file):
+    with open(file, encoding="utf8", errors='ignore') as f:
+        res = f.read()
+
+    return res
+
+if __name__ == "__main__":
+    # Open file (normal file)
+    file_dir = '/home/lch/.bash_history'
+    bash_history = get_file(file_dir)
+    print("bash_history files : \n", bash_history)
+
+    # Open file (binary file)
+    file_dir = '/var/log/wtmp'
+    wtmp = get_file_binary(file_dir)
+    print("wtmp files : \n", wtmp)
+
+set-cookie: AUTH=session(userId);
+response body : token : (userId);
+```
