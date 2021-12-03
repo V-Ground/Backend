@@ -17,9 +17,6 @@ public class GetIpCommand implements AwsCommand{
     public String execute(String commandString) {
         String responseJson = bashExecutor.execute(commandString, false);
         String ip = cliResponseParser.findIp(responseJson);
-        try {
-            Thread.sleep(4000);
-        } catch (Exception e) {}
 
         return ip;
     }

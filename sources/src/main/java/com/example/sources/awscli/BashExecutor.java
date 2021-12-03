@@ -24,20 +24,23 @@ public class BashExecutor {
         bash.command(commands);
 
         StringBuilder sb = new StringBuilder();
-        InputStream inputStream;
-        BufferedReader outBuffer;
+        Process process = null;
         try {
-            Process process = bash.start();
-            inputStream = isDebug ? process.getErrorStream() : process.getInputStream();
-            outBuffer = new BufferedReader(new InputStreamReader(inputStream));
+            process = bash.start();
+            InputStream inputStream = isDebug ? process.getErrorStream() : process.getInputStream();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             String line;
-            while((line = outBuffer.readLine()) != null) {
+            while((line = bufferedReader.readLine()) != null) {
                 sb.append(line);
             }
             inputStream.close();
-            outBuffer.close();
+            bufferedReader.close();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if(process != null) { // 할당 해제
+                process.destroy();
+            }
         }
 
         return sb.toString();
