@@ -19,7 +19,7 @@ public class CreateTaskCommand implements AwsCommand{
         String taskArn = cliResponseParser.findTaskArn(responseJson);
 
         try {
-            Thread.sleep(5000);
+            Thread.sleep(4000);
         } catch (Exception e) {}
 
         return taskArn;

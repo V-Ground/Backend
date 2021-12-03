@@ -1,5 +1,6 @@
 package com.example.sources.controller;
 
+import com.example.sources.awscli.AwsCliResponseParser;
 import com.example.sources.domain.dto.response.ErrorResponseData;
 import com.example.sources.exception.*;
 import org.springframework.http.HttpStatus;
@@ -56,6 +57,12 @@ public class ExceptionHandlerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(CurriculumClosedException.class)
     public ErrorResponseData handleCurriculumClosedException(CurriculumClosedException e) {
+        return new ErrorResponseData(e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(CurriculumClosedException.class)
+    public ErrorResponseData handleAwsCliResponseParseException(AwsResponseParseException e) {
         return new ErrorResponseData(e.getMessage());
     }
 }

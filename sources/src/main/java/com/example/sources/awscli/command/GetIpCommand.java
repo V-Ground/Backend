@@ -4,9 +4,6 @@ import com.example.sources.awscli.AwsCliResponseParser;
 import com.example.sources.awscli.BashExecutor;
 
 public class GetIpCommand implements AwsCommand{
-
-    private final String CLUSTER_NAME = "KT-20211113-2";
-
     private BashExecutor bashExecutor;
     private AwsCliResponseParser cliResponseParser;
 
@@ -21,7 +18,7 @@ public class GetIpCommand implements AwsCommand{
         String responseJson = bashExecutor.execute(commandString, false);
         String ip = cliResponseParser.findIp(responseJson);
         try {
-            Thread.sleep(5000);
+            Thread.sleep(4000);
         } catch (Exception e) {}
 
         return ip;

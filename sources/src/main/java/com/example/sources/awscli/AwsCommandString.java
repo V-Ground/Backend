@@ -13,17 +13,34 @@ public class AwsCommandString {
     @Value("${aws.ecs.security_group}")
     private String SECURITY_GROUP = "sg-01a19961262ae4372";
 
+    /**
+     * 생성된 ecs task 의 세부 정보를 조회한다.
+     *
+     * @param taskName ecs task
+     * @return task detail
+     */
     public String getTaskDetailCommand(String taskName) {
         return String.format("aws ecs describe-tasks " +
                 "--cluster %s " +
                 "--tasks %s", CLUSTER_NAME, taskName);
     }
 
-    public String getIpCommand(String networkInterfaceId) {
+    /**
+     * ecs container 의 IP 를 반환한다.
+     *
+     * @param networkInterfaceId
+     * @return 컨테이너의 networkIfsDetail
+     */
+    public String getNetworkIfsDetailCommand(String networkInterfaceId) {
         return String.format("aws ec2 describe-network-interfaces " +
                 "--network-interface-ids %s", networkInterfaceId);
     }
 
+    /**
+     * ecs 컨테이너를 생성한다.
+     *
+     * @return 생성된 ecs 컨테이너의 id
+     */
     public String createTaskCommand() {
         return String.format("aws ecs run-task " +
                 "--cluster %s " +

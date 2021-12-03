@@ -1,54 +1,75 @@
 package com.example.sources.awscli;
 
 import com.example.sources.domain.dto.aws.TaskDetail;
+import com.example.sources.exception.AwsResponseParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 public class AwsCliResponseParser {
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private ObjectMapper objectMapper;
 
-    public String findTaskArn(String json) {
+    /**
+     * 생성된 task 로부터 받은 json 을 토대로 task 의 Arn 을 파싱한다.
+     *
+     * @param taskDetail taskDetail
+     * @return taskArn
+     */
+    public String findTaskArn(String taskDetail) {
         try {
-            JsonNode jsonNode = objectMapper.readTree(json).at("/tasks/0/containers/0/taskArn");
+            JsonNode jsonNode = objectMapper.readTree(taskDetail).at("/tasks/0/containers/0/taskArn");
             return jsonNode.toString().replaceAll("\"", "");
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
-        return null;
+        throw new AwsResponseParseException("taskArn 을 찾을 수 없습니다.");
     }
 
-    public String findEid(String json) {
+    /**
+     * taskDetail 을 토대로 networkInterfaceId 를 파싱한다
+     *
+     * @param taskDetail taskArn
+     * @return networkInterfaceId
+     */
+    public String findNetworkInterfaceId(String taskDetail) {
         try {
-            JsonNode jsonNode = objectMapper.readTree(json).findValue("details");
+            JsonNode jsonNode = objectMapper.readTree(taskDetail).findValue("details");
 
             List<TaskDetail> taskDetails = objectMapper
                     .readValue(jsonNode.toString(), new TypeReference<List<TaskDetail>>() {});
 
-            for (TaskDetail taskDetail : taskDetails) {
-                if(taskDetail.getName().equals("networkInterfaceId")) {
-                    return taskDetail.getValue();
+            for (TaskDetail iter : taskDetails) {
+                if(iter.getName().equals("networkInterfaceId")) {
+                    return iter.getValue();
                 }
             }
-            return null;
+            throw new AwsResponseParseException("networkInterfaceId 를 찾을 수 없습니다.");
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        return null;
+        throw new AwsResponseParseException("networkInterfaceId 를 찾을 수 없습니다.");
     }
 
-    public String findIp(String json) {
+    /**
+     * networkInterface 를 토대로 public IP 를 파싱한다.
+     *
+     * @param networkInterface networkInterface
+     * @return public IP
+     */
+    public String findIp(String networkInterface) {
         try {
-            JsonNode jsonNode = objectMapper.readTree(json).at("/NetworkInterfaces/0/Association/PublicIp");
+            JsonNode jsonNode = objectMapper.readTree(networkInterface).at("/NetworkInterfaces/0/Association/PublicIp");
             return jsonNode.toString().replaceAll("\"", "");
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        return null;
+        throw new AwsResponseParseException("ip 를 찾을 수 없습니다.");
     }
 }

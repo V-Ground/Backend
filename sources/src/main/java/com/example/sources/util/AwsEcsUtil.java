@@ -7,7 +7,7 @@ import com.example.sources.awscli.BashExecutor;
 import com.example.sources.awscli.command.AwsCommand;
 import com.example.sources.awscli.command.CreateTaskCommand;
 import com.example.sources.awscli.command.GetIpCommand;
-import com.example.sources.awscli.command.GetTaskDetailCommand;
+import com.example.sources.awscli.command.GetNIDCommand;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,7 +22,7 @@ public class AwsEcsUtil {
         AwsCliResponseParser cliResponseParser = new AwsCliResponseParser();
 
         AwsCommand createTaskCommand = new CreateTaskCommand(bashExecutor, cliResponseParser);
-        AwsCommand getTaskDetailCommand = new GetTaskDetailCommand(bashExecutor, cliResponseParser);
+        AwsCommand getTaskDetailCommand = new GetNIDCommand(bashExecutor, cliResponseParser);
         AwsCommand getIpCommand = new GetIpCommand(bashExecutor, cliResponseParser);
 
         awsCliExecutor = new AwsCliExecutor(
@@ -31,10 +31,15 @@ public class AwsEcsUtil {
                 getIpCommand);
     }
 
+    /**
+     * aws cli 를 이용하여 ecs 컨테이너를 생성한다.
+     *
+     * @return 생성된 컨테이너의 public ip
+     */
     public String createEcsContainer() {
         String task = awsCliExecutor.createTask(awsCommandString.createTaskCommand());
-        String eid = awsCliExecutor.getTaskDetail(awsCommandString.getTaskDetailCommand(task));
+        String networkInterfaceId = awsCliExecutor.getNetworkIfs(awsCommandString.getTaskDetailCommand(task));
 
-        return awsCliExecutor.getIp(awsCommandString.getIpCommand(eid));
+        return awsCliExecutor.getIp(awsCommandString.getNetworkIfsDetailCommand(networkInterfaceId));
     }
 }

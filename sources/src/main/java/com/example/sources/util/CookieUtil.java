@@ -1,10 +1,7 @@
 package com.example.sources.util;
 
-import com.example.sources.exception.EmptyCookieException;
 import org.springframework.stereotype.Component;
-
 import javax.servlet.http.Cookie;
-import java.time.LocalDateTime;
 
 @Component
 public class CookieUtil {
