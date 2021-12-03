@@ -1,0 +1,5 @@
+aws:
+  ecs:
+    cluster_name: KT-20211113-2
+    subnet: subnet-07439ed188223bb3f
+    security_group: sg-01a19961262ae4372
