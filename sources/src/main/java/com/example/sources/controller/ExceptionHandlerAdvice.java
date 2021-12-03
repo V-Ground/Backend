@@ -61,7 +61,7 @@ public class ExceptionHandlerAdvice {
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(CurriculumClosedException.class)
+    @ExceptionHandler(AwsResponseParseException.class)
     public ErrorResponseData handleAwsCliResponseParseException(AwsResponseParseException e) {
         return new ErrorResponseData(e.getMessage());
     }

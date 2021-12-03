@@ -1,5 +1,6 @@
 package com.example.sources.cofiguration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,4 +16,5 @@ public class ApplicationConfiguration {
 
     @Bean
     public ModelMapper modelMapper() { return new ModelMapper(); }
+
 }

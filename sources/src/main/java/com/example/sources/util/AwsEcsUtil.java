@@ -8,6 +8,7 @@ import com.example.sources.awscli.command.AwsCommand;
 import com.example.sources.awscli.command.CreateTaskCommand;
 import com.example.sources.awscli.command.GetIpCommand;
 import com.example.sources.awscli.command.GetNIDCommand;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
 @Component
