@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskDetails {
+public class TaskDetail {
     private String name;
     private String value;
 }

@@ -1,15 +1,10 @@
-package com.example.sources.util;
-
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+package com.example.sources.awscli;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.List;
 
-@Component
 public class BashExecutor {
     private ProcessBuilder bash;
 
@@ -25,23 +20,21 @@ public class BashExecutor {
         BufferedReader outBuffer;
         try {
             Process process = bash.start();
-            InputStream stream = isDebug ? process.getErrorStream() : process.getInputStream();
-            outBuffer = new BufferedReader(new InputStreamReader(stream));
+            InputStream inputStream = isDebug ? process.getErrorStream() : process.getInputStream();
+            outBuffer = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             while((line = outBuffer.readLine()) != null) {
                 sb.append(line);
             }
-
+            process.waitFor();
+            inputStream.close();
             outBuffer.close();
-            stream.close();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         return sb.toString();
-    }
-
-    public List<String> getNowExecuteCommand() {
-        return bash.command();
     }
 }

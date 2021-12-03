@@ -1,7 +1,5 @@
 package com.example.sources.service;
 
-import com.example.sources.awscli.AwsCliCommand;
-import com.example.sources.awscli.AwsCliResponseParser;
 import com.example.sources.domain.dto.request.CreateCourseRequestData;
 import com.example.sources.domain.dto.response.CreateCourseResponseData;
 import com.example.sources.domain.dto.response.ParticipantResponseData;
@@ -17,7 +15,7 @@ import com.example.sources.domain.type.RoleType;
 import com.example.sources.exception.AuthenticationFailedException;
 import com.example.sources.exception.NotFoundException;
 import com.example.sources.exception.UserNotFoundException;
-import com.example.sources.util.BashExecutor;
+import com.example.sources.util.AwsEcsUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -34,7 +32,9 @@ public class CourseService {
     private final CourseUserRepository courseUserRepository;
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
+    private final AwsEcsUtil awsEcsUtil;
     private final ModelMapper modelMapper;
+
 
     /**
      * 강사가 클래스를 생성한다.
@@ -59,9 +59,12 @@ public class CourseService {
 
         Course savedCourse = courseRepository.save(course);
 
+        String containerIp = awsEcsUtil.createEcsContainer();
+
         CourseUser courseUser = CourseUser.builder() // 클래스에 강사를 허용
                 .course(savedCourse)
                 .user(teacher)
+                .containerIp(containerIp)
                 .build();
 
         courseUserRepository.save(courseUser);
@@ -103,7 +106,15 @@ public class CourseService {
         User student = userRepository.findById(studentId).orElseThrow(
                 () -> new NotFoundException("사용자 번호 " + studentId));
 
-        courseUserRepository.save(CourseUser.builder().user(student).course(course).build());
+        String containerIp = awsEcsUtil.createEcsContainer();
+
+        CourseUser courseUser = CourseUser.builder()
+                .user(student)
+                .course(course)
+                .containerIp(containerIp)
+                .build();
+
+        courseUserRepository.save(courseUser);
     }
 
     /**

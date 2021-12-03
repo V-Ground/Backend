@@ -1,19 +1,16 @@
 package com.example.sources.awscli;
 
-import com.example.sources.domain.dto.aws.TaskDetails;
+import com.example.sources.domain.dto.aws.TaskDetail;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@RequiredArgsConstructor
-@Component
 public class AwsCliResponseParser {
-    private final ObjectMapper objectMapper;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public String findTaskArn(String json) {
         try {
@@ -30,10 +27,10 @@ public class AwsCliResponseParser {
         try {
             JsonNode jsonNode = objectMapper.readTree(json).findValue("details");
 
-            List<TaskDetails> taskDetails = objectMapper
-                    .readValue(jsonNode.toString(), new TypeReference<List<TaskDetails>>() {});
+            List<TaskDetail> taskDetails = objectMapper
+                    .readValue(jsonNode.toString(), new TypeReference<List<TaskDetail>>() {});
 
-            for (TaskDetails taskDetail : taskDetails) {
+            for (TaskDetail taskDetail : taskDetails) {
                 if(taskDetail.getName().equals("networkInterfaceId")) {
                     return taskDetail.getValue();
                 }
