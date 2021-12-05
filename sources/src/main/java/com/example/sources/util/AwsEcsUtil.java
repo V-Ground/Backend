@@ -8,6 +8,7 @@ import com.example.sources.awscli.command.AwsCommand;
 import com.example.sources.awscli.command.CreateTaskCommand;
 import com.example.sources.awscli.command.GetIpCommand;
 import com.example.sources.awscli.command.GetNIDCommand;
+import com.example.sources.domain.dto.aws.TaskInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +40,11 @@ public class AwsEcsUtil {
      *
      * @return 생성된 컨테이너의 public ip
      */
-    public String createEcsContainer() {
-        String task = awsCliExecutor.createTask(awsCommandString.createTaskCommand());
-        String networkInterfaceId = awsCliExecutor.getNetworkIfs(awsCommandString.getTaskDetailCommand(task));
+    public TaskInfo createEcsContainer() {
+        String taskArn = awsCliExecutor.createTask(awsCommandString.createTaskCommand());
+        String networkInterfaceId = awsCliExecutor.getNetworkIfs(awsCommandString.getTaskDetailCommand(taskArn));
+        String ip = awsCliExecutor.getIp(awsCommandString.getNetworkIfsDetailCommand(networkInterfaceId));
 
-        return awsCliExecutor.getIp(awsCommandString.getNetworkIfsDetailCommand(networkInterfaceId));
+        return new TaskInfo(taskArn, ip);
     }
 }

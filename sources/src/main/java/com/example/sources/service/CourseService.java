@@ -1,5 +1,6 @@
 package com.example.sources.service;
 
+import com.example.sources.domain.dto.aws.TaskInfo;
 import com.example.sources.domain.dto.request.CreateCourseRequestData;
 import com.example.sources.domain.dto.response.CreateCourseResponseData;
 import com.example.sources.domain.dto.response.ParticipantResponseData;
@@ -60,13 +61,14 @@ public class CourseService {
 
         Course savedCourse = courseRepository.save(course);
 
-        String containerIp = awsEcsUtil.createEcsContainer();
+        TaskInfo taskInfo = awsEcsUtil.createEcsContainer();
 
         CourseUser courseUser = CourseUser.builder() // 클래스에 강사를 허용
                 .course(savedCourse)
                 .user(teacher)
-                .containerIp(containerIp)
                 .build();
+
+        courseUser.enrollTask(taskInfo);
 
         courseUserRepository.save(courseUser);
 
@@ -115,13 +117,14 @@ public class CourseService {
         User student = userRepository.findById(studentId).orElseThrow(
                 () -> new NotFoundException("사용자 번호 " + studentId));
 
-        String containerIp = awsEcsUtil.createEcsContainer();
+        TaskInfo taskInfo = awsEcsUtil.createEcsContainer();
 
         CourseUser courseUser = CourseUser.builder()
                 .user(student)
                 .course(course)
-                .containerIp(containerIp)
                 .build();
+
+        courseUser.enrollTask(taskInfo);
 
         return courseUserRepository.save(courseUser);
     }
