@@ -1,6 +1,7 @@
 package com.example.sources.awscli;
 
 import com.example.sources.awscli.command.AwsCommand;
+import org.springframework.stereotype.Component;
 
 public class AwsCliExecutor {
     private AwsCommand createTaskCommand;

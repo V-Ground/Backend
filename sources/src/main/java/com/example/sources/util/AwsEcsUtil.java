@@ -9,6 +9,8 @@ import com.example.sources.awscli.command.CreateTaskCommand;
 import com.example.sources.awscli.command.GetIpCommand;
 import com.example.sources.awscli.command.GetNIDCommand;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,9 +19,9 @@ public class AwsEcsUtil {
     private AwsCliExecutor awsCliExecutor;
     private AwsCommandString awsCommandString;
 
-    public AwsEcsUtil() {
+    public AwsEcsUtil(AwsCommandString awsCommandString) {
+        this.awsCommandString = awsCommandString;
         BashExecutor bashExecutor = new BashExecutor();
-        awsCommandString = new AwsCommandString();
         AwsCliResponseParser cliResponseParser = new AwsCliResponseParser();
 
         AwsCommand createTaskCommand = new CreateTaskCommand(bashExecutor, cliResponseParser);

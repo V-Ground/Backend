@@ -15,11 +15,11 @@ public class CreateTaskCommand implements AwsCommand{
 
     @Override
     public String execute(String commandString) {
-        String responseJson = bashExecutor.execute(commandString, false);
+        String responseJson = bashExecutor.execute(commandString);
         String taskArn = cliResponseParser.findTaskArn(responseJson);
 
-        try {
-            Thread.sleep(4000);
+        try { // ECS 컨테이너 생성되는 시간동안 잠시 대기
+            Thread.sleep(5000);
         } catch (Exception e) {}
 
         return taskArn;

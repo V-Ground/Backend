@@ -14,12 +14,12 @@ public class GetNIDCommand implements AwsCommand{
 
     @Override
     public String execute(String commandString) {
-        String taskDetail = bashExecutor.execute(commandString, false);
+        String taskDetail = bashExecutor.execute(commandString);
         String networkInterfaceId = cliResponseParser.findNetworkInterfaceId(taskDetail);
 
-        try {
+        /*try {
             Thread.sleep(4000);
-        } catch (Exception e) {}
+        } catch (Exception e) {}*/
 
         return networkInterfaceId;
     }

@@ -1,5 +1,7 @@
 package com.example.sources.awscli.command;
 
+import org.springframework.stereotype.Component;
+
 public interface AwsCommand {
 
     /**

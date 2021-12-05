@@ -46,7 +46,7 @@ public class CourseController {
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
     public ResponseEntity invite_need_delete_this_method(@PathVariable Long courseId,
                                                          @PathVariable Long studentId) {
-        courseService.invite_test_need_delete(courseId, studentId);
+        courseService.inviteStudent(courseId, studentId);
         return ResponseEntity.ok().build();
     }
 

@@ -16,10 +16,9 @@ public class BashExecutor {
      * bash 를 실행시킨다
      *
      * @param command 실행 시킬 명령어
-     * @param isDebug 디버그모드
      * @return 실행시킨 bash command 의 result
      */
-    public String execute(String command, boolean isDebug) {
+    public String execute(String command) {
         String[] commands = command.split(" ");
         bash.command(commands);
 
@@ -27,7 +26,7 @@ public class BashExecutor {
         Process process = null;
         try {
             process = bash.start();
-            InputStream inputStream = isDebug ? process.getErrorStream() : process.getInputStream();
+            InputStream inputStream = process.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             while((line = bufferedReader.readLine()) != null) {

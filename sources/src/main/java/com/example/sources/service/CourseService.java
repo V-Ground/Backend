@@ -18,6 +18,7 @@ import com.example.sources.exception.UserNotFoundException;
 import com.example.sources.util.AwsEcsUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -100,7 +101,15 @@ public class CourseService {
         courseRepository.delete(course);
     }
 
-    public void invite_test_need_delete(Long courseId, Long studentId) {
+    /**
+     * 학생을 초대하고 ecs 컨테이너를 생성한다.
+     *
+     * @param courseId
+     * @param studentId
+     */
+    @Deprecated
+    @Async("awsCliExecutor")
+    public CourseUser inviteStudent(Long courseId, Long studentId) {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new NotFoundException("클래스 번호 " + courseId));
         User student = userRepository.findById(studentId).orElseThrow(
@@ -114,7 +123,7 @@ public class CourseService {
                 .containerIp(containerIp)
                 .build();
 
-        courseUserRepository.save(courseUser);
+        return courseUserRepository.save(courseUser);
     }
 
     /**

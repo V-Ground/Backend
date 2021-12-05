@@ -1,5 +1,6 @@
 aws:
   ecs:
-    cluster_name: KT-20211113-2
-    subnet: subnet-07439ed188223bb3f
-    security_group: sg-01a19961262ae4372
+    cluster_name: test-cluster
+    subnet: subnet-0895decbe958ec198
+    security_group: sg-05bd59f9008f201ab
+    task_definition: first-run-task-definition
