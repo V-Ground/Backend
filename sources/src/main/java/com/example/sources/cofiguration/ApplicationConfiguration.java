@@ -1,6 +1,8 @@
 package com.example.sources.cofiguration;
 
+import com.example.sources.feign.FeignError;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.codec.ErrorDecoder;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,4 +19,9 @@ public class ApplicationConfiguration {
 
     @Bean
     public ModelMapper modelMapper() { return new ModelMapper(); }
+
+    @Bean
+    public ErrorDecoder errorDecoder() {
+        return new FeignError();
+    }
 }

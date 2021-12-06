@@ -1,6 +1,5 @@
 package com.example.sources.controller;
 
-import com.example.sources.awscli.AwsCliResponseParser;
 import com.example.sources.domain.dto.response.ErrorResponseData;
 import com.example.sources.exception.*;
 import org.springframework.http.HttpStatus;
@@ -63,6 +62,12 @@ public class ExceptionHandlerAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(AwsResponseParseException.class)
     public ErrorResponseData handleAwsCliResponseParseException(AwsResponseParseException e) {
+        return new ErrorResponseData(e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(OpenFeignException.class)
+    public ErrorResponseData handleFeignException(OpenFeignException e) {
         return new ErrorResponseData(e.getMessage());
     }
 }

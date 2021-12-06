@@ -51,7 +51,6 @@ public class UserController {
                                     @PathVariable Long quizId,
                                     @RequestBody SolveQuizRequestData request,
                                     UserAuthentication authentication) {
-        // TODO userId 와 evaluationId 는 현재 사용하지 않지만 Validation 에 추가할 것
         Long tokenUserId = authentication.getUserId();
         quizService.solveEvaluationQuiz(userId, evaluationId, quizId, request, tokenUserId);
         return ResponseEntity.ok().build();
