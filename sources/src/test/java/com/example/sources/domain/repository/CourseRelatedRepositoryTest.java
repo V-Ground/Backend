@@ -1,16 +1,16 @@
 package com.example.sources.domain.repository;
 
-import com.example.sources.domain.dto.response.AssignmentDetailResponseData;
-import com.example.sources.domain.dto.response.AssignmentResponseData;
-import com.example.sources.domain.dto.response.CourseResponseData;
-import com.example.sources.domain.dto.response.SubmittedQuestionResponseData;
+import com.example.sources.domain.dto.response.*;
 import com.example.sources.domain.entity.*;
 import com.example.sources.domain.repository.assignment.AssignmentRepository;
 import com.example.sources.domain.repository.course.CourseRepository;
 import com.example.sources.domain.repository.coursequestion.CourseQuestionRepository;
 import com.example.sources.domain.repository.courseuser.CourseUserRepository;
+import com.example.sources.domain.repository.interaction.InteractionRepository;
+import com.example.sources.domain.repository.interactionsubmit.InteractionSubmitRepository;
 import com.example.sources.domain.repository.questionsubmit.QuestionSubmitRepository;
 import com.example.sources.domain.repository.user.UserRepository;
+import com.example.sources.domain.type.InteractionType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,6 +26,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @Transactional
 class CourseRelatedRepositoryTest {
+
+
     @Autowired
     private CourseRepository courseRepository;
     @Autowired
@@ -37,6 +40,10 @@ class CourseRelatedRepositoryTest {
     private CourseQuestionRepository courseQuestionRepository;
     @Autowired
     private QuestionSubmitRepository questionSubmitRepository;
+    @Autowired
+    private InteractionRepository interactionRepository;
+    @Autowired
+    private InteractionSubmitRepository interactionSubmitRepository;
 
     @BeforeEach
     void setUp() {
@@ -100,6 +107,19 @@ class CourseRelatedRepositoryTest {
                 .user(student)
                 .question(courseQuestion)
                 .build());
+
+        Interaction interaction = interactionRepository.save(Interaction.builder()
+                .title("방금 진행했던 사항이 이해되셨는지요?")
+                .interactionType(InteractionType.OX)
+                .createdAt(LocalDateTime.now())
+                .course(course)
+                .build());
+
+        interactionSubmitRepository.save(InteractionSubmit.builder()
+                .yesNo(true)
+                .user(student)
+                .interaction(interaction)
+                .build());
     }
 
     @Test
@@ -140,12 +160,30 @@ class CourseRelatedRepositoryTest {
 
     @Test
     @DisplayName("학생이 제출한 과제의 정답 확인")
-    void getAllSubmittedQuestions() {
+    void getAllSubmittedQuestion() {
         List<SubmittedQuestionResponseData> submittedQuestions = questionSubmitRepository
                 .findAllByAssignmentIdAndUserId(1L, 10L);
 
-        for (SubmittedQuestionResponseData submittedQuestion : submittedQuestions) {
-            System.out.println("submittedQuestion = " + submittedQuestion);
-        }
+        assertTrue(0 != submittedQuestions.size());
+    }
+
+    @Test
+    @DisplayName("모든 인터렉션 조회")
+    void getAllInteraction() {
+        List<InteractionResponseData> allInteractions = interactionRepository.findAllByCourseId(3L);
+
+        assertTrue(0 != allInteractions.size());
+    }
+
+    @Test
+    @DisplayName("모든 인터렉션 제출 답 확인")
+    void getAllInteractionSubmit() {
+        List<InteractionSubmitResponseData> allSubmit = interactionSubmitRepository.findAllByInteractionId(1L);
+
+        assertAll(
+                () -> assertEquals(1, allSubmit.size()),
+                () -> assertEquals(true, allSubmit.get(0).isYes()),
+                () -> assertEquals("jwi", allSubmit.get(0).getStudentName())
+        );
     }
 }

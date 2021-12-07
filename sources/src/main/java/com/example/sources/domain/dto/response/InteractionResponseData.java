@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateInteractionResponseData {
+public class InteractionResponseData {
     private Long interactionId;
     private String title;
     private InteractionType interactionType;
