@@ -37,6 +37,7 @@ public class UserController {
     }
 
     @GetMapping("/{teacherId}/courses/{courseId}")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
     public ResponseEntity<List<ParticipantResponseData>> getParticipantDetails(@PathVariable Long teacherId,
                                                                                @PathVariable Long courseId,
                                                                                UserAuthentication authentication) {

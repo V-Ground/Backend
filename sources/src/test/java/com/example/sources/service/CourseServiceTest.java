@@ -8,6 +8,7 @@ import com.example.sources.domain.repository.course.CourseRepository;
 import com.example.sources.domain.repository.courseuser.CourseUserRepository;
 import com.example.sources.domain.repository.role.RoleRepository;
 import com.example.sources.domain.repository.user.UserRepository;
+import com.example.sources.util.AwsEcsUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,7 @@ class CourseServiceTest {
     private final CourseRepository courseRepository = mock(CourseRepository.class);
     private final CourseUserRepository courseUserRepository = mock(CourseUserRepository.class);
     private final RoleRepository roleRepository = mock(RoleRepository.class);
+    private final AwsEcsUtil awsEcsUtil = mock(AwsEcsUtil.class);
 
     private CourseService courseService;
 
@@ -43,6 +45,7 @@ class CourseServiceTest {
                 courseUserRepository,
                 roleRepository,
                 userRepository,
+                awsEcsUtil,
                 new ModelMapper());
 
         given(userRepository.findById(TEACHER_ID))
