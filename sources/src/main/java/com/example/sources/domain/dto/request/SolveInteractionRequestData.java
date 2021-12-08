@@ -9,5 +9,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SolveInteractionRequestData {
-    private boolean isYes;
+    private boolean yesNo;
+
+    public boolean getYesNo() {
+        return yesNo;
+    }
 }

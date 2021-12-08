@@ -36,7 +36,6 @@ public class InteractionService {
     /**
      * 강사가 상호작용을 추가한다.
      *
-     * @param courseId 추가할 클래스의 번호
      * @param request 추가할 상호작용 관련 데이터
      * @param tokenUserId 요청을 보낸 사용자의 토큰에 포함된 userId
      * @return 생성된 상호작용의 데이터
@@ -44,7 +43,15 @@ public class InteractionService {
     public InteractionResponseData addInteraction(Long courseId,
                                                   CreateInteractionRequestData request,
                                                   Long tokenUserId) {
-        Course course = validateCourse(courseId, tokenUserId);
+
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new NotFoundException("클래스 번호 " + courseId));
+
+        boolean owner = course.isOwner(tokenUserId);
+
+        if(!owner) {
+            throw new AuthenticationFailedException();
+        }
 
         Interaction map = modelMapper.map(request, Interaction.class);
         map.publish(course);
@@ -96,7 +103,7 @@ public class InteractionService {
                 .orElseThrow(() -> new NotFoundException("학생 번호 " + studentId));
 
         InteractionSubmit interactionSubmit = InteractionSubmit.builder()
-                .yesNo(request.isYes())
+                .yesNo(request.getYesNo())
                 .interaction(interaction)
                 .user(student)
                 .build();

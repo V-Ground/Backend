@@ -25,7 +25,7 @@ public class InteractionSubmitRepositoryImpl implements InteractionSubmitQuery {
         return queryFactory
                 .select(Projections.fields(InteractionSubmitResponseData.class,
                         interactionSubmit.id.as("interactionSubmitId"),
-                        interactionSubmit.yesNo.as("isYes"),
+                        interactionSubmit.yesNo.as("yesNo"),
                         interactionSubmit.answer,
                         interactionSubmit.user.username.as("studentName")
                         ))

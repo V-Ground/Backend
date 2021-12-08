@@ -7,6 +7,7 @@ import com.example.sources.domain.dto.response.*;
 import com.example.sources.security.UserAuthentication;
 import com.example.sources.service.AssignmentService;
 import com.example.sources.service.CourseService;
+import com.example.sources.service.InteractionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

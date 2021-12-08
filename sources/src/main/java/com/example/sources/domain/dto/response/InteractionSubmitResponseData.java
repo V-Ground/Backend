@@ -10,7 +10,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class InteractionSubmitResponseData {
     private Long interactionSubmitId;
-    private boolean isYes;
+    private boolean yesNo;
     private String answer;
     private String studentName;
+
+    public boolean getYesNo() {
+        return yesNo;
+    }
 }

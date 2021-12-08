@@ -182,7 +182,7 @@ class CourseRelatedRepositoryTest {
 
         assertAll(
                 () -> assertEquals(1, allSubmit.size()),
-                () -> assertEquals(true, allSubmit.get(0).isYes()),
+                () -> assertEquals(true, allSubmit.get(0).isYesNo()),
                 () -> assertEquals("jwi", allSubmit.get(0).getStudentName())
         );
     }

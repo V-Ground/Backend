@@ -18,7 +18,9 @@ public class ApplicationConfiguration {
     }
 
     @Bean
-    public ModelMapper modelMapper() { return new ModelMapper(); }
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
 
     @Bean
     public ErrorDecoder errorDecoder() {

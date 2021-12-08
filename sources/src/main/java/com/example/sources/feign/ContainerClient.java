@@ -3,7 +3,6 @@ package com.example.sources.feign;
 import com.example.sources.domain.dto.feign.FindFileRequestData;
 import com.example.sources.domain.dto.feign.FindFileResponseData;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;

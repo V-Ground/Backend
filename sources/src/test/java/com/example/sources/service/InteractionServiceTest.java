@@ -83,9 +83,7 @@ class InteractionServiceTest {
     @DisplayName("상호작용 생성 - 성공")
     void addInteraction_success() {
         CreateInteractionRequestData request = new CreateInteractionRequestData("이해 되셨나요?", InteractionType.OX);
-        InteractionResponseData response = interactionService.addInteraction(COURSE_ID,
-                request,
-                TEACHER_ID);
+        InteractionResponseData response = interactionService.addInteraction(COURSE_ID, request, TEACHER_ID);
 
         assertNotNull(response);
     }
