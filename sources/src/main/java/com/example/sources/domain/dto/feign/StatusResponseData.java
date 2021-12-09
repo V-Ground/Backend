@@ -5,9 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FindFileResponseData {
-    private String exist;
+public class StatusResponseData {
+    private boolean status;
+
+    public boolean getStatus() {
+        return status;
+    }
 }
