@@ -1,9 +1,7 @@
 package com.example.sources.service;
 
-import com.example.sources.domain.dto.feign.BashResponseData;
-import com.example.sources.domain.dto.feign.CommandReqData;
-import com.example.sources.domain.dto.feign.FileResData;
-import com.example.sources.domain.dto.feign.InstallResData;
+import com.example.sources.domain.dto.feign.*;
+import com.example.sources.domain.dto.request.ContainerBaseField;
 import com.example.sources.domain.dto.request.ContainerFileReqData;
 import com.example.sources.domain.dto.request.ContainerInstallReqData;
 import com.example.sources.domain.dto.request.ContainerCommandReqData;
@@ -50,11 +48,11 @@ public class ContainerService {
                 .map(courseUser ->
                         CompletableFuture.supplyAsync(
                                 () -> {
-                                    BashResponseData feignResponse;
+                                    FeignBashResponseData feignResponse;
                                     URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080/command/execute");
                                     feignResponse = containerClient.executeRemoteCommand(
                                             uri,
-                                            new CommandReqData(requestData.getCommand()));
+                                            new FeignCommandReqData(requestData.getCommand()));
 
                                     return ContainerBashResData.builder()
                                             .studentId(courseUser.getId())
@@ -83,7 +81,7 @@ public class ContainerService {
                         CompletableFuture.supplyAsync(
                                 () -> {
                                     URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080/filesystem/file_install/");
-                                    InstallResData feignResponse = containerClient.detectInstallation(
+                                    FeignInstallResData feignResponse = containerClient.detectInstallation(
                                             uri,
                                             requestData.getProgramName());
 
@@ -97,6 +95,82 @@ public class ContainerService {
                                 .orTimeout(2L, TimeUnit.SECONDS)
                                 .exceptionally(e ->
                                         ContainerInstallResData.builder()
+                                                .studentId(courseUser.getId())
+                                                .error(true)
+                                                .build()))
+                .collect(Collectors.toList())
+                .stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.toUnmodifiableList());
+    }
+    /**
+     * 컨테이너 내부의 path 에 위치한 파일 내용을 반환한다.
+     *
+     * @param courseId 클래스 id
+     * @param requestData 파일 확인을 위한 dto
+     * @param tokenUserId 요청을 보낸 강사의 id
+     * @return
+     */
+    public List<ContainerFileResData> getFileContent(Long courseId, ContainerFileReqData requestData, Long tokenUserId) {
+
+        validateCourse(courseId, tokenUserId);
+        List<CourseUser> courseUsers = getCourseUserFromIds(requestData.getStudentIds());
+
+        return courseUsers.stream()
+                .map(courseUser ->
+                        CompletableFuture.supplyAsync(
+                                () -> {
+                                    URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080/filesystem/file_view");
+                                    FeignFileResData feignResponse = containerClient.getFileContent(
+                                            uri,
+                                            requestData.getFilePath());
+
+                                    return ContainerFileResData.builder()
+                                            .studentId(courseUser.getId())
+                                            .status(feignResponse.getStatus())
+                                            .fileContent(feignResponse.getFileContent())
+                                            .build();
+                                })
+                                .orTimeout(2L, TimeUnit.SECONDS)
+                                .exceptionally(e ->
+                                        ContainerFileResData.builder()
+                                                .studentId(courseUser.getId())
+                                                .error(true)
+                                                .build()))
+                .collect(Collectors.toList())
+                .stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    /**
+     * 컨테이너에 존재하는 bash_history 를 반환한다.
+     *
+     * @param courseId 클래스 id
+     * @param requestData 요청 dto
+     * @param tokenUserId 요청을 보낸 강사의 id
+     * @return
+     */
+    public List<ContainerFileResData> getBashHistory(Long courseId, ContainerBaseField requestData, Long tokenUserId) {
+
+        validateCourse(courseId, tokenUserId);
+        List<CourseUser> courseUsers = getCourseUserFromIds(requestData.getStudentIds());
+
+        return courseUsers.stream()
+                .map(courseUser ->
+                        CompletableFuture.supplyAsync(
+                                () -> {
+                                    URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080/bash_history/non_realtime");
+                                    FeignHistoryResData feignResponse = containerClient.getBashHistory(uri);
+
+                                    return ContainerFileResData.builder()
+                                            .studentId(courseUser.getId())
+                                            .fileContent(feignResponse.getFileContent())
+                                            .build();
+                                })
+                                .orTimeout(2L, TimeUnit.SECONDS)
+                                .exceptionally(e ->
+                                        ContainerFileResData.builder()
                                                 .studentId(courseUser.getId())
                                                 .error(true)
                                                 .build()))
@@ -120,38 +194,6 @@ public class ContainerService {
         if(!owner) {
             throw new AuthenticationFailedException();
         }
-    }
-
-    public List<ContainerFileResData> getFileContent(Long courseId, ContainerFileReqData requestData, Long tokenUserId) {
-
-        validateCourse(courseId, tokenUserId);
-        List<CourseUser> courseUsers = getCourseUserFromIds(requestData.getStudentIds());
-
-        return courseUsers.stream()
-                .map(courseUser ->
-                        CompletableFuture.supplyAsync(
-                                () -> {
-                                    URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080/filesystem/file_view");
-                                    FileResData feignResponse = containerClient.getFileContent(
-                                            uri,
-                                            requestData.getFilePath());
-
-                                    return ContainerFileResData.builder()
-                                            .studentId(courseUser.getId())
-                                            .status(feignResponse.getStatus())
-                                            .fileContent(feignResponse.getFileContent())
-                                            .build();
-                                })
-                                .orTimeout(2L, TimeUnit.SECONDS)
-                                .exceptionally(e ->
-                                        ContainerFileResData.builder()
-                                                .studentId(courseUser.getId())
-                                                .error(true)
-                                                .build()))
-                .collect(Collectors.toList())
-                .stream()
-                .map(CompletableFuture::join)
-                .collect(Collectors.toUnmodifiableList());
     }
 
     /**

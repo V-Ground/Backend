@@ -1,5 +1,6 @@
 package com.example.sources.controller;
 
+import com.example.sources.domain.dto.request.ContainerBaseField;
 import com.example.sources.domain.dto.request.ContainerFileReqData;
 import com.example.sources.domain.dto.request.ContainerInstallReqData;
 import com.example.sources.domain.dto.request.ContainerCommandReqData;
@@ -58,6 +59,17 @@ public class ContainerController {
 
         return ResponseEntity
                 .ok(containerService.getFileContent(courseId, body, tokenUserId));
+    }
+
+    @PostMapping("/courses/{courseId}/bash_history/non_realtime")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
+    public ResponseEntity<List<ContainerFileResData>> getBashHistory(@PathVariable Long courseId,
+                                                                     @RequestBody ContainerBaseField body,
+                                                                     UserAuthentication authentication) {
+        Long tokenUserId = authentication.getUserId();
+
+        return ResponseEntity
+                .ok(containerService.getBashHistory(courseId, body, tokenUserId));
     }
 
 }

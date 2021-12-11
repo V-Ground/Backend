@@ -5,13 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter
+import java.util.List;
+
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class InstallResData {
+public class FeignFileResData {
     private boolean status;
-    private String installPath;
-    private String version;
+    private List<String> fileContent;
 
     public boolean getStatus() {
         return status;

@@ -1,8 +1,6 @@
 package com.example.sources.feign;
 
 import com.example.sources.domain.dto.feign.*;
-import com.example.sources.domain.dto.response.ContainerFileResData;
-import com.example.sources.domain.dto.response.ContainerInstallResData;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,17 +12,20 @@ import java.net.URI;
 public interface ContainerClient {
 
     @GetMapping(value = "/mouse_keyboard/keyboard")
-    StatusResData detectKeyboardHit(URI uri);
+    FeignStatusResData detectKeyboardHit(URI uri);
 
     @GetMapping(value = "/mouse_keyboard/mouse")
-    StatusResData detectMouseMove(URI uri);
+    FeignStatusResData detectMouseMove(URI uri);
 
-    @PostMapping("/command/execute")
-    BashResponseData executeRemoteCommand(URI uri, @RequestBody CommandReqData requestBody);
+    @PostMapping(value = "/command/execute")
+    FeignBashResponseData executeRemoteCommand(URI uri, @RequestBody FeignCommandReqData requestBody);
 
     @GetMapping(value = "/filesystem/find_install")
-    InstallResData detectInstallation(URI uri, @RequestParam String programName);
+    FeignInstallResData detectInstallation(URI uri, @RequestParam String programName);
 
-    @GetMapping(value = "filesystem/file_view")
-    FileResData getFileContent(URI uri, @RequestParam String filePath);
+    @GetMapping(value = "/filesystem/file_view")
+    FeignFileResData getFileContent(URI uri, @RequestParam String filePath);
+
+    @GetMapping(value = "/bash_history/non_realtime")
+    FeignHistoryResData getBashHistory(URI uri);
 }

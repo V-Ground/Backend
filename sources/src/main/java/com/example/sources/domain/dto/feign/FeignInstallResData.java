@@ -8,6 +8,12 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommandReqData {
-    private String command;
+public class FeignInstallResData {
+    private boolean status;
+    private String installPath;
+    private String version;
+
+    public boolean getStatus() {
+        return status;
+    }
 }
