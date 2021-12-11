@@ -5,15 +5,18 @@ import lombok.*;
 @Getter @Setter @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ContainerStatusResponseData {
+public class ContainerInstallResData {
     private Long studentId;
-    private String studentName;
     private boolean status;
-    private boolean error;
+    private String installPath;
+    private String version;
+    private boolean error = false;
 
     public boolean getStatus() {
         return status;
     }
 
-    public boolean getError() { return error; }
+    public boolean getError() {
+        return error;
+    }
 }

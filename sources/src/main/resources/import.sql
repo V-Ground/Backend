@@ -30,9 +30,9 @@ insert into course (id, title, description, cpu, memory, os, visibility, teacher
 insert into course (id, title, description, cpu, memory, os, visibility, teacher_id) values('2', 'Wireshark 를 이용한 네트워크 분석', 'Wireshark 를 이용하여 네트워크를 분석합니다.', '1', '1', 'UBUNTU', true, '7');
 
 /* 클래스 소속 회원 추가 */
-insert into course_user (id, container_ip, user_id, course_id) values('1', '3.38.101.76', 1, 1);
-insert into course_user (id, container_ip, user_id, course_id) values('2', '3.38.108.25', 1, 2);
-insert into course_user (id, container_ip, user_id, course_id) values('3', '13.209.20.216', 6, 1);
+insert into course_user (id, container_ip, user_id, course_id) values('1', '58.142.191.143', 1, 1);
+insert into course_user (id, container_ip, user_id, course_id) values('2', '58.142.191.141', 1, 2);
+insert into course_user (id, container_ip, user_id, course_id) values('3', '58.142.191.141', 6, 1);
 
 /* 클래스 과제 추가 */
 insert into assignment (id, title, description, started_at, ended_at, course_id) values('1', '클라우드 컴퓨팅 기본 지식 점검', '클라우드 컴퓨팅 자원을 이용하기 위해서 알아야하는 기본 지식에 대한 퀴즈', '2021-11-19T00:00:00', '2021-11-22T00:00:00', 1);

@@ -1,25 +1,21 @@
 package com.example.sources.controller;
 
-import com.example.sources.domain.dto.request.CreateEvaluationRequestData;
+import com.example.sources.domain.dto.request.CreateEvaluationReqData;
 import com.example.sources.domain.dto.request.CreateQuizRequestData;
 import com.example.sources.domain.dto.response.CreateEvaluationResponseData;
 import com.example.sources.domain.dto.response.CreateQuizResponseData;
-import com.example.sources.domain.dto.response.QuizResponseData;
 import com.example.sources.domain.entity.Role;
 import com.example.sources.domain.type.RoleType;
 import com.example.sources.service.AuthenticationService;
 import com.example.sources.service.EvaluationService;
 import com.example.sources.service.QuizService;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -27,7 +23,6 @@ import javax.servlet.http.Cookie;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -89,7 +84,7 @@ class EvaluationControllerTest {
     @Test
     @DisplayName("테스트 생성")
     void addEvaluation() throws Exception {
-        CreateEvaluationRequestData request = new CreateEvaluationRequestData();
+        CreateEvaluationReqData request = new CreateEvaluationReqData();
 
         mockMvc.perform(post("/api/v1/evaluations")
                         .contentType(MediaType.APPLICATION_JSON)

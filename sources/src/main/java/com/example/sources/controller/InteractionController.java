@@ -1,6 +1,6 @@
 package com.example.sources.controller;
 
-import com.example.sources.domain.dto.request.CreateInteractionRequestData;
+import com.example.sources.domain.dto.request.CreateInteractionReqData;
 import com.example.sources.domain.dto.request.SolveInteractionRequestData;
 import com.example.sources.domain.dto.response.InteractionResponseData;
 import com.example.sources.domain.dto.response.InteractionSubmitResponseData;
@@ -23,7 +23,7 @@ public class InteractionController {
     @PostMapping("/courses/{courseId}")
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
     public ResponseEntity<InteractionResponseData> addInteraction(@PathVariable Long courseId,
-                                                                  @RequestBody CreateInteractionRequestData requestData,
+                                                                  @RequestBody CreateInteractionReqData requestData,
                                                                   UserAuthentication authentication) {
         Long tokenUserId = authentication.getUserId();
         return ResponseEntity

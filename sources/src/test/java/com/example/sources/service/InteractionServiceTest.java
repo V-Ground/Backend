@@ -1,12 +1,11 @@
 package com.example.sources.service;
 
-import com.example.sources.domain.dto.request.CreateInteractionRequestData;
+import com.example.sources.domain.dto.request.CreateInteractionReqData;
 import com.example.sources.domain.dto.request.SolveInteractionRequestData;
 import com.example.sources.domain.dto.response.InteractionResponseData;
 import com.example.sources.domain.dto.response.InteractionSubmitResponseData;
 import com.example.sources.domain.entity.Course;
 import com.example.sources.domain.entity.Interaction;
-import com.example.sources.domain.entity.InteractionSubmit;
 import com.example.sources.domain.entity.User;
 import com.example.sources.domain.repository.course.CourseRepository;
 import com.example.sources.domain.repository.courseuser.CourseUserRepository;
@@ -82,7 +81,7 @@ class InteractionServiceTest {
     @Test
     @DisplayName("상호작용 생성 - 성공")
     void addInteraction_success() {
-        CreateInteractionRequestData request = new CreateInteractionRequestData("이해 되셨나요?", InteractionType.OX);
+        CreateInteractionReqData request = new CreateInteractionReqData("이해 되셨나요?", InteractionType.OX);
         InteractionResponseData response = interactionService.addInteraction(COURSE_ID, request, TEACHER_ID);
 
         assertNotNull(response);

@@ -1,6 +1,6 @@
 package com.example.sources.service;
 
-import com.example.sources.domain.dto.request.CreateAssignmentRequestData;
+import com.example.sources.domain.dto.request.CreateAssignmentReqData;
 import com.example.sources.domain.dto.request.CreateQuestionRequestData;
 import com.example.sources.domain.dto.request.SolveQuestionRequestData;
 import com.example.sources.domain.dto.response.*;
@@ -16,7 +16,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -100,7 +99,7 @@ class AssignmentServiceTest {
     @Test
     @DisplayName("과제 생성 - 성공")
     void addAssignment_success() {
-        CreateAssignmentRequestData request = CreateAssignmentRequestData.builder()
+        CreateAssignmentReqData request = CreateAssignmentReqData.builder()
                 .title("title")
                 .description("test")
                 .build();

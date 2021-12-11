@@ -2,18 +2,22 @@ package com.example.sources.domain.dto.response;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter @Setter @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ContainerStatusResponseData {
+public class ContainerFileResData {
     private Long studentId;
-    private String studentName;
     private boolean status;
+    private List<String> fileContent;
     private boolean error;
 
     public boolean getStatus() {
         return status;
     }
 
-    public boolean getError() { return error; }
+    public boolean getError() {
+        return error;
+    }
 }

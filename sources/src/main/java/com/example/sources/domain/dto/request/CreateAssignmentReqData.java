@@ -7,13 +7,9 @@ import java.time.LocalDateTime;
 @Getter @Setter @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateEvaluationRequestData {
-    private Long userId;
+public class CreateAssignmentReqData {
     private String title;
     private String description;
-    private String cpu;
-    private String memory;
-    private String os;
     private LocalDateTime startedAt;
     private LocalDateTime endedAt;
 }

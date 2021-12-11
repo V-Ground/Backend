@@ -5,11 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StatusResponseData {
+public class InstallResData {
     private boolean status;
+    private String installPath;
+    private String version;
 
     public boolean getStatus() {
         return status;

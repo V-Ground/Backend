@@ -1,12 +1,11 @@
 package com.example.sources.controller;
 
-import com.example.sources.domain.dto.request.CreateAssignmentRequestData;
-import com.example.sources.domain.dto.request.CreateCourseRequestData;
+import com.example.sources.domain.dto.request.CreateAssignmentReqData;
+import com.example.sources.domain.dto.request.CreateCourseReqData;
 import com.example.sources.domain.dto.request.CreateQuestionRequestData;
 import com.example.sources.domain.dto.response.*;
 import com.example.sources.domain.entity.Role;
 import com.example.sources.domain.type.RoleType;
-import com.example.sources.security.UserAuthentication;
 import com.example.sources.service.AssignmentService;
 import com.example.sources.service.AuthenticationService;
 import com.example.sources.service.CourseService;
@@ -21,7 +20,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.servlet.http.Cookie;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -77,7 +75,7 @@ class CourseControllerTest {
         given(authenticationService.getRoles(STUDENT_ID))
                 .willReturn(List.of(new Role(STUDENT_ID, RoleType.STUDENT)));
 
-        given(courseService.addCourse(any(CreateCourseRequestData.class)))
+        given(courseService.addCourse(any(CreateCourseReqData.class)))
                 .willReturn(new CreateCourseResponseData());
 
         given(assignmentService.addAssignment(eq(COURSE_ID), any(), eq(TEACHER_TOKEN_ID)))
@@ -96,7 +94,7 @@ class CourseControllerTest {
     @Test
     @DisplayName("클래스 생성 성공")
     void addCourse_success() throws Exception {
-        CreateCourseRequestData request = new CreateCourseRequestData();
+        CreateCourseReqData request = new CreateCourseReqData();
 
         mockMvc.perform(post("/api/v1/courses")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -109,7 +107,7 @@ class CourseControllerTest {
     @Test
     @DisplayName("클래스 과제 생성")
     void addAssignment_success() throws Exception {
-        CreateAssignmentRequestData request = new CreateAssignmentRequestData();
+        CreateAssignmentReqData request = new CreateAssignmentReqData();
 
         mockMvc.perform(post("/api/v1/courses/{courseId}/assignments", COURSE_ID)
                         .contentType(MediaType.APPLICATION_JSON)

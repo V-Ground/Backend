@@ -1,13 +1,12 @@
 package com.example.sources.controller;
 
-import com.example.sources.domain.dto.request.CreateAssignmentRequestData;
-import com.example.sources.domain.dto.request.CreateCourseRequestData;
+import com.example.sources.domain.dto.request.CreateAssignmentReqData;
+import com.example.sources.domain.dto.request.CreateCourseReqData;
 import com.example.sources.domain.dto.request.CreateQuestionRequestData;
 import com.example.sources.domain.dto.response.*;
 import com.example.sources.security.UserAuthentication;
 import com.example.sources.service.AssignmentService;
 import com.example.sources.service.CourseService;
-import com.example.sources.service.InteractionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +24,7 @@ public class CourseController {
 
     @PostMapping
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
-    public ResponseEntity<CreateCourseResponseData> addCourse(@RequestBody CreateCourseRequestData request) {
+    public ResponseEntity<CreateCourseResponseData> addCourse(@RequestBody CreateCourseReqData request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(courseService.addCourse(request));
     }
 
@@ -54,7 +53,7 @@ public class CourseController {
     @PostMapping("/{courseId}/assignments")
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
     public ResponseEntity<AssignmentResponseData> addAssignment(@PathVariable Long courseId,
-                                                                   @RequestBody CreateAssignmentRequestData request,
+                                                                   @RequestBody CreateAssignmentReqData request,
                                                                    UserAuthentication authentication) {
         Long tokenUserId = authentication.getUserId();
         return ResponseEntity.status(HttpStatus.CREATED).body(assignmentService.addAssignment(courseId, request, tokenUserId));

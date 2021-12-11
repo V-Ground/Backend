@@ -1,6 +1,6 @@
 package com.example.sources.service;
 
-import com.example.sources.domain.dto.request.CreateAssignmentRequestData;
+import com.example.sources.domain.dto.request.CreateAssignmentReqData;
 import com.example.sources.domain.dto.request.CreateQuestionRequestData;
 import com.example.sources.domain.dto.request.ScoringRequestData;
 import com.example.sources.domain.dto.request.SolveQuestionRequestData;
@@ -16,7 +16,6 @@ import com.example.sources.exception.AuthenticationFailedException;
 import com.example.sources.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,7 +43,7 @@ public class AssignmentService {
      * @return 생성된 과제의 정보가 담긴 DTO
      */
     public AssignmentResponseData addAssignment(Long courseId,
-                                                CreateAssignmentRequestData request,
+                                                CreateAssignmentReqData request,
                                                 Long tokenUserId) {
         Course course = courseRepository.findById(courseId).orElseThrow( // 과제를 생성할 course 가 없는 경우
                 () -> new NotFoundException("클래스 번호 " + courseId));

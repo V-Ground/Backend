@@ -1,6 +1,6 @@
 package com.example.sources.service;
 
-import com.example.sources.domain.dto.request.CreateEvaluationRequestData;
+import com.example.sources.domain.dto.request.CreateEvaluationReqData;
 import com.example.sources.domain.dto.response.CreateEvaluationResponseData;
 import com.example.sources.domain.dto.response.QuizResponseData;
 import com.example.sources.domain.entity.Evaluation;
@@ -10,7 +10,6 @@ import com.example.sources.domain.entity.User;
 import com.example.sources.domain.repository.evaluation.EvaluationRepository;
 import com.example.sources.domain.repository.evaluationquiz.EvaluationQuizRepository;
 import com.example.sources.domain.repository.evaluationuser.EvaluationUserRepository;
-import com.example.sources.domain.repository.quizsubmit.QuizSubmitRepository;
 import com.example.sources.domain.repository.role.RoleRepository;
 import com.example.sources.domain.repository.user.UserRepository;
 import com.example.sources.domain.type.RoleType;
@@ -40,7 +39,7 @@ public class EvaluationService {
      * @param request : 테스트 생성 Request DTO
      * @return 생성된 테스트의 정보가 담긴 DTO
      */
-    public CreateEvaluationResponseData addEvaluation(CreateEvaluationRequestData request) {
+    public CreateEvaluationResponseData addEvaluation(CreateEvaluationReqData request) {
         Long userId = request.getUserId();
         User teacher = userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException("사용자 번호 " + userId));

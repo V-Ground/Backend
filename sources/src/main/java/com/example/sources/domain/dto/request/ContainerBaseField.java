@@ -5,14 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateCourseRequestData {
-    private Long userId;
-    private String title;
-    private String description;
-    private String cpu;
-    private String memory;
-    private String os;
+public class ContainerBaseField {
+    private List<Long> studentIds;
 }

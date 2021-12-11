@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateInteractionRequestData {
+public class CreateInteractionReqData {
     private String title;
     private InteractionType interactionType;
 }

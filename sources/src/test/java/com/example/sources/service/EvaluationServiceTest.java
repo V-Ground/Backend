@@ -1,6 +1,6 @@
 package com.example.sources.service;
 
-import com.example.sources.domain.dto.request.CreateEvaluationRequestData;
+import com.example.sources.domain.dto.request.CreateEvaluationReqData;
 import com.example.sources.domain.dto.response.CreateEvaluationResponseData;
 import com.example.sources.domain.entity.Evaluation;
 import com.example.sources.domain.entity.User;
@@ -53,7 +53,7 @@ class EvaluationServiceTest {
     @Test
     @DisplayName("테스트 생성 - 성공")
     void addEvaluation_success() {
-        CreateEvaluationRequestData request = CreateEvaluationRequestData.builder()
+        CreateEvaluationReqData request = CreateEvaluationReqData.builder()
                 .userId(TEACHER_ID)
                 .build();
 

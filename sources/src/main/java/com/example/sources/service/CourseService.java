@@ -1,7 +1,7 @@
 package com.example.sources.service;
 
 import com.example.sources.domain.dto.aws.TaskInfo;
-import com.example.sources.domain.dto.request.CreateCourseRequestData;
+import com.example.sources.domain.dto.request.CreateCourseReqData;
 import com.example.sources.domain.dto.response.CreateCourseResponseData;
 import com.example.sources.domain.dto.response.ParticipantResponseData;
 import com.example.sources.domain.entity.Course;
@@ -44,7 +44,7 @@ public class CourseService {
      * @param request : 클래스 생성 Request DTO
      * @return : 생성된 클래스의 정보가 담긴 DTO
      */
-    public CreateCourseResponseData addCourse(CreateCourseRequestData request) {
+    public CreateCourseResponseData addCourse(CreateCourseReqData request) {
         Long userId = request.getUserId();
 
         User teacher = userRepository.findById(userId).orElseThrow(

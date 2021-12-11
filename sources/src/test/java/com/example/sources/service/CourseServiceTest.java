@@ -1,6 +1,6 @@
 package com.example.sources.service;
 
-import com.example.sources.domain.dto.request.CreateCourseRequestData;
+import com.example.sources.domain.dto.request.CreateCourseReqData;
 import com.example.sources.domain.dto.response.CreateCourseResponseData;
 import com.example.sources.domain.entity.Course;
 import com.example.sources.domain.entity.User;
@@ -72,7 +72,7 @@ class CourseServiceTest {
     @Test
     @DisplayName("course 생성 성공")
     void createCourse_success() {
-        CreateCourseRequestData request = new CreateCourseRequestData(
+        CreateCourseReqData request = new CreateCourseReqData(
                 STUDENT_ID, "와샥", "와이어샤크에 대해서 공부합니다", "1", "1", "os");
 
         CreateCourseResponseData createCourseResponseData = courseService.addCourse(request);

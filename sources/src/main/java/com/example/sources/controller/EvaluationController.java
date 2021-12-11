@@ -1,6 +1,6 @@
 package com.example.sources.controller;
 
-import com.example.sources.domain.dto.request.CreateEvaluationRequestData;
+import com.example.sources.domain.dto.request.CreateEvaluationReqData;
 import com.example.sources.domain.dto.request.CreateQuizRequestData;
 import com.example.sources.domain.dto.response.CreateEvaluationResponseData;
 import com.example.sources.domain.dto.response.CreateQuizResponseData;
@@ -25,7 +25,7 @@ public class EvaluationController {
 
     @PostMapping
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
-    public ResponseEntity<CreateEvaluationResponseData> add(@RequestBody CreateEvaluationRequestData request) {
+    public ResponseEntity<CreateEvaluationResponseData> add(@RequestBody CreateEvaluationReqData request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(evaluationService.addEvaluation(request));
     }
 

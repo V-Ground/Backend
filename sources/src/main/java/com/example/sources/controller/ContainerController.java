@@ -1,5 +1,11 @@
 package com.example.sources.controller;
 
+import com.example.sources.domain.dto.request.ContainerFileReqData;
+import com.example.sources.domain.dto.request.ContainerInstallReqData;
+import com.example.sources.domain.dto.request.ContainerCommandReqData;
+import com.example.sources.domain.dto.response.ContainerBashResData;
+import com.example.sources.domain.dto.response.ContainerFileResData;
+import com.example.sources.domain.dto.response.ContainerInstallResData;
 import com.example.sources.domain.dto.response.ContainerStatusResponseData;
 import com.example.sources.security.UserAuthentication;
 import com.example.sources.service.ContainerService;
@@ -16,18 +22,6 @@ import java.util.List;
 public class ContainerController {
     private final ContainerService containerService;
 
-    @GetMapping("/courses/{courseId}/exist")
-    @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
-    public ResponseEntity<List<ContainerStatusResponseData>> checkFileExist(@PathVariable Long courseId,
-                                                                            @RequestParam Integer searchOption,
-                                                                            @RequestParam String baseDir,
-                                                                            @RequestParam String filename,
-                                                                            UserAuthentication authentication) {
-        Long tokenUserId = authentication.getUserId();
-        return ResponseEntity
-                .ok(containerService.existFile(courseId, searchOption, baseDir, filename, tokenUserId));
-    }
-
     @GetMapping("/courses/{courseId}/activation")
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
     public ResponseEntity<List<ContainerStatusResponseData>> detectActivation(@PathVariable Long courseId,
@@ -38,17 +32,32 @@ public class ContainerController {
 
     @GetMapping("/courses/{courseId}/installation")
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
-    public ResponseEntity<List<ContainerStatusResponseData>> detectInstallation(@PathVariable Long courseId,
-                                                                           UserAuthentication authentication) {
+    public ResponseEntity<List<ContainerInstallResData>> detectInstallation(@PathVariable Long courseId,
+                                                                            @RequestBody ContainerInstallReqData body,
+                                                                            UserAuthentication authentication) {
         Long tokenUserId = authentication.getUserId();
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(containerService.detectInstallation(courseId, body, tokenUserId));
     }
 
-    @GetMapping("/courses/{courseId}/remote_command")
+    @PostMapping("/courses/{courseId}/remote_command")
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
-    public ResponseEntity<List<ContainerStatusResponseData>> runRemoteCommand(@PathVariable Long courseId,
-                                                                                UserAuthentication authentication) {
+    public ResponseEntity<List<ContainerBashResData>> runRemoteCommand(@PathVariable Long courseId,
+                                                                       @RequestBody ContainerCommandReqData body,
+                                                                       UserAuthentication authentication) {
         Long tokenUserId = authentication.getUserId();
-        return ResponseEntity.ok().build();
+        return ResponseEntity
+                .ok(containerService.executeRemoteCommand(courseId, body, tokenUserId));
     }
+
+    @PostMapping("/courses/{courseId}/file")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
+    public ResponseEntity<List<ContainerFileResData>> getFileContent(@PathVariable Long courseId,
+                                                                     @RequestBody ContainerFileReqData body,
+                                                                     UserAuthentication authentication) {
+        Long tokenUserId = authentication.getUserId();
+
+        return ResponseEntity
+                .ok(containerService.getFileContent(courseId, body, tokenUserId));
+    }
+
 }

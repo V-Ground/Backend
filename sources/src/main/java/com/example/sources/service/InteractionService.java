@@ -1,6 +1,6 @@
 package com.example.sources.service;
 
-import com.example.sources.domain.dto.request.CreateInteractionRequestData;
+import com.example.sources.domain.dto.request.CreateInteractionReqData;
 import com.example.sources.domain.dto.request.SolveInteractionRequestData;
 import com.example.sources.domain.dto.response.InteractionResponseData;
 import com.example.sources.domain.dto.response.InteractionSubmitResponseData;
@@ -41,7 +41,7 @@ public class InteractionService {
      * @return 생성된 상호작용의 데이터
      */
     public InteractionResponseData addInteraction(Long courseId,
-                                                  CreateInteractionRequestData request,
+                                                  CreateInteractionReqData request,
                                                   Long tokenUserId) {
 
         Course course = courseRepository.findById(courseId)
