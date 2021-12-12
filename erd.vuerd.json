@@ -2,8 +2,8 @@
   "canvas": {
     "width": 2000,
     "height": 2000,
-    "scrollTop": 0,
-    "scrollLeft": 0,
+    "scrollTop": 624,
+    "scrollLeft": 4,
     "show": {
       "tableComment": true,
       "columnComment": true,
