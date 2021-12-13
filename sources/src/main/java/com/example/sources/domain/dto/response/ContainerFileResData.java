@@ -10,7 +10,7 @@ import java.util.List;
 public class ContainerFileResData {
     private Long studentId;
     private boolean status;
-    private List<String> fileContent;
+    private String fileContent;
     private boolean error;
 
     public boolean getStatus() {

@@ -1,6 +1,6 @@
 aws:
   ecs:
-    cluster_name: test-cluster
-    subnet: subnet-0895decbe958ec198
-    security_group: sg-05bd59f9008f201ab
+    cluster_name: V-Ground
+    subnet: subnet-02c66502498e812d8
+    security_group: sg-0fd0e5833e45422a4
     task_definition: first-run-task-definition

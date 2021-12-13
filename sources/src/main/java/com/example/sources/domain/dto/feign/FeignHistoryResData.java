@@ -11,5 +11,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FeignHistoryResData {
-    private List<String> fileContent;
+    private String fileContent;
 }

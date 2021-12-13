@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class FeignFileResData {
     private boolean status;
-    private List<String> fileContent;
+    private String fileContent;
 
     public boolean getStatus() {
         return status;
