@@ -1,9 +1,6 @@
 package com.example.sources.controller;
 
-import com.example.sources.domain.dto.request.ContainerBaseField;
-import com.example.sources.domain.dto.request.ContainerFileReqData;
-import com.example.sources.domain.dto.request.ContainerInstallReqData;
-import com.example.sources.domain.dto.request.ContainerCommandReqData;
+import com.example.sources.domain.dto.request.*;
 import com.example.sources.domain.dto.response.ContainerBashResData;
 import com.example.sources.domain.dto.response.ContainerFileResData;
 import com.example.sources.domain.dto.response.ContainerInstallResData;
@@ -31,7 +28,7 @@ public class ContainerController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/courses/{courseId}/installation")
+    @PostMapping("/courses/{courseId}/installation")
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
     public ResponseEntity<List<ContainerInstallResData>> detectInstallation(@PathVariable Long courseId,
                                                                             @RequestBody ContainerInstallReqData body,
@@ -64,12 +61,20 @@ public class ContainerController {
     @PostMapping("/courses/{courseId}/bash_history/non_realtime")
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
     public ResponseEntity<List<ContainerFileResData>> getBashHistory(@PathVariable Long courseId,
-                                                                     @RequestBody ContainerBaseField body,
+                                                                     @RequestBody ContainerHistoryReqData body,
                                                                      UserAuthentication authentication) {
         Long tokenUserId = authentication.getUserId();
 
         return ResponseEntity
                 .ok(containerService.getBashHistory(courseId, body, tokenUserId));
+    }
+
+    @GetMapping
+    public ResponseEntity get(@RequestParam List<String> re) {
+        for (String s : re) {
+            System.out.println("s = " + s);
+        }
+        return ResponseEntity.ok().build();
     }
 
 }

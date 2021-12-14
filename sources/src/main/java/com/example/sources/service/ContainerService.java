@@ -1,10 +1,7 @@
 package com.example.sources.service;
 
 import com.example.sources.domain.dto.feign.*;
-import com.example.sources.domain.dto.request.ContainerBaseField;
-import com.example.sources.domain.dto.request.ContainerFileReqData;
-import com.example.sources.domain.dto.request.ContainerInstallReqData;
-import com.example.sources.domain.dto.request.ContainerCommandReqData;
+import com.example.sources.domain.dto.request.*;
 import com.example.sources.domain.dto.response.*;
 import com.example.sources.domain.entity.Course;
 import com.example.sources.domain.entity.CourseUser;
@@ -49,7 +46,7 @@ public class ContainerService {
                         CompletableFuture.supplyAsync(
                                 () -> {
                                     FeignBashResponseData feignResponse;
-                                    URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080/command/execute");
+                                    URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080/command/execute//");
                                     feignResponse = containerClient.executeRemoteCommand(
                                             uri,
                                             new FeignCommandReqData(requestData.getCommand()));
@@ -80,7 +77,7 @@ public class ContainerService {
                 .map(courseUser ->
                         CompletableFuture.supplyAsync(
                                 () -> {
-                                    URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080/filesystem/file_install/");
+                                    URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080/filesystem/file_install//");
                                     FeignInstallResData feignResponse = containerClient.detectInstallation(
                                             uri,
                                             requestData.getProgramName());
@@ -120,7 +117,7 @@ public class ContainerService {
                 .map(courseUser ->
                         CompletableFuture.supplyAsync(
                                 () -> {
-                                    URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080/filesystem/file_view");
+                                    URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080/filesystem/file_view/");
                                     FeignFileResData feignResponse = containerClient.getFileContent(
                                             uri,
                                             requestData.getFilePath());
@@ -151,7 +148,7 @@ public class ContainerService {
      * @param tokenUserId 요청을 보낸 강사의 id
      * @return
      */
-    public List<ContainerFileResData> getBashHistory(Long courseId, ContainerBaseField requestData, Long tokenUserId) {
+    public List<ContainerFileResData> getBashHistory(Long courseId, ContainerHistoryReqData requestData, Long tokenUserId) {
 
         validateCourse(courseId, tokenUserId);
         List<CourseUser> courseUsers = getCourseUserFromIds(requestData.getStudentIds());
@@ -160,8 +157,8 @@ public class ContainerService {
                 .map(courseUser ->
                         CompletableFuture.supplyAsync(
                                 () -> {
-                                    URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080/bash_history/non_realtime");
-                                    FeignHistoryResData feignResponse = containerClient.getBashHistory(uri);
+                                    URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080/bash_history/non_realtime/");
+                                    FeignHistoryResData feignResponse = containerClient.getBashHistory(uri, requestData.getExcludes());
 
                                     return ContainerFileResData.builder()
                                             .studentId(courseUser.getId())
