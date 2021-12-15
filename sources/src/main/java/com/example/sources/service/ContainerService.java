@@ -310,6 +310,7 @@ public class ContainerService {
         List<CourseUser> courseUsers = new ArrayList<>();
 
         for (Long studentId : ids) {
+            // TODO 현재는 하나의 학생이라도 존재하지 않는다면 exception throw 하는데 exception 에 따라 다른 result 는 반환할 수 있도록 할 것.
             CourseUser courseUser = courseUserRepository.findByUserId(studentId)
                     .orElseThrow(() -> new NotFoundException("학생 번호 " + studentId));
 
