@@ -68,13 +68,4 @@ public class ContainerController {
         return ResponseEntity
                 .ok(containerService.getBashHistory(courseId, body, tokenUserId));
     }
-
-    @GetMapping
-    public ResponseEntity get(@RequestParam List<String> re) {
-        for (String s : re) {
-            System.out.println("s = " + s);
-        }
-        return ResponseEntity.ok().build();
-    }
-
 }

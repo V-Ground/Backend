@@ -18,7 +18,7 @@ public interface ContainerClient {
     @GetMapping(value = "/mouse_keyboard/mouse")
     FeignStatusResData detectMouseMove(URI uri);
 
-    @PostMapping
+    @PostMapping(value = "/command/execute/")
     FeignBashResponseData executeRemoteCommand(URI uri, @RequestBody FeignCommandReqData requestBody);
 
     @GetMapping(value = "/filesystem/find_install")
@@ -29,4 +29,6 @@ public interface ContainerClient {
 
     @GetMapping(value = "/bash_history/non_realtime")
     FeignHistoryResData getBashHistory(URI uri, @RequestParam List<String> excludeKeyWords);
+
+    @PostMapping
 }

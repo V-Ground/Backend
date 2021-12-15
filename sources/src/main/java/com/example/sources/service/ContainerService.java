@@ -46,7 +46,7 @@ public class ContainerService {
                         CompletableFuture.supplyAsync(
                                 () -> {
                                     FeignBashResponseData feignResponse;
-                                    URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080/command/execute//");
+                                    URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080");
                                     feignResponse = containerClient.executeRemoteCommand(
                                             uri,
                                             new FeignCommandReqData(requestData.getCommand()));
@@ -77,7 +77,7 @@ public class ContainerService {
                 .map(courseUser ->
                         CompletableFuture.supplyAsync(
                                 () -> {
-                                    URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080/filesystem/file_install//");
+                                    URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080");
                                     FeignInstallResData feignResponse = containerClient.detectInstallation(
                                             uri,
                                             requestData.getProgramName());
@@ -108,7 +108,9 @@ public class ContainerService {
      * @param tokenUserId 요청을 보낸 강사의 id
      * @return
      */
-    public List<ContainerFileResData> getFileContent(Long courseId, ContainerFileReqData requestData, Long tokenUserId) {
+    public List<ContainerFileResData> getFileContent(Long courseId,
+                                                     ContainerFileReqData requestData,
+                                                     Long tokenUserId) {
 
         validateCourse(courseId, tokenUserId);
         List<CourseUser> courseUsers = getCourseUserFromIds(requestData.getStudentIds());
@@ -117,7 +119,7 @@ public class ContainerService {
                 .map(courseUser ->
                         CompletableFuture.supplyAsync(
                                 () -> {
-                                    URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080/filesystem/file_view/");
+                                    URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080");
                                     FeignFileResData feignResponse = containerClient.getFileContent(
                                             uri,
                                             requestData.getFilePath());
@@ -148,8 +150,9 @@ public class ContainerService {
      * @param tokenUserId 요청을 보낸 강사의 id
      * @return
      */
-    public List<ContainerFileResData> getBashHistory(Long courseId, ContainerHistoryReqData requestData, Long tokenUserId) {
-
+    public List<ContainerFileResData> getBashHistory(Long courseId,
+                                                     ContainerHistoryReqData requestData,
+                                                     Long tokenUserId) {
         validateCourse(courseId, tokenUserId);
         List<CourseUser> courseUsers = getCourseUserFromIds(requestData.getStudentIds());
 
@@ -157,8 +160,10 @@ public class ContainerService {
                 .map(courseUser ->
                         CompletableFuture.supplyAsync(
                                 () -> {
-                                    URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080/bash_history/non_realtime/");
-                                    FeignHistoryResData feignResponse = containerClient.getBashHistory(uri, requestData.getExcludes());
+                                    URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080");
+                                    FeignHistoryResData feignResponse = containerClient.getBashHistory(
+                                            uri,
+                                            requestData.getExcludes());
 
                                     return ContainerFileResData.builder()
                                             .studentId(courseUser.getId())
@@ -211,6 +216,4 @@ public class ContainerService {
 
         return courseUsers;
     }
-
-
 }
