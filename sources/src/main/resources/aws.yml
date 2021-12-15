@@ -1,6 +1,6 @@
 aws:
   ecs:
-    cluster_name: V-Ground
+    cluster_name: vground
     subnet: subnet-02c66502498e812d8
     security_group: sg-0fd0e5833e45422a4
-    task_definition: first-run-task-definition
+    task_definition: vground-task-definition:1

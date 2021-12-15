@@ -30,5 +30,4 @@ insert into course (id, title, description, cpu, memory, os, visibility, teacher
 
 /* 클래스 소속 회원 추가 */
 insert into course_user (id, container_ip, user_id, course_id) values('1', '58.142.191.143', 1, 1);
-insert into course_user (id, container_ip, user_id, course_id) values('2', '58.142.191.141', 1, 2);
 insert into course_user (id, container_ip, user_id, course_id) values('3', '58.142.191.141', 6, 1);
