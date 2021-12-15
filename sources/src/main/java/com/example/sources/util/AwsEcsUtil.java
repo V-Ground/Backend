@@ -4,10 +4,7 @@ import com.example.sources.awscli.AwsCliExecutor;
 import com.example.sources.awscli.AwsCliResponseParser;
 import com.example.sources.awscli.AwsCommandString;
 import com.example.sources.awscli.BashExecutor;
-import com.example.sources.awscli.command.AwsCommand;
-import com.example.sources.awscli.command.CreateTaskCommand;
-import com.example.sources.awscli.command.GetIpCommand;
-import com.example.sources.awscli.command.GetNIDCommand;
+import com.example.sources.awscli.command.*;
 import com.example.sources.domain.dto.aws.TaskInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -28,11 +25,13 @@ public class AwsEcsUtil {
         AwsCommand createTaskCommand = new CreateTaskCommand(bashExecutor, cliResponseParser);
         AwsCommand getTaskDetailCommand = new GetNIDCommand(bashExecutor, cliResponseParser);
         AwsCommand getIpCommand = new GetIpCommand(bashExecutor, cliResponseParser);
+        AwsCommand getLastStatus = new GetLastStatusCommand(bashExecutor, cliResponseParser);
 
         awsCliExecutor = new AwsCliExecutor(
                 createTaskCommand,
                 getTaskDetailCommand,
-                getIpCommand);
+                getIpCommand,
+                getLastStatus);
     }
 
     /**
@@ -46,5 +45,15 @@ public class AwsEcsUtil {
         String ip = awsCliExecutor.getIp(awsCommandString.getNetworkIfsDetailCommand(networkInterfaceId));
 
         return new TaskInfo(taskArn, ip);
+    }
+
+    /**
+     * aws cli 를 이용하여 컨테이너의 상태를 확인한다.
+     *
+     * @param taskArn 조회할 컨테이너의 ARN
+     * @return 컨테이너의 상태 | RUNNING | PENDING | STOPPED | PROVISIONING
+     */
+    public String getTaskStatus(String taskArn) {
+        return awsCliExecutor.getLastStatus(awsCommandString.getTaskDetailCommand(taskArn));
     }
 }

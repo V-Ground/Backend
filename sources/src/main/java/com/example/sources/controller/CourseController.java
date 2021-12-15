@@ -28,6 +28,14 @@ public class CourseController {
         return ResponseEntity.status(HttpStatus.CREATED).body(courseService.addCourse(request));
     }
 
+    @GetMapping("/{courseId}/task/status")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
+    public ResponseEntity<List<TaskStatusResData>> getAllContainerStatus(@PathVariable Long courseId,
+                                                                         UserAuthentication authentication) {
+        Long tokenUserId = authentication.getUserId();
+        return ResponseEntity.ok(courseService.getContainerStatus(courseId, tokenUserId));
+    }
+
     @GetMapping("/disable/{courseId}")
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
     public ResponseEntity<CreateCourseResponseData> disable(@PathVariable Long courseId) {

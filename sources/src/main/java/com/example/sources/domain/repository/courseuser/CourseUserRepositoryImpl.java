@@ -48,7 +48,7 @@ public class CourseUserRepositoryImpl implements CourseUserQuery {
     }
 
     @Override
-    public List<ParticipantResponseData> findAllByCourseId(Long courseId) {
+    public List<ParticipantResponseData> findAllDtoByCourseId(Long courseId) {
         return queryFactory
                 .select(Projections.fields(ParticipantResponseData.class,
                         user.id.as("studentId"),
@@ -57,6 +57,15 @@ public class CourseUserRepositoryImpl implements CourseUserQuery {
                 .from(courseUser)
                 .join(courseUser.course, course)
                 .join(courseUser.user, user)
+                .where(course.id.eq(courseId))
+                .fetch();
+    }
+
+    @Override
+    public List<CourseUser> findAllByCourseId(Long courseId) {
+        return queryFactory
+                .selectFrom(courseUser)
+                .join(courseUser.course, course)
                 .where(course.id.eq(courseId))
                 .fetch();
     }

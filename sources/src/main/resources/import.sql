@@ -29,5 +29,4 @@ insert into role (id, role_type, user_id) values('11', 'TEACHER', '8');
 insert into course (id, title, description, cpu, memory, os, visibility, teacher_id) values('1', '클라우드 기초 과정', 'AWS 와 NCP 를 이용해서 클라우드 컴퓨팅의 기초에 대해서 학습힙니다.', '1', '1', 'UBUNTU', true, '6');
 
 /* 클래스 소속 회원 추가 */
-insert into course_user (id, container_ip, user_id, course_id) values('1', '58.142.191.143', 1, 1);
-insert into course_user (id, container_ip, user_id, course_id) values('3', '58.142.191.141', 6, 1);
+insert into course_user (id, container_ip, user_id, course_id) values('1', '3.35.135.147', 1, 1);

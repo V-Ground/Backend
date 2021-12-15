@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface CourseUserQuery {
     List<CourseResponseData> findAllByUserId(Long userId);
     Boolean existsByCourseIdAndUserId(Long courseId, Long userId);
-    List<ParticipantResponseData> findAllByCourseId(Long courseId);
+    List<ParticipantResponseData> findAllDtoByCourseId(Long courseId);
+    List<CourseUser> findAllByCourseId(Long courseId);
     Optional<CourseUser> findByUserId(Long userId);
 }

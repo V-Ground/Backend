@@ -32,6 +32,26 @@ public class AwsCliResponseParser {
     }
 
     /**
+     * task detail 조회 결과로 나온 json 에서 현재 상태를 파싱한다.
+     *
+     * @param taskDetail task 의 세부 조회 응답
+     * @return status
+     */
+    public String findLastStatus(String taskDetail) {
+        try {
+            System.out.println("parser 까지 들어옴");
+            System.out.println("taskDetail = " + taskDetail);
+            JsonNode jsonNode = objectMapper.readTree(taskDetail).at("/tasks/0/lastStatus");
+            System.out.println(jsonNode.toString());
+            return jsonNode.toString().replaceAll("\"", "");
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        throw new AwsResponseParseException("taskArn 을 찾을 수 없습니다");
+    }
+
+    /**
      * taskDetail 을 토대로 networkInterfaceId 를 파싱한다
      *
      * @param taskDetail taskArn

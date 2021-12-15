@@ -4,6 +4,7 @@ import com.example.sources.domain.dto.aws.TaskInfo;
 import com.example.sources.domain.dto.request.CreateCourseReqData;
 import com.example.sources.domain.dto.response.CreateCourseResponseData;
 import com.example.sources.domain.dto.response.ParticipantResponseData;
+import com.example.sources.domain.dto.response.TaskStatusResData;
 import com.example.sources.domain.entity.Course;
 import com.example.sources.domain.entity.CourseUser;
 import com.example.sources.domain.entity.Role;
@@ -23,6 +24,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -144,6 +146,26 @@ public class CourseService {
             throw new AuthenticationFailedException();
         }
 
-        return courseUserRepository.findAllByCourseId(courseId);
+        return courseUserRepository.findAllDtoByCourseId(courseId);
+    }
+
+    /**
+     *
+     * 클래스에 소속된 모든 학생의 컨테이너를 aws cli 로 조회하고 상태를 반환한다.
+     *
+     * @param courseId 클래스 번호
+     * @param tokenUserId 토큰에 포함된 강사의 ID
+     * @return 컨테이너 상태와 학생 번호가 포함된 DTO List
+     */
+    public List<TaskStatusResData> getContainerStatus(Long courseId, Long tokenUserId) {
+        List<CourseUser> courseUsers = courseUserRepository.findAllByCourseId(courseId);
+
+        List<TaskStatusResData> resDataList = new ArrayList<>();
+        for (CourseUser courseUser : courseUsers) {
+            String taskStatus = awsEcsUtil.getTaskStatus(courseUser.getTaskArn());
+            resDataList.add(new TaskStatusResData(courseUser.getId(), taskStatus));
+        }
+
+        return resDataList;
     }
 }

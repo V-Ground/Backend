@@ -56,8 +56,6 @@ class CourseRelatedRepositoryTest {
                 .email("jwi@gmail.com")
                 .build());
 
-        System.out.println("student.getId() = " + student.getId());
-
         Course course = courseRepository.save(Course.builder()
                 .title("와이어샤크 기초")
                 .description("와이어샤크의 기초에 대해서 학습합니다")
@@ -195,5 +193,15 @@ class CourseRelatedRepositoryTest {
         CourseUser courseUser = courseUserRepository.findByUserId(10L).get();
 
         assertNotNull(courseUser);
+    }
+
+    @Test
+    @DisplayName("클래스에 소속된 모든 학생 조회")
+    void getCourseUserByCourseId() {
+        List<CourseUser> allByCourseId = courseUserRepository.findAllByCourseId(2L);
+
+        for (CourseUser s : allByCourseId) {
+            System.out.println("s = " + s.getUser().getUsername());
+        }
     }
 }

@@ -3,11 +3,11 @@ package com.example.sources.awscli.command;
 import com.example.sources.awscli.AwsCliResponseParser;
 import com.example.sources.awscli.BashExecutor;
 
-public class GetNIDCommand implements AwsCommand {
+public class GetLastStatusCommand implements AwsCommand {
     private BashExecutor bashExecutor;
     private AwsCliResponseParser cliResponseParser;
 
-    public GetNIDCommand(BashExecutor bashExecutor, AwsCliResponseParser cliResponseParser) {
+    public GetLastStatusCommand(BashExecutor bashExecutor, AwsCliResponseParser cliResponseParser) {
         this.bashExecutor = bashExecutor;
         this.cliResponseParser = cliResponseParser;
     }
@@ -15,8 +15,9 @@ public class GetNIDCommand implements AwsCommand {
     @Override
     public String execute(String commandString) {
         String taskDetail = bashExecutor.execute(commandString);
-        String networkInterfaceId = cliResponseParser.findNetworkInterfaceId(taskDetail);
+        String lastStatus = cliResponseParser.findLastStatus(taskDetail);
+        System.out.println("lastStatus = " + lastStatus);
 
-        return networkInterfaceId;
+        return lastStatus;
     }
 }

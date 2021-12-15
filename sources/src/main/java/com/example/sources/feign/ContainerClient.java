@@ -19,7 +19,7 @@ public interface ContainerClient {
     FeignStatusResData detectMouseMove(URI uri);
 
     @PostMapping(value = "/command/execute/")
-    FeignBashResponseData executeRemoteCommand(URI uri, @RequestBody FeignCommandReqData requestBody);
+    FeignBashResponseData executeRemoteCommand(URI uri, @RequestBody FeignCommandReqData body);
 
     @PostMapping(value = "/command/execute_script/",  consumes = "multipart/form-data")
     FeignBashResponseData executeRemoteScript(URI uri, @RequestPart MultipartFile scriptFile);
@@ -30,8 +30,8 @@ public interface ContainerClient {
     @GetMapping(value = "/filesystem/file_view")
     FeignFileResData getFileContent(URI uri, @RequestParam String filePath);
 
-    @GetMapping(value = "/bash_history/non_realtime")
-    FeignHistoryResData getBashHistory(URI uri, @RequestParam List<String> excludeKeyWords);
+    @PostMapping(value = "/bash_history/non_realtime/")
+    FeignHistoryResData getBashHistory(URI uri, @RequestBody FeignHistoryReqData body);
 
     @PostMapping(value = "/filesystem/file_insert/", consumes = "multipart/form-data")
     FeignInsertFileResData insertFile(URI uri,

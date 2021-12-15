@@ -7,13 +7,16 @@ public class AwsCliExecutor {
     private AwsCommand createTaskCommand;
     private AwsCommand getTaskDetailCommand;
     private AwsCommand getIpCommand;
+    private AwsCommand getLastStatusCommand;
 
     public AwsCliExecutor(AwsCommand createTaskCommand,
                           AwsCommand getTaskDetailCommand,
-                          AwsCommand getIpCommand) {
+                          AwsCommand getIpCommand,
+                          AwsCommand getLastStatusCommand) {
         this.createTaskCommand = createTaskCommand;
         this.getTaskDetailCommand = getTaskDetailCommand;
         this.getIpCommand = getIpCommand;
+        this.getLastStatusCommand = getLastStatusCommand;
     }
 
     /**
@@ -39,10 +42,18 @@ public class AwsCliExecutor {
     /**
      * commandString 을 받아 ip 를 조회하는 aws cli 를 호출한다.
      *
-     * @param commandString networkInterfaceId 를 조회하는
+     * @param commandString networkInterfaceId 를 조회하는 commandString
      * @return container ip
      */
     public String getIp(String commandString) {
         return getIpCommand.execute(commandString);
     }
+
+    /**
+     * commandString 을 받아 lastStatus 를 조회하는 aws cli 를 호출한다.
+     *
+     * @param commandString lastStatus 를 조회하는 commandString
+     * @return lastStatus
+     */
+    public String getLastStatus(String commandString) { return getLastStatusCommand.execute(commandString); }
 }

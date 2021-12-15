@@ -32,7 +32,7 @@ public class AwsCommandString {
      * ecs container 의 IP 를 반환한다.
      *
      * @param networkInterfaceId
-     * @return 컨테이너의 networkIfsDetail
+     * @return 컨테이너의 networkIfsDetail 를 조회하는 명령어
      */
     public String getNetworkIfsDetailCommand(String networkInterfaceId) {
         return String.format("aws ec2 describe-network-interfaces " +
@@ -42,7 +42,7 @@ public class AwsCommandString {
     /**
      * ecs 컨테이너를 생성한다.
      *
-     * @return 생성된 ecs 컨테이너의 id
+     * @return 생성된 ecs 컨테이너의 id 를 조회하는 명령어
      */
     public String createTaskCommand() {
         System.out.println("CLUSTER_NAME = " + CLUSTER_NAME);

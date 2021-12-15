@@ -213,9 +213,10 @@ public class ContainerService {
                         CompletableFuture.supplyAsync(
                                 () -> {
                                     URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080");
+
                                     FeignHistoryResData feignResponse = containerClient.getBashHistory(
                                             uri,
-                                            requestData.getExcludes());
+                                            new FeignHistoryReqData(requestData.getExcludes()));
 
                                     return ContainerFileResData.builder()
                                             .studentId(courseUser.getId())
