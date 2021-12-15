@@ -9,7 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ContainerHistoryResData {
     private Long studentId;
-    private List<String> fileContent;
+    private String fileContent;
     private boolean error = false;
 
     public boolean getError() {

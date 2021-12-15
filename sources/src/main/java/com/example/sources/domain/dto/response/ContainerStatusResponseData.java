@@ -9,11 +9,12 @@ public class ContainerStatusResponseData {
     private Long studentId;
     private String studentName;
     private boolean status;
-    private boolean error;
+    private boolean error = false;
 
+    public boolean getError() {
+        return error;
+    }
     public boolean getStatus() {
         return status;
     }
-
-    public boolean getError() { return error; }
 }

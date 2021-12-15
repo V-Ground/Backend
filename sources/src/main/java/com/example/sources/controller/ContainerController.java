@@ -1,16 +1,14 @@
 package com.example.sources.controller;
 
 import com.example.sources.domain.dto.request.*;
-import com.example.sources.domain.dto.response.ContainerBashResData;
-import com.example.sources.domain.dto.response.ContainerFileResData;
-import com.example.sources.domain.dto.response.ContainerInstallResData;
-import com.example.sources.domain.dto.response.ContainerStatusResponseData;
+import com.example.sources.domain.dto.response.*;
 import com.example.sources.security.UserAuthentication;
 import com.example.sources.service.ContainerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -47,6 +45,17 @@ public class ContainerController {
                 .ok(containerService.executeRemoteCommand(courseId, body, tokenUserId));
     }
 
+    @PostMapping("/courses/{courseId}/remote_script")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
+    public ResponseEntity<List<ContainerBashResData>> runRemoteScript(@PathVariable Long courseId,
+                                                                      @RequestParam("studentIds") List<Long> studentIds,
+                                                                      @RequestParam("scriptFile")MultipartFile scriptFile,
+                                                                      UserAuthentication authentication) {
+        Long tokenUserId = authentication.getUserId();
+        return ResponseEntity
+                .ok(containerService.executeRemoteScript(courseId, studentIds, scriptFile, tokenUserId));
+    }
+
     @PostMapping("/courses/{courseId}/file")
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
     public ResponseEntity<List<ContainerFileResData>> getFileContent(@PathVariable Long courseId,
@@ -67,5 +76,20 @@ public class ContainerController {
 
         return ResponseEntity
                 .ok(containerService.getBashHistory(courseId, body, tokenUserId));
+    }
+
+    @PostMapping("/courses/{courseId}/file/insertion")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
+    public ResponseEntity<List<ContainerFileInsertResData>> insertFile(@PathVariable Long courseId,
+                                                                       @RequestParam List<Long> studentIds,
+                                                                       @RequestParam String filePath,
+                                                                       @RequestParam Integer insertOption,
+                                                                       @RequestParam MultipartFile inputFile,
+                                                                       UserAuthentication authentication) {
+        Long tokenUserId = authentication.getUserId();
+
+        return ResponseEntity
+                .ok(containerService
+                        .insertFile(courseId, studentIds, filePath, insertOption, inputFile, tokenUserId));
     }
 }

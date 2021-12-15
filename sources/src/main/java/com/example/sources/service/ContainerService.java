@@ -12,6 +12,7 @@ import com.example.sources.exception.NotFoundException;
 import com.example.sources.feign.ContainerClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -68,6 +69,57 @@ public class ContainerService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    /**
+     * 컨테이너에 원격 스크립트를 삽입하고 실행한다.
+     *
+     * @param courseId 클래스 번호
+     * @param studentIds 포함시킬 학생들의 id
+     * @param scriptFile 실행시킬 scriptFile
+     * @param tokenUserId 요청을 보낸 강사의 id
+     * @return
+     */
+    public List<ContainerBashResData> executeRemoteScript(Long courseId,
+                                                          List<Long> studentIds,
+                                                          MultipartFile scriptFile,
+                                                          Long tokenUserId) {
+        validateCourse(courseId, tokenUserId);
+        List<CourseUser> courseUsers = getCourseUserFromIds(studentIds);
+
+        return courseUsers.stream()
+                .map(courseUser ->
+                        CompletableFuture.supplyAsync(
+                                () -> {
+                                    FeignBashResponseData feignResponse = null;
+                                    URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080");
+                                    feignResponse = containerClient.executeRemoteScript(
+                                            uri,
+                                            scriptFile);
+
+                                    return ContainerBashResData.builder()
+                                            .studentId(courseUser.getId())
+                                            .commandResult(feignResponse.getCommandResult())
+                                            .build();
+                                })
+                                .orTimeout(2L, TimeUnit.SECONDS)
+                                .exceptionally(e ->
+                                        ContainerBashResData.builder()
+                                                .studentId(courseUser.getId())
+                                                .error(true)
+                                                .build()))
+                .collect(Collectors.toList())
+                .stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    /**
+     * 컨테이너 내부에 특정 파일이나 패키지가 설치되었는지 확인한다.
+     *
+     * @param courseId 클래스 번호
+     * @param requestData 패키지 확인을 위한 dto
+     * @param tokenUserId 요청을 보낸 강사의 id
+     * @return
+     */
     public List<ContainerInstallResData> detectInstallation(Long courseId,
                                                             ContainerInstallReqData requestData,
                                                             Long tokenUserId) {
@@ -100,6 +152,7 @@ public class ContainerService {
                 .map(CompletableFuture::join)
                 .collect(Collectors.toUnmodifiableList());
     }
+
     /**
      * 컨테이너 내부의 path 에 위치한 파일 내용을 반환한다.
      *
@@ -183,6 +236,56 @@ public class ContainerService {
     }
 
     /**
+     * 컨테이너 내부로 파일을 주입하고 결과를 반환한다.
+     *
+     * @param courseId 클래스 번호
+     * @param studentIds 포함시킬 학생들의 id list
+     * @param inputFile 주입할 파일
+     * @param filePath 파일의 경로
+     * @param insertOption 파일 주입 옵션 || 0 : 덮어쓰기, 1 : 파일명 + random str 로 새로운 파일 생성
+     * @param tokenUserId 강사의 ID
+     * @return
+     */
+    public List<ContainerFileInsertResData> insertFile(Long courseId,
+                                                 List<Long> studentIds,
+                                                 String filePath,
+                                                 Integer insertOption,
+                                                 MultipartFile inputFile,
+                                                 Long tokenUserId) {
+        validateCourse(courseId, tokenUserId);
+        List<CourseUser> courseUsers = getCourseUserFromIds(studentIds);
+
+        return courseUsers.stream()
+                .map(courseUser ->
+                        CompletableFuture.supplyAsync(
+                                () -> {
+                                    URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080");
+                                    FeignInsertFileResData feignResponse = containerClient.insertFile(
+                                            uri,
+                                            filePath,
+                                            insertOption,
+                                            inputFile);
+
+                                    return ContainerFileInsertResData.builder()
+                                            .studentId(courseUser.getId())
+                                            .filename(feignResponse.getFilename())
+                                            .savedPath(feignResponse.getSavedPath())
+                                            .status(feignResponse.getStatus())
+                                            .build();
+                                })
+                                .orTimeout(2L, TimeUnit.SECONDS)
+                                .exceptionally(e ->
+                                        ContainerFileInsertResData.builder()
+                                                .studentId(courseUser.getId())
+                                                .error(true)
+                                                .build()))
+                .collect(Collectors.toList())
+                .stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    /**
      * 요청을 보낸 사용자가 course 의 소유자인지 검증하는 공통 로직 메서드
      *
      * @param courseId 검증할 대상 course
@@ -216,4 +319,5 @@ public class ContainerService {
 
         return courseUsers;
     }
+
 }

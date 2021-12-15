@@ -1,11 +1,11 @@
 package com.example.sources.feign;
 
 import com.example.sources.domain.dto.feign.*;
+import feign.Param;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.net.URI;
 import java.util.List;
 
@@ -21,6 +21,9 @@ public interface ContainerClient {
     @PostMapping(value = "/command/execute/")
     FeignBashResponseData executeRemoteCommand(URI uri, @RequestBody FeignCommandReqData requestBody);
 
+    @PostMapping(value = "/command/execute_script/",  consumes = "multipart/form-data")
+    FeignBashResponseData executeRemoteScript(URI uri, @RequestPart MultipartFile scriptFile);
+
     @GetMapping(value = "/filesystem/find_install")
     FeignInstallResData detectInstallation(URI uri, @RequestParam String programName);
 
@@ -30,5 +33,9 @@ public interface ContainerClient {
     @GetMapping(value = "/bash_history/non_realtime")
     FeignHistoryResData getBashHistory(URI uri, @RequestParam List<String> excludeKeyWords);
 
-    @PostMapping
+    @PostMapping(value = "/filesystem/file_insert/", consumes = "multipart/form-data")
+    FeignInsertFileResData insertFile(URI uri,
+                    @RequestParam String filePath,
+                    @RequestParam Integer insertOption,
+                    @RequestPart MultipartFile inputFile);
 }

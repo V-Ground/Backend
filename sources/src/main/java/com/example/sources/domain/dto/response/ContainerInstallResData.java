@@ -12,11 +12,11 @@ public class ContainerInstallResData {
     private String version;
     private boolean error = false;
 
-    public boolean getStatus() {
-        return status;
-    }
-
     public boolean getError() {
         return error;
+    }
+
+    public boolean getStatus() {
+        return status;
     }
 }
