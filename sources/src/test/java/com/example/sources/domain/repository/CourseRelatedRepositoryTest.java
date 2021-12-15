@@ -56,6 +56,8 @@ class CourseRelatedRepositoryTest {
                 .email("jwi@gmail.com")
                 .build());
 
+        System.out.println("student.getId() = " + student.getId());
+
         Course course = courseRepository.save(Course.builder()
                 .title("와이어샤크 기초")
                 .description("와이어샤크의 기초에 대해서 학습합니다")
@@ -182,8 +184,16 @@ class CourseRelatedRepositoryTest {
 
         assertAll(
                 () -> assertEquals(1, allSubmit.size()),
-                () -> assertEquals(true, allSubmit.get(0).isYesNo()),
+                () -> assertEquals(true, allSubmit.get(0).getYesNo()),
                 () -> assertEquals("jwi", allSubmit.get(0).getStudentName())
         );
+    }
+
+    @Test
+    @DisplayName("클래스에 소속된 특정 학생 확인")
+    void getCourseUserByStudentId() {
+        CourseUser courseUser = courseUserRepository.findByUserId(10L).get();
+
+        assertNotNull(courseUser);
     }
 }

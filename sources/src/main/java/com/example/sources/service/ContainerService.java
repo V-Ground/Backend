@@ -89,9 +89,8 @@ public class ContainerService {
                 .map(courseUser ->
                         CompletableFuture.supplyAsync(
                                 () -> {
-                                    FeignBashResponseData feignResponse = null;
                                     URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080");
-                                    feignResponse = containerClient.executeRemoteScript(
+                                    FeignBashResponseData feignResponse = containerClient.executeRemoteScript(
                                             uri,
                                             scriptFile);
 
@@ -311,7 +310,7 @@ public class ContainerService {
         List<CourseUser> courseUsers = new ArrayList<>();
 
         for (Long studentId : ids) {
-            CourseUser courseUser = courseUserRepository.findById(studentId)
+            CourseUser courseUser = courseUserRepository.findByUserId(studentId)
                     .orElseThrow(() -> new NotFoundException("학생 번호 " + studentId));
 
             courseUsers.add(courseUser);
