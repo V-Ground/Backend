@@ -2,6 +2,7 @@ package com.example.sources.service;
 
 import com.example.sources.domain.dto.request.CreateInteractionReqData;
 import com.example.sources.domain.dto.request.SolveInteractionRequestData;
+import com.example.sources.domain.dto.response.ContainerActivationResData;
 import com.example.sources.domain.dto.response.InteractionResponseData;
 import com.example.sources.domain.dto.response.InteractionSubmitResponseData;
 import com.example.sources.domain.entity.Course;
@@ -32,6 +33,7 @@ public class InteractionService {
     private final CourseRepository courseRepository;
     private final CourseUserRepository courseUserRepository;
     private final ModelMapper modelMapper;
+
 
     /**
      * 강사가 상호작용을 추가한다.

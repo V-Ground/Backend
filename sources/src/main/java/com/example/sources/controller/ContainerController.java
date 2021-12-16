@@ -20,10 +20,11 @@ public class ContainerController {
 
     @GetMapping("/courses/{courseId}/activation")
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER')")
-    public ResponseEntity<List<ContainerStatusResponseData>> detectActivation(@PathVariable Long courseId,
+    public ResponseEntity<List<ContainerActivationResData>> detectActivation(@PathVariable Long courseId,
                                                                            UserAuthentication authentication) {
         Long tokenUserId = authentication.getUserId();
-        return ResponseEntity.ok().build();
+        return ResponseEntity
+                .ok(containerService.detectActivation(courseId, tokenUserId));
     }
 
     @PostMapping("/courses/{courseId}/installation")
@@ -32,7 +33,8 @@ public class ContainerController {
                                                                             @RequestBody ContainerInstallReqData body,
                                                                             UserAuthentication authentication) {
         Long tokenUserId = authentication.getUserId();
-        return ResponseEntity.ok(containerService.detectInstallation(courseId, body, tokenUserId));
+        return ResponseEntity
+                .ok(containerService.detectInstallation(courseId, body, tokenUserId));
     }
 
     @PostMapping("/courses/{courseId}/remote_command")

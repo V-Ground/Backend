@@ -28,6 +28,40 @@ public class ContainerService {
     private final CourseRepository courseRepository;
     private final CourseUserRepository courseUserRepository;
 
+    public List<ContainerActivationResData> detectActivation(Long courseId,
+                                                             Long tokenUserId) {
+
+        validateCourse(courseId, tokenUserId);
+        List<CourseUser> courseUsers = courseUserRepository.findAllByCourseId(courseId);
+
+        return courseUsers.stream()
+                .map(courseUser ->
+                        CompletableFuture.supplyAsync(
+                                () -> {
+                                    // URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080");
+                                    URI uri = URI.create("http://" + "" + ":8080");
+                                    boolean activation = false;
+
+                                    FeignActivationResData feignStatusResData = containerClient.detectKeyboardHit(uri);
+
+                                    return ContainerActivationResData.builder()
+                                            .studentId(courseUser.getId())
+                                            .mouseActivation(feignStatusResData.getStatus() == 1)
+                                            .build();
+                                })
+                                .orTimeout(2L, TimeUnit.SECONDS)
+                                .exceptionally(e ->
+                                        ContainerActivationResData.builder()
+                                                .studentId(courseUser.getId())
+                                                .error(true)
+                                                .build()))
+                .collect(Collectors.toList())
+                .stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+
     /**
      * 컨테이너에 원격 명령을 실행한다.
      *

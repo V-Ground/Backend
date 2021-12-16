@@ -13,7 +13,7 @@ import java.util.List;
 public interface ContainerClient {
 
     @GetMapping(value = "/mouse_keyboard/keyboard")
-    FeignStatusResData detectKeyboardHit(URI uri);
+    FeignActivationResData detectKeyboardHit(URI uri);
 
     @GetMapping(value = "/mouse_keyboard/mouse")
     FeignStatusResData detectMouseMove(URI uri);

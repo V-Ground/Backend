@@ -29,4 +29,29 @@ insert into role (id, role_type, user_id) values('11', 'TEACHER', '8');
 insert into course (id, title, description, cpu, memory, os, visibility, teacher_id) values('1', '클라우드 기초 과정', 'AWS 와 NCP 를 이용해서 클라우드 컴퓨팅의 기초에 대해서 학습힙니다.', '1', '1', 'UBUNTU', true, '6');
 
 /* 클래스 소속 회원 추가 */
-insert into course_user (id, container_ip, user_id, course_id) values('1', '3.35.135.147', 1, 1);
+-- insert into course_user (id, container_ip, user_id, course_id) values('1', '3.35.135.147', 1, 1);
+
+/* 클래스 인터렉션 추가 */
+insert into interaction (id, created_at, interaction_type, title, course_id) values('1', '2021-12-16 23:32:13.543845', 'OX', 'nginx 설치', 1);
+insert into interaction (id, created_at, interaction_type, title, course_id) values('2', '2021-12-16 23:32:13.543845', 'OX', 'flask 설치', 1);
+insert into interaction (id, created_at, interaction_type, title, course_id) values('3', '2021-12-16 23:32:13.543845', 'OX', '설정 변경', 1);
+
+insert into interaction_submit (id, answer, yes_no, interaction_id, student_id) values('1', '', TRUE, 1, 1);
+insert into interaction_submit (id, answer, yes_no, interaction_id, student_id) values('2', '', FALSE, 1, 2);
+insert into interaction_submit (id, answer, yes_no, interaction_id, student_id) values('3', '', TRUE, 1, 3)
+
+/* 클래스 과제 추가 */
+insert into assignment (id, description, ended_at, started_at, title, course_id) values (1, '클라우드 상식 퀴즈', '2021-12-31 12:00:00', '2021-11-09 12:00:00', '클라우드 네트워크', 1);
+
+/* 클래스 과제 주관식 */
+insert into course_question (id, answer, description, question, score, assignment_id) values (1, 'Floating IP', '', '클라우드의 유동 IP', 1, 1);
+insert into course_question (id, answer, description, question, score, assignment_id) values (2, 'VPC', '', '클라우드 가상 네트워크', 1, 1);
+insert into course_question (id, answer, description, question, score, assignment_id) values (3, 'CIDR', '', '네트워크 할당 방식', 1, 1);
+
+/* 주관식 해결 */
+insert into question_submit (id, answer, scored, question_id, user_id) values (1, 'Floating IP', 1, 1, 1);
+insert into question_submit (id, answer, scored, question_id, user_id) values (2, 'Floating IP', 1, 1, 2);
+insert into question_submit (id, answer, scored, question_id, user_id) values (3, 'Private IP', 0, 1, 3);
+insert into question_submit (id, answer, scored, question_id, user_id) values (4, 'Floating IP', 1, 1, 4);
+insert into question_submit (id, answer, scored, question_id, user_id) values (5, 'Public IP', 0, 1, 5);
+
