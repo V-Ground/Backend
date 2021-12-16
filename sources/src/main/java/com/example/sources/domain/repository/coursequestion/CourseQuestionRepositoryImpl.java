@@ -55,6 +55,17 @@ public class CourseQuestionRepositoryImpl implements CourseQuestionQuery {
     }
 
     @Override
+    public List<QuestionResponseData> findAllByCourseId(Long courseId) {
+        return queryFactory
+                .select(Projections.fields(QuestionResponseData.class,
+                        courseQuestion.id.as("questionId"),
+                        courseQuestion.question))
+                .from(courseQuestion)
+                .where(courseQuestion.assignment.course.id.eq(courseId))
+                .fetch();
+    }
+
+    @Override
     public List<QuestionResponseData> findAllByAssignmentId(Long assignmentId) {
         return queryFactory
                 .select(Projections.fields(QuestionResponseData.class,

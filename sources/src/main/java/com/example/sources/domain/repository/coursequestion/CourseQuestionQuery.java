@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface CourseQuestionQuery {
     Optional<AssignmentDetailResponseData> findAssignmentDetailById(Long assignmentId);
-
+    List<QuestionResponseData> findAllByCourseId(Long courseId);
     List<QuestionResponseData> findAllByAssignmentId(Long assignmentId);
 }

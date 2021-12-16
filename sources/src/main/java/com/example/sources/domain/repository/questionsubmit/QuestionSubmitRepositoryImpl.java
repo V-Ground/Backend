@@ -36,6 +36,20 @@ public class QuestionSubmitRepositoryImpl implements QuestionSubmitQuery {
     }
 
     @Override
+    public List<SubmittedQuestionResponseData> findAllByCourseIdAndUserId(Long courseId, Long userId) {
+        return queryFactory
+                .select(Projections.fields(SubmittedQuestionResponseData.class,
+                        courseQuestion.id.as("questionId"),
+                        courseQuestion.question,
+                        questionSubmit.answer.as("submittedAnswer"),
+                        questionSubmit.scored))
+                .from(questionSubmit)
+                .join(questionSubmit.question, courseQuestion)
+                .where(courseQuestion.assignment.course.id.eq(courseId).and(questionSubmit.user.id.eq(userId)))
+                .fetch();
+    }
+
+    @Override
     public Optional<QuestionSubmit> findByQuestionIdAndUserId(Long questionId, Long userId) {
         return Optional.ofNullable(
                 queryFactory

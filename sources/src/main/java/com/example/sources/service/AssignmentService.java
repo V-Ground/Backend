@@ -274,11 +274,10 @@ public class AssignmentService {
      * 특정 과제에 대한 학생들의 정답을 요약하여 반환한다.
      *
      * @param courseId 클래스 번호
-     * @param assignmentId 과제 번호
      * @param tokenUserId 토큰에 포함된 강사의 id
      * @return
      */
-    public AssignmentSummaryResData getAssignmentSummary(Long courseId, Long assignmentId, Long tokenUserId) {
+    public AssignmentSummaryResData getAssignmentSummary(Long courseId, Long tokenUserId) {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new NotFoundException("클래스 번호" + courseId));
 
@@ -295,7 +294,7 @@ public class AssignmentService {
             Long userId = courseUser.getUser().getId();
 
             List<SubmittedQuestionResponseData> answers = questionSubmitRepository
-                    .findAllByAssignmentIdAndUserId(assignmentId, userId);
+                    .findAllByCourseIdAndUserId(courseId, userId);
 
             submittedAnswers.add(StudentSubmittedQuestionResData.builder()
                     .studentId(userId)
@@ -303,7 +302,7 @@ public class AssignmentService {
                     .build());
         }
 
-        List<QuestionResponseData> questions = courseQuestionRepository.findAllByAssignmentId(assignmentId);
+        List<QuestionResponseData> questions = courseQuestionRepository.findAllByCourseId(courseId);
 
         return AssignmentSummaryResData.builder()
                 .questions(questions)

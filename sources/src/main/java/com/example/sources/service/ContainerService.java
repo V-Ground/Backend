@@ -38,8 +38,7 @@ public class ContainerService {
                 .map(courseUser ->
                         CompletableFuture.supplyAsync(
                                 () -> {
-                                    // URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080");
-                                    URI uri = URI.create("http://" + "" + ":8080");
+                                    URI uri = URI.create("http://" + courseUser.getContainerIp() + ":8080");
                                     boolean activation = false;
 
                                     FeignActivationResData feignStatusResData = containerClient.detectKeyboardHit(uri);

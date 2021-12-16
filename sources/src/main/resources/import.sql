@@ -48,11 +48,14 @@ insert into interaction_submit (id, answer, yes_no, interaction_id, student_id) 
 
 /* 클래스 과제 추가 */
 insert into assignment (id, description, ended_at, started_at, title, course_id) values (1, '클라우드 상식 퀴즈', '2021-12-31 12:00:00', '2021-11-09 12:00:00', '클라우드 네트워크', 1);
+insert into assignment (id, description, ended_at, started_at, title, course_id) values (2, '클라우드 고급 퀴즈', '2021-12-31 12:00:00', '2021-11-09 12:00:00', '클라우드 네트워크', 1);
 
 /* 클래스 과제 주관식 */
 insert into course_question (id, answer, description, question, score, assignment_id) values (1, 'Floating IP', '', '클라우드의 유동 IP', 1, 1);
 insert into course_question (id, answer, description, question, score, assignment_id) values (2, 'VPC', '', '클라우드 가상 네트워크', 1, 1);
 insert into course_question (id, answer, description, question, score, assignment_id) values (3, 'CIDR', '', '네트워크 할당 방식', 1, 1);
+
+insert into course_question (id, answer, description, question, score, assignment_id) values (4, 'AWS', '', '가장 대표적인 클라우드는?', 1, 2);
 
 /* 주관식 해결 */
 insert into question_submit (id, answer, scored, question_id, user_id) values (1, 'Floating IP', 1, 1, 1);
@@ -65,3 +68,6 @@ insert into question_submit (id, answer, scored, question_id, user_id) values (6
 insert into question_submit (id, answer, scored, question_id, user_id) values (7, 'ICPC', 0, 2, 2);
 
 insert into question_submit (id, answer, scored, question_id, user_id) values (8, 'CIDR', 1, 3, 1);
+
+insert into question_submit (id, answer, scored, question_id, user_id) values (9, 'GCP', 0, 4, 1);
+insert into question_submit (id, answer, scored, question_id, user_id) values (10, 'AWS', 1, 4, 2);

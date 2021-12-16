@@ -9,5 +9,6 @@ import java.util.Optional;
 
 public interface QuestionSubmitQuery {
     List<SubmittedQuestionResponseData> findAllByAssignmentIdAndUserId(Long assignmentId, Long userId);
+    List<SubmittedQuestionResponseData> findAllByCourseIdAndUserId(Long courseId, Long userId);
     Optional<QuestionSubmit>  findByQuestionIdAndUserId(Long questionId, Long userId);
 }
