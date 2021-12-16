@@ -40,7 +40,7 @@ public class ContainerService {
                                                            ContainerCommandReqData requestData,
                                                            Long tokenUserId) {
         validateCourse(courseId, tokenUserId);
-        List<CourseUser> courseUsers = getCourseUserFromIds(requestData.getStudentIds());
+        List<CourseUser> courseUsers = getCourseUserFromIds(courseId, requestData.getStudentIds());
 
         return courseUsers.stream()
                 .map(courseUser ->
@@ -83,7 +83,7 @@ public class ContainerService {
                                                           MultipartFile scriptFile,
                                                           Long tokenUserId) {
         validateCourse(courseId, tokenUserId);
-        List<CourseUser> courseUsers = getCourseUserFromIds(studentIds);
+        List<CourseUser> courseUsers = getCourseUserFromIds(courseId, studentIds);
 
         return courseUsers.stream()
                 .map(courseUser ->
@@ -123,7 +123,7 @@ public class ContainerService {
                                                             ContainerInstallReqData requestData,
                                                             Long tokenUserId) {
         validateCourse(courseId, tokenUserId);
-        List<CourseUser> courseUsers = getCourseUserFromIds(requestData.getStudentIds());
+        List<CourseUser> courseUsers = getCourseUserFromIds(courseId, requestData.getStudentIds());
         return courseUsers.stream()
                 .map(courseUser ->
                         CompletableFuture.supplyAsync(
@@ -165,7 +165,7 @@ public class ContainerService {
                                                      Long tokenUserId) {
 
         validateCourse(courseId, tokenUserId);
-        List<CourseUser> courseUsers = getCourseUserFromIds(requestData.getStudentIds());
+        List<CourseUser> courseUsers = getCourseUserFromIds(courseId, requestData.getStudentIds());
 
         return courseUsers.stream()
                 .map(courseUser ->
@@ -206,7 +206,7 @@ public class ContainerService {
                                                      ContainerHistoryReqData requestData,
                                                      Long tokenUserId) {
         validateCourse(courseId, tokenUserId);
-        List<CourseUser> courseUsers = getCourseUserFromIds(requestData.getStudentIds());
+        List<CourseUser> courseUsers = getCourseUserFromIds(courseId, requestData.getStudentIds());
 
         return courseUsers.stream()
                 .map(courseUser ->
@@ -253,7 +253,7 @@ public class ContainerService {
                                                  MultipartFile inputFile,
                                                  Long tokenUserId) {
         validateCourse(courseId, tokenUserId);
-        List<CourseUser> courseUsers = getCourseUserFromIds(studentIds);
+        List<CourseUser> courseUsers = getCourseUserFromIds(courseId, studentIds);
 
         return courseUsers.stream()
                 .map(courseUser ->
@@ -307,12 +307,12 @@ public class ContainerService {
      * @param ids CourseUser 에 조회할 id list
      * @return 조회된 CourseUser 객체 리스트
      */
-    private List<CourseUser> getCourseUserFromIds(List<Long> ids) {
+    private List<CourseUser> getCourseUserFromIds(Long courseId, List<Long> ids) {
         List<CourseUser> courseUsers = new ArrayList<>();
 
         for (Long studentId : ids) {
             // TODO 현재는 하나의 학생이라도 존재하지 않는다면 exception throw 하는데 exception 에 따라 다른 result 는 반환할 수 있도록 할 것.
-            CourseUser courseUser = courseUserRepository.findByUserId(studentId)
+            CourseUser courseUser = courseUserRepository.findByCourseIdAndUserId(courseId, studentId)
                     .orElseThrow(() -> new NotFoundException("학생 번호 " + studentId));
 
             courseUsers.add(courseUser);

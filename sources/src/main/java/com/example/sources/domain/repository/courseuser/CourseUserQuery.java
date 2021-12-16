@@ -12,5 +12,6 @@ public interface CourseUserQuery {
     Boolean existsByCourseIdAndUserId(Long courseId, Long userId);
     List<ParticipantResponseData> findAllDtoByCourseId(Long courseId);
     List<CourseUser> findAllByCourseId(Long courseId);
+    Optional<CourseUser> findByCourseIdAndUserId(Long courseId, Long userId);
     Optional<CourseUser> findByUserId(Long userId);
 }

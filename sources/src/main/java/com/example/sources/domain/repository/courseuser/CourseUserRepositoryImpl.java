@@ -71,6 +71,18 @@ public class CourseUserRepositoryImpl implements CourseUserQuery {
     }
 
     @Override
+    public Optional<CourseUser> findByCourseIdAndUserId(Long courseId, Long userId) {
+        CourseUser fetch = queryFactory
+                .selectFrom(QCourseUser.courseUser)
+                .join(QCourseUser.courseUser.user, user)
+                .where(user.id.eq(userId))
+                .join(QCourseUser.courseUser.course, course)
+                .where(course.id.eq(courseId))
+                .fetchFirst();
+        return Optional.ofNullable(fetch);
+    }
+
+    @Override
     public Optional<CourseUser> findByUserId(Long userId) {
         CourseUser fetch = queryFactory
                 .selectFrom(QCourseUser.courseUser)

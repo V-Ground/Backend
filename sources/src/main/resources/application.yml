@@ -25,6 +25,6 @@ jwt:
   secret: 12345678901234567890123456789012
 
 frontend:
-  ip: localhost:3000 # 54.180.120.49:3000 # localhost:3000 # 3.34.45.79
+  ip: localhost:3000 # 15.164.221.215:3000
 
 # 파일 내용 보기 & bash history array 아니라 문자열 하나로 받기

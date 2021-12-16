@@ -14,6 +14,7 @@ import com.example.sources.domain.repository.courseuser.CourseUserRepository;
 import com.example.sources.domain.repository.role.RoleRepository;
 import com.example.sources.domain.repository.user.UserRepository;
 import com.example.sources.domain.type.RoleType;
+import com.example.sources.exception.AlreadyExistException;
 import com.example.sources.exception.AuthenticationFailedException;
 import com.example.sources.exception.NotFoundException;
 import com.example.sources.exception.UserNotFoundException;
@@ -38,7 +39,6 @@ public class CourseService {
     private final UserRepository userRepository;
     private final AwsEcsUtil awsEcsUtil;
     private final ModelMapper modelMapper;
-
 
     /**
      * 강사가 클래스를 생성한다.
@@ -118,6 +118,12 @@ public class CourseService {
                 .orElseThrow(() -> new NotFoundException("클래스 번호 " + courseId));
         User student = userRepository.findById(studentId).orElseThrow(
                 () -> new NotFoundException("사용자 번호 " + studentId));
+
+        boolean exists = courseUserRepository.existsByCourseIdAndUserId(courseId, studentId);
+
+        if(exists) {
+            throw new AlreadyExistException("사용자 번호 " + studentId);
+        }
 
         TaskInfo taskInfo = awsEcsUtil.createEcsContainer();
 
