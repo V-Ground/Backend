@@ -121,7 +121,7 @@ public class CourseService {
 
         boolean exists = courseUserRepository.existsByCourseIdAndUserId(courseId, studentId);
 
-        if(exists) {
+        if(exists) { // 학생이 존재하면
             throw new AlreadyExistException("사용자 번호 " + studentId);
         }
 

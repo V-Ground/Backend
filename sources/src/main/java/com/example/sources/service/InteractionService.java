@@ -62,14 +62,18 @@ public class InteractionService {
     }
 
     /**
-     * 강사가 모든 인터렉션을 조회한다.
+     * 모든 인터렉션을 조회한다.
      *
      * @param courseId 인터렉션을 조회할 대상 클래스
      * @param tokenUserId 요청을 보낸 강사의 userId
      * @return
      */
     public List<InteractionResponseData> getInteractions(Long courseId, Long tokenUserId) {
-        validateCourse(courseId, tokenUserId);
+        Boolean exists = courseUserRepository.existsByCourseIdAndUserId(courseId, tokenUserId);
+
+        if(!exists) {
+            throw new AuthenticationFailedException();
+        }
         return interactionRepository.findAllByCourseId(courseId);
     }
 
