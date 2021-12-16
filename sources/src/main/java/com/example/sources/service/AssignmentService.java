@@ -19,6 +19,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -244,13 +245,13 @@ public class AssignmentService {
                               Long answerId,
                               ScoringRequestData request,
                               Long tokenUserId) {
-        if(!teacherId.equals(tokenUserId)) {
+        if (!teacherId.equals(tokenUserId)) {
             throw new AuthenticationFailedException();
         }
         Course course = courseRepository.findById(courseId).orElseThrow(
                 () -> new NotFoundException("클래스 번호 " + courseId));
 
-        if(!course.isOwner(tokenUserId)) {
+        if (!course.isOwner(tokenUserId)) {
             throw new AuthenticationFailedException();
         }
 
@@ -267,5 +268,47 @@ public class AssignmentService {
         submitted.scoring(request.getScore());
 
         questionSubmitRepository.save(submitted);
+    }
+
+    /**
+     * 특정 과제에 대한 학생들의 정답을 요약하여 반환한다.
+     *
+     * @param courseId 클래스 번호
+     * @param assignmentId 과제 번호
+     * @param tokenUserId 토큰에 포함된 강사의 id
+     * @return
+     */
+    public AssignmentSummaryResData getAssignmentSummary(Long courseId, Long assignmentId, Long tokenUserId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new NotFoundException("클래스 번호" + courseId));
+
+        boolean owner = course.isOwner(tokenUserId);
+
+        if (!owner) {
+            throw new AuthenticationFailedException();
+        }
+
+        List<CourseUser> courseUsers = courseUserRepository.findAllByCourseId(courseId);
+        List<StudentSubmittedQuestionResData> submittedAnswers = new ArrayList<>();
+
+        for (CourseUser courseUser : courseUsers) {
+            Long userId = courseUser.getUser().getId();
+
+            List<SubmittedQuestionResponseData> answers = questionSubmitRepository
+                    .findAllByAssignmentIdAndUserId(assignmentId, userId);
+
+            submittedAnswers.add(StudentSubmittedQuestionResData.builder()
+                    .studentId(userId)
+                    .submittedQuestions(answers)
+                    .build());
+        }
+
+        List<QuestionResponseData> questions = courseQuestionRepository.findAllByAssignmentId(assignmentId);
+
+        return AssignmentSummaryResData.builder()
+                .questions(questions)
+                .students(submittedAnswers)
+                .build();
+
     }
 }

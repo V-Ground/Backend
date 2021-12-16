@@ -2,13 +2,8 @@ package com.example.sources.service;
 
 import com.example.sources.domain.dto.request.CreateInteractionReqData;
 import com.example.sources.domain.dto.request.SolveInteractionRequestData;
-import com.example.sources.domain.dto.response.ContainerActivationResData;
-import com.example.sources.domain.dto.response.InteractionResponseData;
-import com.example.sources.domain.dto.response.InteractionSubmitResponseData;
-import com.example.sources.domain.entity.Course;
-import com.example.sources.domain.entity.Interaction;
-import com.example.sources.domain.entity.InteractionSubmit;
-import com.example.sources.domain.entity.User;
+import com.example.sources.domain.dto.response.*;
+import com.example.sources.domain.entity.*;
 import com.example.sources.domain.repository.course.CourseRepository;
 import com.example.sources.domain.repository.courseuser.CourseUserRepository;
 import com.example.sources.domain.repository.interaction.InteractionRepository;
@@ -21,6 +16,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -133,6 +129,35 @@ public class InteractionService {
     }
 
     /**
+     * 코스에 대한 인터렉션과 학생들이 제출한 정답들을 요약하여 번환한다.
+     *
+     * @param courseId 클래스 번호
+     * @param tokenUserId 요청을 보낸 강사의 id
+     * @return
+     */
+    public InteractionSummaryResData getInteractionSummary(Long courseId, Long tokenUserId) {
+        List<InteractionResponseData> interactions = interactionRepository.findAllByCourseId(courseId);
+
+        List<CourseUser> courseUsers = courseUserRepository.findAllByCourseId(courseId);
+        List<StudentSubmittedInteractionResData> answers = new ArrayList<>();
+        for (CourseUser courseUser : courseUsers) {
+            Long userId = courseUser.getUser().getId();
+            List<InteractionSubmitResponseData> submittedAnswers = interactionSubmitRepository
+                    .findAllByCourseIdAndUserId(courseId, userId);
+
+            answers.add(StudentSubmittedInteractionResData.builder()
+                    .studentId(userId)
+                    .submittedInteractions(submittedAnswers)
+                    .build());
+        }
+        return InteractionSummaryResData.builder()
+                .students(answers)
+                .interactions(interactions)
+                .build();
+
+    }
+
+    /**
      * 요청을 보낸 사용자가 course 의 소유자인지 검증하는 공통 로직 메서드
      *
      * @param courseId 검증할 대상 course
@@ -150,5 +175,4 @@ public class InteractionService {
 
         return course;
     }
-
 }

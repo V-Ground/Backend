@@ -1,14 +1,12 @@
 package com.example.sources.domain.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter @Setter
+@Getter @Setter @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class InteractionSubmitResponseData {
+    private Long interactionId;
     private Long interactionSubmitId;
     private boolean yesNo;
     private String answer;

@@ -30,6 +30,12 @@ insert into course (id, title, description, cpu, memory, os, visibility, teacher
 
 /* 클래스 소속 회원 추가 */
 -- insert into course_user (id, container_ip, user_id, course_id) values('1', '3.35.135.147', 1, 1);
+insert into course_user (id, container_ip, user_id, course_id) values('1', '3.35.135.147', 1, 1);
+insert into course_user (id, container_ip, user_id, course_id) values('2', '3.35.135.147', 2, 1);
+insert into course_user (id, container_ip, user_id, course_id) values('3', '3.35.135.147', 3, 1);
+insert into course_user (id, container_ip, user_id, course_id) values('4', '3.35.135.147', 4, 1);
+insert into course_user (id, container_ip, user_id, course_id) values('5', '3.35.135.147', 5, 1);
+insert into course_user (id, container_ip, user_id, course_id) values('6', '3.35.135.147', 6, 1);
 
 /* 클래스 인터렉션 추가 */
 insert into interaction (id, created_at, interaction_type, title, course_id) values('1', '2021-12-16 23:32:13.543845', 'OX', 'nginx 설치', 1);
@@ -55,3 +61,7 @@ insert into question_submit (id, answer, scored, question_id, user_id) values (3
 insert into question_submit (id, answer, scored, question_id, user_id) values (4, 'Floating IP', 1, 1, 4);
 insert into question_submit (id, answer, scored, question_id, user_id) values (5, 'Public IP', 0, 1, 5);
 
+insert into question_submit (id, answer, scored, question_id, user_id) values (6, 'VPC', 1, 2, 1);
+insert into question_submit (id, answer, scored, question_id, user_id) values (7, 'ICPC', 0, 2, 2);
+
+insert into question_submit (id, answer, scored, question_id, user_id) values (8, 'CIDR', 1, 3, 1);

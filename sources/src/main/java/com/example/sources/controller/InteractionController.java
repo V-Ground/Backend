@@ -58,4 +58,11 @@ public class InteractionController {
         interactionService.solveInteraction(interactionId, courseId, studentId, requestData, tokenUserId);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/courses/{courseId}/summary")
+    public ResponseEntity getInteractionSummary(@PathVariable Long courseId,
+                                                UserAuthentication authentication) {
+        Long tokenUserId = authentication.getUserId();
+        return ResponseEntity.ok(interactionService.getInteractionSummary(courseId, tokenUserId));
+    }
 }

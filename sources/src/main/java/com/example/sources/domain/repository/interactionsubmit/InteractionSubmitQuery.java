@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface InteractionSubmitQuery {
     List<InteractionSubmitResponseData> findAllByInteractionId(Long interactionId);
+
+    List<InteractionSubmitResponseData> findAllByCourseIdAndUserId(Long courseId, Long userId);
 }

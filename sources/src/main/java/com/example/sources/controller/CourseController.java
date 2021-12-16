@@ -95,4 +95,12 @@ public class CourseController {
         Long tokenUserId = authentication.getUserId();
         return ResponseEntity.ok(assignmentService.getAssignmentDetail(courseId, assignmentId, userId, tokenUserId));
     }
+
+    @GetMapping("/{courseId}/assignments/{assignmentId}/summary")
+    public ResponseEntity<AssignmentSummaryResData> getAssignmentSummary(@PathVariable Long courseId,
+                                                                         @PathVariable Long assignmentId,
+                                                                         UserAuthentication authentication) {
+        Long tokenUserId = authentication.getUserId();
+        return ResponseEntity.ok(assignmentService.getAssignmentSummary(courseId, assignmentId, tokenUserId));
+    }
 }

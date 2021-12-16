@@ -53,4 +53,15 @@ public class CourseQuestionRepositoryImpl implements CourseQuestionQuery {
 
         return Optional.of(new AssignmentDetailResponseData(fetchOne, fetch));
     }
+
+    @Override
+    public List<QuestionResponseData> findAllByAssignmentId(Long assignmentId) {
+        return queryFactory
+                .select(Projections.fields(QuestionResponseData.class,
+                        courseQuestion.id.as("questionId"),
+                        courseQuestion.question))
+                .from(courseQuestion)
+                .where(courseQuestion.assignment.id.eq(assignmentId))
+                .fetch();
+    }
 }

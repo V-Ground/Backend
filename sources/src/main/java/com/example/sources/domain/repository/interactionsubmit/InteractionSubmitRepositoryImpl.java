@@ -34,4 +34,16 @@ public class InteractionSubmitRepositoryImpl implements InteractionSubmitQuery {
                 .where(interaction.id.eq(interactionId))
                 .fetch();
     }
+
+    @Override
+    public List<InteractionSubmitResponseData> findAllByCourseIdAndUserId(Long courseId, Long userId) {
+        return queryFactory
+                .select(Projections.fields(InteractionSubmitResponseData.class,
+                        interaction.id.as("interactionId"),
+                        interactionSubmit.id.as("interactionSubmitId"),
+                        interactionSubmit.yesNo.as("yesNo")))
+                .from(interactionSubmit)
+                .where(interactionSubmit.interaction.id.eq(courseId).and(interactionSubmit.user.id.eq(userId)))
+                .fetch();
+    }
 }
