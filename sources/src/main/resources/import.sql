@@ -30,12 +30,12 @@ insert into course (id, title, description, cpu, memory, os, visibility, teacher
 
 /* 클래스 소속 회원 추가 */
 -- insert into course_user (id, container_ip, user_id, course_id) values('1', '3.35.135.147', 1, 1);
-insert into course_user (id, container_ip, user_id, course_id) values('1', '3.35.135.147', 1, 1);
-insert into course_user (id, container_ip, user_id, course_id) values('2', '3.35.135.147', 2, 1);
-insert into course_user (id, container_ip, user_id, course_id) values('3', '3.35.135.147', 3, 1);
-insert into course_user (id, container_ip, user_id, course_id) values('4', '3.35.135.147', 4, 1);
-insert into course_user (id, container_ip, user_id, course_id) values('5', '3.35.135.147', 5, 1);
-insert into course_user (id, container_ip, user_id, course_id) values('6', '3.35.135.147', 6, 1);
+insert into course_user (id, container_ip, task_arn, user_id, course_id) values('1', '13.124.32.214', 'arn:aws:ecs:ap-northeast-2:075534638877:task/vground/2d221947c63a4b41ba9440745d47ff3c', 1, 1);
+insert into course_user (id, container_ip, task_arn, user_id, course_id) values('2', '3.35.25.15', 'arn:aws:ecs:ap-northeast-2:075534638877:task/vground/6a3db9fa11d2444a81aa9a5d4e6332cf', 2, 1);
+insert into course_user (id, container_ip, task_arn, user_id, course_id) values('3', '52.78.150.204', 'arn:aws:ecs:ap-northeast-2:075534638877:task/vground/7a6e0a456d294871a7865114e2c5f895', 3, 1);
+insert into course_user (id, container_ip, task_arn, user_id, course_id) values('4', '3.34.187.158', 'arn:aws:ecs:ap-northeast-2:075534638877:task/vground/a474a28dd7b14656a79596036da65548', 4, 1);
+insert into course_user (id, container_ip, task_arn, user_id, course_id) values('5', '54.180.132.232', 'arn:aws:ecs:ap-northeast-2:075534638877:task/vground/c0ef9393ad124e53b6205278e3c1d23b', 5, 1);
+insert into course_user (id, container_ip, task_arn, user_id, course_id) values('6', '52.78.234.14', 'arn:aws:ecs:ap-northeast-2:075534638877:task/vground/66388dad191444d082db4ff009fb7c35', 6, 1);
 
 /* 클래스 인터렉션 추가 */
 insert into interaction (id, created_at, interaction_type, title, course_id) values('1', '2021-12-16 23:32:13.543845', 'OX', 'nginx 설치', 1);

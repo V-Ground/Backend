@@ -173,7 +173,7 @@ public class ContainerService {
                                             .version(feignResponse.getVersion())
                                             .build();
                                 })
-                                .orTimeout(2L, TimeUnit.SECONDS)
+                                .orTimeout(5L, TimeUnit.SECONDS)
                                 .exceptionally(e ->
                                         ContainerInstallResData.builder()
                                                 .studentId(courseUser.getId())
