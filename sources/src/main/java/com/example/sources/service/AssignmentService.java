@@ -188,9 +188,13 @@ public class AssignmentService {
 
         QuestionSubmit questionSubmit;
 
+        CourseQuestion question = courseQuestionRepository.findById(questionId)
+                .orElseThrow(() -> new NotFoundException("퀴즈 번호 " + questionId));
+
         if(submit.isEmpty()) { // 기존에 정답이 없는 경우
             questionSubmit = modelMapper.map(request, QuestionSubmit.class);
             questionSubmit.solve(courseQuestion, user);
+            questionSubmit.score(request.getAnswer(), question.getAnswer());
         }else {
             questionSubmit = submit.get();
             questionSubmit.updateAnswer(request.getAnswer());

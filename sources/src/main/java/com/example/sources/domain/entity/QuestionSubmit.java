@@ -51,4 +51,14 @@ public class QuestionSubmit {
     public void scoring(Integer score) {
         this.scored = score;
     }
+
+    /**
+     * 자동 채점을 진행한다.
+     *
+     * @param inputAnswer 학생이 입력한 답
+     * @param answer 강사가 설정한 답
+     */
+    public void score(String inputAnswer, String answer) {
+        scored = inputAnswer.equals(answer) ? 1 : 0;
+    }
 }

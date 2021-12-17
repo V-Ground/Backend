@@ -37,6 +37,7 @@ insert into course_user (id, container_ip, task_arn, user_id, course_id) values(
 insert into course_user (id, container_ip, task_arn, user_id, course_id) values('5', '54.180.132.232', 'arn:aws:ecs:ap-northeast-2:075534638877:task/vground/c0ef9393ad124e53b6205278e3c1d23b', 5, 1);
 insert into course_user (id, container_ip, task_arn, user_id, course_id) values('6', '54.180.162.98', 'arn:aws:ecs:ap-northeast-2:075534638877:task/vground/336ccb23bbf84e908eadad0101c375d6', 6, 1);
 
+/**
 /* 클래스 인터렉션 추가 */
 insert into interaction (id, created_at, interaction_type, title, course_id) values('1', '2021-12-16 23:32:13.543845', 'OX', 'nginx 설치', 1);
 insert into interaction (id, created_at, interaction_type, title, course_id) values('2', '2021-12-16 23:32:13.543845', 'OX', 'flask 설치', 1);
@@ -45,7 +46,10 @@ insert into interaction (id, created_at, interaction_type, title, course_id) val
 insert into interaction_submit (id, answer, yes_no, interaction_id, student_id) values('1', '', TRUE, 1, 1);
 insert into interaction_submit (id, answer, yes_no, interaction_id, student_id) values('2', '', FALSE, 1, 2);
 insert into interaction_submit (id, answer, yes_no, interaction_id, student_id) values('3', '', TRUE, 1, 3)
+*/
 
+
+/**
 /* 클래스 과제 추가 */
 insert into assignment (id, description, ended_at, started_at, title, course_id) values (1, '클라우드 상식 퀴즈', '2021-12-31 12:00:00', '2021-11-09 12:00:00', '클라우드 네트워크', 1);
 insert into assignment (id, description, ended_at, started_at, title, course_id) values (2, '클라우드 고급 퀴즈', '2021-12-31 12:00:00', '2021-11-09 12:00:00', '클라우드 네트워크', 1);
@@ -71,3 +75,4 @@ insert into question_submit (id, answer, scored, question_id, user_id) values (8
 
 insert into question_submit (id, answer, scored, question_id, user_id) values (9, 'GCP', 0, 4, 1);
 insert into question_submit (id, answer, scored, question_id, user_id) values (10, 'AWS', 1, 4, 2);
+**/
