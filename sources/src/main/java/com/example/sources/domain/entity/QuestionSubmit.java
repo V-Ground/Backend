@@ -59,6 +59,6 @@ public class QuestionSubmit {
      * @param answer 강사가 설정한 답
      */
     public void score(String inputAnswer, String answer) {
-        scored = inputAnswer.equals(answer) ? 1 : 0;
+        this.scored = inputAnswer.equals(answer) ? 1 : 0;
     }
 }
