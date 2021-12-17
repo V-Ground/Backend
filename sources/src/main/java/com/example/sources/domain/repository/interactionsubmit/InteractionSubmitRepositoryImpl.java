@@ -43,7 +43,7 @@ public class InteractionSubmitRepositoryImpl implements InteractionSubmitQuery {
                         interactionSubmit.id.as("interactionSubmitId"),
                         interactionSubmit.yesNo.as("yesNo")))
                 .from(interactionSubmit)
-                .where(interactionSubmit.interaction.id.eq(courseId).and(interactionSubmit.user.id.eq(userId)))
+                .where(interactionSubmit.interaction.course.id.eq(courseId).and(interactionSubmit.user.id.eq(userId)))
                 .fetch();
     }
 }

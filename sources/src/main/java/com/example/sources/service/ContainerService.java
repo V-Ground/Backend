@@ -44,14 +44,14 @@ public class ContainerService {
                                     FeignActivationResData feignStatusResData = containerClient.detectKeyboardHit(uri);
 
                                     return ContainerActivationResData.builder()
-                                            .studentId(courseUser.getId())
+                                            .studentId(courseUser.getUser().getId())
                                             .mouseActivation(feignStatusResData.getStatus() == 1)
                                             .build();
                                 })
                                 .orTimeout(2L, TimeUnit.SECONDS)
                                 .exceptionally(e ->
                                         ContainerActivationResData.builder()
-                                                .studentId(courseUser.getId())
+                                                .studentId(courseUser.getUser().getId())
                                                 .error(true)
                                                 .build()))
                 .collect(Collectors.toList())
@@ -59,7 +59,6 @@ public class ContainerService {
                 .map(CompletableFuture::join)
                 .collect(Collectors.toUnmodifiableList());
     }
-
 
     /**
      * 컨테이너에 원격 명령을 실행한다.
@@ -86,14 +85,14 @@ public class ContainerService {
                                             new FeignCommandReqData(requestData.getCommand()));
 
                                     return ContainerBashResData.builder()
-                                            .studentId(courseUser.getId())
+                                            .studentId(courseUser.getUser().getId())
                                             .commandResult(feignResponse.getCommandResult())
                                             .build();
                                 })
                                 .orTimeout(2L, TimeUnit.SECONDS)
                                 .exceptionally(e ->
                                         ContainerBashResData.builder()
-                                                .studentId(courseUser.getId())
+                                                .studentId(courseUser.getUser().getId())
                                                 .error(true)
                                                 .build()))
                 .collect(Collectors.toList())
@@ -128,14 +127,14 @@ public class ContainerService {
                                             scriptFile);
 
                                     return ContainerBashResData.builder()
-                                            .studentId(courseUser.getId())
+                                            .studentId(courseUser.getUser().getId())
                                             .commandResult(feignResponse.getCommandResult())
                                             .build();
                                 })
                                 .orTimeout(2L, TimeUnit.SECONDS)
                                 .exceptionally(e ->
                                         ContainerBashResData.builder()
-                                                .studentId(courseUser.getId())
+                                                .studentId(courseUser.getUser().getId())
                                                 .error(true)
                                                 .build()))
                 .collect(Collectors.toList())
@@ -167,7 +166,7 @@ public class ContainerService {
                                             requestData.getProgramName());
 
                                     return ContainerInstallResData.builder()
-                                            .studentId(courseUser.getId())
+                                            .studentId(courseUser.getUser().getId())
                                             .status(feignResponse.getStatus())
                                             .installPath(feignResponse.getInstallPath())
                                             .version(feignResponse.getVersion())
@@ -176,7 +175,7 @@ public class ContainerService {
                                 .orTimeout(5L, TimeUnit.SECONDS)
                                 .exceptionally(e ->
                                         ContainerInstallResData.builder()
-                                                .studentId(courseUser.getId())
+                                                .studentId(courseUser.getUser().getId())
                                                 .error(true)
                                                 .build()))
                 .collect(Collectors.toList())
@@ -210,7 +209,7 @@ public class ContainerService {
                                             requestData.getFilePath());
 
                                     return ContainerFileResData.builder()
-                                            .studentId(courseUser.getId())
+                                            .studentId(courseUser.getUser().getId())
                                             .status(feignResponse.getStatus())
                                             .fileContent(feignResponse.getFileContent())
                                             .build();
@@ -218,7 +217,7 @@ public class ContainerService {
                                 .orTimeout(2L, TimeUnit.SECONDS)
                                 .exceptionally(e ->
                                         ContainerFileResData.builder()
-                                                .studentId(courseUser.getId())
+                                                .studentId(courseUser.getUser().getId())
                                                 .error(true)
                                                 .build()))
                 .collect(Collectors.toList())
@@ -252,14 +251,14 @@ public class ContainerService {
                                             new FeignHistoryReqData(requestData.getExcludes()));
 
                                     return ContainerFileResData.builder()
-                                            .studentId(courseUser.getId())
+                                            .studentId(courseUser.getUser().getId())
                                             .fileContent(feignResponse.getFileContent())
                                             .build();
                                 })
                                 .orTimeout(2L, TimeUnit.SECONDS)
                                 .exceptionally(e ->
                                         ContainerFileResData.builder()
-                                                .studentId(courseUser.getId())
+                                                .studentId(courseUser.getUser().getId())
                                                 .error(true)
                                                 .build()))
                 .collect(Collectors.toList())
@@ -300,7 +299,7 @@ public class ContainerService {
                                             inputFile);
 
                                     return ContainerFileInsertResData.builder()
-                                            .studentId(courseUser.getId())
+                                            .studentId(courseUser.getUser().getId())
                                             .filename(feignResponse.getFilename())
                                             .savedPath(feignResponse.getSavedPath())
                                             .status(feignResponse.getStatus())
@@ -309,7 +308,7 @@ public class ContainerService {
                                 .orTimeout(2L, TimeUnit.SECONDS)
                                 .exceptionally(e ->
                                         ContainerFileInsertResData.builder()
-                                                .studentId(courseUser.getId())
+                                                .studentId(courseUser.getUser().getId())
                                                 .error(true)
                                                 .build()))
                 .collect(Collectors.toList())
