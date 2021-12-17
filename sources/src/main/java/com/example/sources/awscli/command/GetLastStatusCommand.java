@@ -16,7 +16,6 @@ public class GetLastStatusCommand implements AwsCommand {
     public String execute(String commandString) {
         String taskDetail = bashExecutor.execute(commandString);
         String lastStatus = cliResponseParser.findLastStatus(taskDetail);
-        System.out.println("lastStatus = " + lastStatus);
 
         return lastStatus;
     }

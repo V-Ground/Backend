@@ -39,10 +39,7 @@ public class AwsCliResponseParser {
      */
     public String findLastStatus(String taskDetail) {
         try {
-            System.out.println("parser 까지 들어옴");
-            System.out.println("taskDetail = " + taskDetail);
             JsonNode jsonNode = objectMapper.readTree(taskDetail).at("/tasks/0/lastStatus");
-            System.out.println(jsonNode.toString());
             return jsonNode.toString().replaceAll("\"", "");
         } catch (JsonProcessingException e) {
             e.printStackTrace();
