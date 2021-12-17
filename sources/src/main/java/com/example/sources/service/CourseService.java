@@ -169,7 +169,7 @@ public class CourseService {
         List<TaskStatusResData> resDataList = new ArrayList<>();
         for (CourseUser courseUser : courseUsers) {
             String taskStatus = awsEcsUtil.getTaskStatus(courseUser.getTaskArn());
-            resDataList.add(new TaskStatusResData(courseUser.getId(), taskStatus));
+            resDataList.add(new TaskStatusResData(courseUser.getUser().getId(), taskStatus));
         }
 
         return resDataList;
