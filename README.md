@@ -72,39 +72,62 @@ Best Of the Best 멘토님들을 대상으로 한 **온라인 실습시 불편�
 
 ### 📌 awc-cli를 이용한 클라우드 자원 관리
 
-학생 가상머신 (컨테이너) 생성 자동화를 위해 awc-cli 가 사용되었습니다.
+학생 가상머신 (컨테이너) 생성 자동화를 위해 `awc-cli` 가 사용되었습니다.
 
-클래스에 학생을 초대할 때 awc-cli 의 ecs 명령어로 task 를 생성합니다.
+클래스에 학생을 초대할 때 `awc-cli` 의 `ecs` 명령어로 task 를 생성합니다.
 
 ### 📌 Open Feign 을 이용한 API 통신
 
 상호작용 모듈은 한 번의 호출에 클래스에 소속된 모든 컨테이너의 상호작용 웹서버 통신을 수행해야 합니다.
-이를 위해 Spring Cloud 에서 사용되는 HTTP Client 모듈인 OpenFeign 이 사용되었습니다.
+이를 위해 Spring Cloud 에서 사용되는 HTTP Client 모듈인 `OpenFeign` 이 사용되었습니다.
 
 ### 📌 실습을 위한 가상머신 선정에 대한 고민
 
 실습 머신으로 다양한 후보군이 존재하였습니다.
 
-- VM
-- Container
-- Firecracker
+- `VM`
+- `Container`
+- `Firecracker`
 
 # ⛳️ 프로젝트 소개
 
 ### 📌 사용 기술
 
+![tech](https://github.com/V-Ground/Backend/blob/master/assets/tech.png)
+
+- **Front-End**
+  - `next.js`
+  - `react.js`
+  - `axios`
+  - `mui`
+  - `NoVnc`
+- **Back-End**
+  - `spring-boot`
+  - `sprint security`
+  - `spring data jpa`
+  - `query dsl`
+  - `spring-cloud-open-feign`
+- **Infrastructure**
+  - `aws-cli`
+  - `aws-ec2`
+  - `aws-ecs`
+  - `aws-fargate`
+- **Etc**
+  - `postman`
+  - `git`
+  - `github`
+  - `adobe xd`
+
 ### 📌 아키텍쳐
 
-![deploy](https://github.com/V-Ground/Backend/blob/master/assets/infra.png)
+![infra](https://github.com/V-Ground/Backend/blob/master/assets/infra.png)
 
 ### 📌 DB 설계
 
 ![deploy](https://github.com/V-Ground/Backend/blob/master/assets/db.png)
 
-##### [> 자세히](https://github.com/V-Ground/Backend/blob/master/assets/db.png)
-
-### 📌 Contents List
+##### [> 자세히](https://github.com/V-Ground/Backend/blob/master/ass0ets/db.png)
 
 ### 📌 UI Prototype
 
-![UI](https://github.com/dhslrl321/Bless-Music-Studio/blob/master/images/xd.png)
+![UI](https://github.com/V-Ground/Backend/blob/master/assets/ui.png)
