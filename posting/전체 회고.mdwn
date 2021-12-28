@@ -1,0 +1,9 @@
+# [클라우드 기반 보안 실습 플랫폼 개발기] 프로젝트를 마무리하며
+
+[##_Image|kage@bi2VJd/btrotlGrjOE/eWx31cs9vzQpNnZtvxSfG1/img.png|CDM|1.3|{"originWidth":944,"originHeight":378,"style":"alignCenter","width":625,"height":250}_##]
+
+오늘은 [클라우드 기반 샌드박스 보안 실습 플랫폼-github 바로가기](https://github.com/V-Ground/Backend) 개발을 하며 느꼈던 감정들에 대해서 회고해보려 한다.
+
+# 프로젝트 설명
+
+우선 간단하게 프로젝트에 대해서 설명하자면 다음과 같다

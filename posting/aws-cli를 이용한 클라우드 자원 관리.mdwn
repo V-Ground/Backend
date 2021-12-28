@@ -1,0 +1,357 @@
+# [클라우드 기반 보안 실습 플랫폼 개발기] aws-cli 를 이용한 클라우드 자원 관리
+
+[##_Image|kage@bi2VJd/btrotlGrjOE/eWx31cs9vzQpNnZtvxSfG1/img.png|CDM|1.3|{"originWidth":944,"originHeight":378,"style":"alignCenter","width":625,"height":250}_##]
+
+오늘은 [클라우드 기반 샌드박스 보안 실습 플랫폼-github 바로가기](https://github.com/V-Ground/Backend) 개발을 하며 사용했던 aws-cli의 경험을 공유해보려 한다.
+
+### 목차
+
+- **배경**
+- **기술 선정**
+  - 기술 후보군의 비교
+  - 기술 선택
+- **도입**
+  - cli 프로세스를 생성할 방법에 대한 고민
+  - cli-command 를 위한 디자인 패턴
+- **후기**
+
+# 배경
+
+우선 프로젝트에서 내가 개발해야하는 feature 는 다음과 같다.
+
+[##_Image|kage@cWv81r/btroHbi0ZSy/io54vk6oE3bESQ3Q2N5muk/img.png|CDM|1.3|{"originWidth":1128,"originHeight":538,"style":"alignCenter"}_##]
+
+- #### 강사는 클래스(수업)을 생성할 수 있고, 하나의 클래스(수업)이 생성되면 클래스에서 사용될 **실습 Computing Engine** 을 할당받는다.
+- #### 학생은 클래스(수업)에 초대되면 실습 **Computing Engine 을 할당받는다.**
+- #### 제약: Computing Engine 은 Farage 기반 AWS의 ECS 를 사용해야 한다.
+
+이 과정에서 나는 동적으로 컨테이너를 생성해야 했었고, 해당 컨테이너들의 status 를 확인해야 했었다.
+
+# 기술 선정
+
+나는 위의 feature 를 개발하기 위해서는 동적으로 **aws computing 자원을 관리할 방법**들이 필요했고 그 방법으로 2가지의 **AWS Client**의 선택지가 존재했다.
+
+1. aws sdk
+2. aws cli
+
+## aws sdk
+
+aws sdk 는 `Amazon Web Service Software Development Kit` 로 aws 에서 제공하는 클라우드 application 개발 kit 이다.
+
+aws sdk 는 Java 를 비롯하여 Go, JS, node등 다양한 언어와 런타임을 지원하는데, 대부분의 API가 Asynchronous 하게 동작하기 때문에 코드의 실행 흐름에 있어서 **적은 Thread 로도 높은 수준의 Concurrency**를 보장한다.
+
+## aws cli
+
+aws cli 는 `Amazon Web Service Command Line Interface` 로 셸 커맨드를 이용해서 AWS 서비스를 관리하고 상호작용할 수 있는 AWS Client 이다.
+
+설치가 간단하고 명령어 자체도 문서화가 잘 되어있으며 간단해서 **초기 진입 장벽은 cli가 훨씬 낮아**보였다.
+
+또한 aws cli 를 이용해서 s3 bucket 을 관리했던 경험이 있기 때문에 cli 가 나에게는 더욱 익숙했다.
+
+## 그래서 cli냐 sdk냐?
+
+이 프로젝트는 **짧은 기간**동안 많은 기능들을 개발했어야 했는데 이 둘을 내 기준에서 정리하자면 다음과 같았다.
+
+- **AWS SDK**
+  - -> Java application 개발에 특화되어있기 때문에 더 안정적인 개발이 가능하다.
+  - -> Synchronous, Asynchronous 모두 지원하며 여러 성공 case 가 존재한다.
+  - -> 하지만 공식 문서의 examples 를 포함한 대부분의 reference가 s3나 rds 관련 자료였기 때문에 사용하고 학습하는데 걸리는 시간이 많이 필요하다.
+- **AWS CLI**
+  - -> 문서가 나름 잘 짜여져 있고 가독성이 좋다.
+  - -> Spring boot 서버에서 외부 프로세스를 실행시켜야 하는 단점이 있지만 익숙한 기술이다.
+  - -> 하지만 aws client 주체가 서버가 돌고있는 host machine 이기 때문에 host 의존성이 생긴다.
+
+이외에도 사실 나는 프로젝트에서 클라우드 파트가 아니였었다.
+
+프로젝트 진행 도중 일정과 팀원 분배가 다시 이루어지며 내가 플**랫폼 API와 더불어 클라우드 API를 개발해야 하는 상황**이었기에 나에게 **기술 선정에 대한 시간**은 그리 **많지 않았었다.**
+
+#### 그리하여 결국 프로젝트 기술 스택은 **AWS CLI**로 선정!
+
+> 이 때 돌아갔어야 했는데... 그냥 sdk 써 원익아..
+
+---
+
+# cli 프로세스를 생성할 방법
+
+결국 프로젝트의 기술 스택으로 **aws cli** 가 선정되었고, cli를 사용하기 위한 setting 을 마친 후 **어떤 방식으로 bash 를 실행시킬 것인지** 결정해야 했다.
+
+사실상 bash 또한 외부 프로세스이기 때문에 Java 에서 외부 프로세스를 불러올 방법에 대해서 고민을 해야했고 그에 대한 방법으로 **ProcessBuilder** 를 사용하였다.
+
+아래의 코드는 프로젝트의 소스코드 일부를 가져온 것이다.
+
+```java
+public class BashExecutor {
+    private ProcessBuilder bash;
+
+    public BashExecutor() {
+        this.bash = new ProcessBuilder();
+    }
+
+    /**
+     * bash 를 실행시킨다
+     *
+     * @param command 실행 시킬 명령어
+     * @return 실행시킨 bash command 의 result
+     */
+    public String execute(String command) {
+        String[] commands = command.split(" ");
+        bash.command(commands);
+
+        StringBuilder sb = new StringBuilder();
+        Process process = null;
+        try {
+            process = bash.start();
+            InputStream inputStream = process.getInputStream();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            while((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+            inputStream.close();
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if(process != null) { // 할당 해제
+                process.destroy();
+            }
+        }
+
+        return sb.toString();
+    }
+}
+```
+
+해당 코드에서는 `BashExecutor` 클래스가 생성될 때 마다 `ProcessBuilder` 객체가 새롭게 할당된다.
+
+하나의 객체가 할당될 때마다 **Sub-Process** 하나가 애플리케이션에서 **생성되고 이는 결국 고려해야할 점들이 많아짐**을 의미한다.
+
+그 중 **외부 프로세스가 전달하는 스트림 처리 문제**를 확인해보자
+
+[Java에서 외부 프로세스를 실행할 때](https://d2.naver.com/helloworld/1113548) 에서 이야기하듯 Process 의 `getInputStream()` 메서드를 이용할 때 버퍼의 크기가 넘쳐 제대로 읽지 못하는 문제가 발생할 수 있는데, 이를 해결하기 위해서는 스트림 처리를 하도록 하는 전용 클래스가 있어야 한다.
+
+하지만 내가 구성한 코드에서는 별도로 처리하는 로직이 존재하지 않고 그냥 **cli 가 필요한 만큼 프로세스를 생성해버리는 것이 가장 큰 문제**라고 할 수 있으며 변경해야하는 여지가 존재한다.
+
+# cli-command 를 위한 디자인 패턴
+
+나는 cli 커맨드를 처리하기 위해서 **Command** 패턴을 도입하였다.
+
+Command 패턴이란 요청을 **객체의 형태로 캡슐화**하는 것인데, 이를 위해서 aws-cli 에 보내야하는 요청을 캡슐화하여 **AwsEcsUtil** 에서 각각의 command 를 trigger 한다.
+
+[##_Image|kage@dNwexa/btroDhqOBM0/2odkhHtFmVhojVpk6iuTYk/img.png|CDM|1.3|{"originWidth":734,"originHeight":531,"style":"alignCenter","width":626,"height":453}_##]
+
+위의 다이어그램을 코드로 확인해보자
+
+### Command
+
+```java
+public interface AwsCommand {
+
+    /**
+     * aws cli command 를 실행한다.
+     *
+     * @param commandString 실행할 command
+     * @return command 의 result 문자열
+     */
+    String execute(String commandString);
+}
+```
+
+각각의 aws-cli 커맨드를 실행할 공통 메서드를 따로 빼고 Command 별로 캡슐화를 해주었다.
+
+### ConcreteCommand
+
+실행될 커맨드에 대한 인터페이스로 실행될 기능들을 `execute()` 메서드로 선언해주어 다른 Command 들이 이를 구현하도록 하였다.
+
+```java
+public class GetIpCommand implements AwsCommand{
+    private BashExecutor bashExecutor;
+    private AwsCliResponseParser cliResponseParser;
+
+    public GetIpCommand(BashExecutor bashExecutor,
+                        AwsCliResponseParser cliResponseParser) {
+        this.bashExecutor = bashExecutor;
+        this.cliResponseParser = cliResponseParser;
+    }
+
+    @Override
+    public String execute(String commandString) {
+        String responseJson = bashExecutor.execute(commandString);
+        String ip = cliResponseParser.findIp(responseJson);
+
+        return ip;
+    }
+}
+
+// 생략
+
+public class GetLastStatusCommand implements AwsCommand {
+    private BashExecutor bashExecutor;
+    private AwsCliResponseParser cliResponseParser;
+
+    public GetLastStatusCommand(BashExecutor bashExecutor, AwsCliResponseParser cliResponseParser) {
+        this.bashExecutor = bashExecutor;
+        this.cliResponseParser = cliResponseParser;
+    }
+
+    @Override
+    public String execute(String commandString) {
+        String taskDetail = bashExecutor.execute(commandString);
+        String lastStatus = cliResponseParser.findLastStatus(taskDetail);
+
+        return lastStatus;
+    }
+}
+```
+
+`execute()` 메서드가 호출된다면 위에서 보이는바와 같이 멤버로 존재하는 **BashExecutor** 의 execute() 로 Sub-Process 를 생성한다.
+
+만약 새로운 Command 가 추가되어야 한다면 위와 같이 Command 클래스를 하나씩 더 추가한다.
+
+### Invoker
+
+이 부분은 Invoker 에 해당하는 객체이다.
+
+Command 에 명시된 순서와 parser 를 통해서 BashExecutor 의 실행 결과들을 반환하게 되는데, 각각의 Command 기능에 따라 메서드를 구현하였다.
+
+```java
+public class AwsCliExecutor {
+    private AwsCommand createTaskCommand;
+    private AwsCommand getTaskDetailCommand;
+    private AwsCommand getIpCommand;
+    private AwsCommand getLastStatusCommand;
+
+    public AwsCliExecutor(AwsCommand createTaskCommand,
+                          AwsCommand getTaskDetailCommand,
+                          AwsCommand getIpCommand,
+                          AwsCommand getLastStatusCommand) {
+        this.createTaskCommand = createTaskCommand;
+        this.getTaskDetailCommand = getTaskDetailCommand;
+        this.getIpCommand = getIpCommand;
+        this.getLastStatusCommand = getLastStatusCommand;
+    }
+
+    /**
+     * commandString 을 받아 ecs container 를 생성하는 aws cli 를 호출한다.
+     *
+     * @param commandString 실행시킬 aws cli command
+     * @return 생성된 ecs container 의 arn
+     */
+    public String createTask(String commandString) {
+        return createTaskCommand.execute(commandString);
+    }
+
+    /**
+     * taskArn 을 받아 networkInterface 을 조회하는 aws cli 를 호출한다.
+     *
+     * @param commandString taskArn 을 조회하는 commandString
+     * @return taskArn
+     */
+    public String getNetworkIfs(String commandString) {
+        return getTaskDetailCommand.execute(commandString);
+    }
+
+    /**
+     * commandString 을 받아 ip 를 조회하는 aws cli 를 호출한다.
+     *
+     * @param commandString networkInterfaceId 를 조회하는 commandString
+     * @return container ip
+     */
+    public String getIp(String commandString) {
+        return getIpCommand.execute(commandString);
+    }
+
+    /**
+     * commandString 을 받아 lastStatus 를 조회하는 aws cli 를 호출한다.
+     *
+     * @param commandString lastStatus 를 조회하는 commandString
+     * @return lastStatus
+     */
+    public String getLastStatus(String commandString) { return getLastStatusCommand.execute(commandString); }
+}
+```
+
+123
+
+### Client
+
+Command 에 대한 Client 는 **AwsEcsUtil** 이라는 클래스가 그 역할을 수행한다.
+
+```java
+@Component
+public class AwsEcsUtil {
+
+    private AwsCliExecutor awsCliExecutor;
+    private AwsCommandString awsCommandString;
+
+    public AwsEcsUtil(AwsCommandString awsCommandString) {
+        this.awsCommandString = awsCommandString;
+        BashExecutor bashExecutor = new BashExecutor();
+        AwsCliResponseParser cliResponseParser = new AwsCliResponseParser();
+
+        AwsCommand createTaskCommand = new CreateTaskCommand(bashExecutor, cliResponseParser);
+        AwsCommand getTaskDetailCommand = new GetNIDCommand(bashExecutor, cliResponseParser);
+        AwsCommand getIpCommand = new GetIpCommand(bashExecutor, cliResponseParser);
+        AwsCommand getLastStatus = new GetLastStatusCommand(bashExecutor, cliResponseParser);
+
+        awsCliExecutor = new AwsCliExecutor(
+                createTaskCommand,
+                getTaskDetailCommand,
+                getIpCommand,
+                getLastStatus);
+    }
+
+    /**
+     * aws cli 를 이용하여 ecs 컨테이너를 생성한다.
+     *
+     * @return 생성된 컨테이너의 public ip
+     */
+    public TaskInfo createEcsContainer() {
+        String taskArn = awsCliExecutor.createTask(awsCommandString.createTaskCommand());
+        String networkInterfaceId = awsCliExecutor.getNetworkIfs(awsCommandString.getTaskDetailCommand(taskArn));
+        String ip = awsCliExecutor.getIp(awsCommandString.getNetworkIfsDetailCommand(networkInterfaceId));
+
+        return new TaskInfo(taskArn, ip);
+    }
+
+    /**
+     * aws cli 를 이용하여 컨테이너의 상태를 확인한다.
+     *
+     * @param taskArn 조회할 컨테이너의 ARN
+     * @return 컨테이너의 상태 | RUNNING | PENDING | STOPPED | PROVISIONING
+     */
+    public String getTaskStatus(String taskArn) {
+        return awsCliExecutor.getLastStatus(awsCommandString.getTaskDetailCommand(taskArn));
+    }
+}
+```
+
+처음으로 디자인 패턴을 도입하여 소프트웨어를 개발하였는데 실 아키텍처에 디자인 패턴을 도입한다는 것이 마냥 쉬운 것은 아니었던것 같다.
+
+#### 위와 같이 캡슐화를 통해서 일관성있는 로직을 개발할 수 있을지라도 제대로된 Command 패턴을 사용했는가? 에 대한 의문은 여전히 존재한다.
+
+또한 과연 디자인 패턴을 도입한다고 하여도 이 코드가 **가독성이 좋고 잘 구성이 되었는가?** 에 대한 대답도 쉽게 할 수 없을것 같다는 것이 너무 아쉬웠다.
+
+# 결론
+
+사실 이와 같은 상황에 있어서는 aws sdk 를 선택하는 것이 일반적이며 개인적으로 생각하는 best practice 가 아닐까 한다.
+
+aws-cli 를 선택하면 꽤 많은 문제점들을 안고 개발을 해야한다. 이를테면 위에서 말한 Sub-Process 문제부터 해서 Sub-Process 의 보안적 취약점.
+
+만약 Sub-Process 문제를 해결한다고 하면 아예 cli 를 날리는 모듈을 외부 프로세스로 빼고 Spring-boot 에서는 요청이 들어올 떄 마다 외부 프로세스에게 한 번의 요청으로 처리하는 방법이 있을 수 있다.
+
+그럼 위와 같은 코드들이 모두 빠지게 되어 application 이 더욱 경량화 될 것이며 웹과 관련된 로직만을 더 집중해서 구현할 수 있다.
+
+또 문제가 더 있다.
+
+aws-cli 를 선택한다면 cli 의 configure 를 위해서 secret key를 host machine 에 설정해줘야 하는데, 이 과정이 도커에서 동작하게 하기가 꽤나 까다롭다.
+
+Dockerfile 의 env 로 secret key 를 넣는 방법을 선택하면 역시 해결가능하나 컨테이너 내부에서 aws-cli 가 돌아갈 수 있도록 컨테이너의 base-image 를 잘 선택해야 한다.
+
+위와 같은 문제점들을 안고서도 불구하고 계속 aws-cli 를 고집했던데에는 바로 **시간**이었다.
+
+앞서도 이야기했듯 구현해야하는 시간이 매우 촉박했었고 이 선택 또한 우리에게는 매우 효율적인 선택이었었다고 생각된다.
+
+하지만 위의 문제점들을 가진다면 실제 Production 수준의 결과물은 나오지 않을 것이다.
+
+추후 해당 프로젝트가 더 고도화될 수 있다면 가장 먼저 고쳐야하는 포인트를 주저없이 이 부분이라고 말할 수 있다..

@@ -14,9 +14,9 @@ public class AsyncConfiguration {
     @Bean(name = "awsCliExecutor")
     public Executor awsCliExecutor() {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-        taskExecutor.setCorePoolSize(3);
-        taskExecutor.setMaxPoolSize(30);
-        taskExecutor.setQueueCapacity(10);
+        taskExecutor.setCorePoolSize(3); // 실제 생성될 쓰레드
+        taskExecutor.setQueueCapacity(10); // 큐의 사이즈
+        taskExecutor.setMaxPoolSize(30); // 큐가 꽉 찼을 때 늘릴 쓰레드
         taskExecutor.setThreadNamePrefix("Executor-");
         taskExecutor.initialize();
         return taskExecutor;
